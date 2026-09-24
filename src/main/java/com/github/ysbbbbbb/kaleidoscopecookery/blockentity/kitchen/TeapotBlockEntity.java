@@ -384,6 +384,7 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         return true;
     }
 
+    @ServerThreadSafe
     @Override
     public boolean takeTeapot(Level level, LivingEntity user) {
         // 同时保护直接调用接口的路径，以及已取下/已替换的旧方块实体引用。
