@@ -67,7 +67,8 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 	modCompileOnly("mezz.jei:jei-1.21.11-fabric:${project.jei_version}")
 	modImplementation ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.11.1")
-
+	// Apple Skin
+	modImplementation "maven.modrinth:EsAfCjCV:59ti1rvg"
 	// REI 前置
 	modImplementation "me.shedaniel.cloth:cloth-config-fabric:21.11.153"
 	modImplementation "dev.architectury:architectury-fabric:19.0.1"

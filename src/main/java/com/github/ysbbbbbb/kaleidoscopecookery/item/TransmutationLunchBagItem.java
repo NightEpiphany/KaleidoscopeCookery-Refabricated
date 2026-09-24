@@ -30,12 +30,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
@@ -61,7 +63,10 @@ public class TransmutationLunchBagItem extends Item {
     private static final int MAX_SIZE = 16;
 
     public TransmutationLunchBagItem(Properties p) {
-        super(p.stacksTo(1));
+        super(p.stacksTo(1).food(
+                new FoodProperties(0, 0, true),
+                Consumables.DEFAULT_FOOD
+        ));
     }
 
     @Deprecated

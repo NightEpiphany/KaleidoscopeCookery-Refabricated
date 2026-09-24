@@ -58,7 +58,7 @@ public final class ModItems {
     public static final Item SHAWARMA_SPIT = registerItemViaBlock(ModBlocks.SHAWARMA_SPIT);
     public static final Item MILLSTONE = registerItemViaBlock(ModBlocks.MILLSTONE);
     public static final Item STEAMER = registerItemViaBlock(ModBlocks.STEAMER, SteamerItem::new);
-    public static final Item OIL_POT = registerItemViaBlock(ModBlocks.OIL_POT, OilPotItem::new, new Item.Properties().stacksTo(16));
+    public static final Item OIL_POT = registerItemViaBlock(ModBlocks.OIL_POT, OilPotItem::new, new Item.Properties().stacksTo(1));
 
     // Tea
     public static final Item TEAPOT = registerItemViaBlock(ModBlocks.TEAPOT, TeapotItem::new, new Item.Properties().stacksTo(1));

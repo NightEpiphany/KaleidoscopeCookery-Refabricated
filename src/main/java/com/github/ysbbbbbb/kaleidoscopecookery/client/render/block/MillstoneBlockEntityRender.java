@@ -5,7 +5,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.MillstoneModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.renderstates.MillstoneBlockEntityRenderState;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.IBlockEntityRendererExtension;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class MillstoneBlockEntityRender implements BlockEntityRenderer<MillstoneBlockEntity, MillstoneBlockEntityRenderState>, IBlockEntityRendererExtension<MillstoneBlockEntity> {
+public class MillstoneBlockEntityRender implements BlockEntityRenderer<MillstoneBlockEntity, MillstoneBlockEntityRenderState> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "textures/block/millstone.png");
 
     private final MillstoneModel bodyModel;
@@ -159,8 +158,6 @@ public class MillstoneBlockEntityRender implements BlockEntityRenderer<Millstone
         return true;
     }
 
-
-    @Override
     public AABB getRenderBoundingBox(MillstoneBlockEntity blockEntity) {
         BlockPos pos = blockEntity.getBlockPos();
         return getAABB(pos.offset(-3, 0, -3), pos.offset(3, 1, 3));
