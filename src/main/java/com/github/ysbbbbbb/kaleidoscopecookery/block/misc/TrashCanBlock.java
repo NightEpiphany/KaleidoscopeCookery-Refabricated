@@ -163,7 +163,7 @@ public class TrashCanBlock extends HorizontalDirectionalBlock implements SimpleW
         Level level = context.getLevel();
         return this.defaultBlockState()
                 .setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED, level.isWaterAt(context.getClickedPos()));
+                .setValue(WATERLOGGED, level.getFluidState(context.getClickedPos()).is(Fluids.WATER));
     }
 
     @Override
