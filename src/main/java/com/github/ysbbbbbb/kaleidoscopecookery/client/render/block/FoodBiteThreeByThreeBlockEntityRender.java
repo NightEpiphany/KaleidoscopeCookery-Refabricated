@@ -5,7 +5,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteThreeByThreeBl
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.food.FoodBiteThreeByThreeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.ColdCutHamSlicesModel;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.IBlockEntityRendererExtension;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -22,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 @Environment(EnvType.CLIENT)
-public class FoodBiteThreeByThreeBlockEntityRender implements BlockEntityRenderer<FoodBiteThreeByThreeBlockEntity>, IBlockEntityRendererExtension<FoodBiteThreeByThreeBlockEntity> {
+public class FoodBiteThreeByThreeBlockEntityRender implements BlockEntityRenderer<FoodBiteThreeByThreeBlockEntity> {
     private static final ResourceLocation COLD_CUT_HAM_SLICES_TEXTURE = ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "textures/block/cold_cut_ham_slices.png");
 
     private final ColdCutHamSlicesModel coldCutHamSlicesModel;
@@ -59,12 +58,6 @@ public class FoodBiteThreeByThreeBlockEntityRender implements BlockEntityRendere
     @Override
     public boolean shouldRenderOffScreen(FoodBiteThreeByThreeBlockEntity pBlockEntity) {
         return true;
-    }
-
-    @Override
-    public AABB getRenderBoundingBox(FoodBiteThreeByThreeBlockEntity blockEntity) {
-        BlockPos pos = blockEntity.getBlockPos();
-        return getAABB(pos.offset(-3, 0, -3), pos.offset(3, 1, 3));
     }
 
     private static AABB getAABB(BlockPos pStart, BlockPos pEnd) {

@@ -6,7 +6,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBloc
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.MillstoneModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplacer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplacerReloadListener;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.IBlockEntityRendererExtension;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -29,7 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 @Environment(EnvType.CLIENT)
-public class MillstoneBlockEntityRender implements BlockEntityRenderer<MillstoneBlockEntity>, IBlockEntityRendererExtension<MillstoneBlockEntity> {
+public class MillstoneBlockEntityRender implements BlockEntityRenderer<MillstoneBlockEntity> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "textures/block/millstone.png");
 
     private final BlockEntityRendererProvider.Context context;
@@ -111,7 +110,6 @@ public class MillstoneBlockEntityRender implements BlockEntityRenderer<Millstone
     }
 
 
-    @Override
     public AABB getRenderBoundingBox(MillstoneBlockEntity blockEntity) {
         BlockPos pos = blockEntity.getBlockPos();
         return getAABB(pos.offset(-3, 0, -3), pos.offset(3, 1, 3));
