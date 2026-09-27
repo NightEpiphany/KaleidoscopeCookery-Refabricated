@@ -8,12 +8,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 
-public final class ModEnchantments {
+public interface ModEnchantments {
 
-    public static final Enchantment QUICK_KNIFE = new QuickKnifeEnchantment();
-    public static final Enchantment SWEEP = new SweepEnchantment();
+    Enchantment QUICK_KNIFE = new QuickKnifeEnchantment();
+    Enchantment SWEEP = new SweepEnchantment();
 
-    public static void registerEnchantments() {
+    static void registerEnchantments() {
         Registry.register(BuiltInRegistries.ENCHANTMENT, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "quick_knife"), QUICK_KNIFE);
         Registry.register(BuiltInRegistries.ENCHANTMENT, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "sweep"), SWEEP);
     }
