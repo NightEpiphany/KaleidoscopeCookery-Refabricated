@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModArmorMaterials;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -11,7 +12,7 @@ public class StrawHatItem extends ArmorItem {
     private final boolean hasFlower;
 
     public StrawHatItem(boolean hasFlower) {
-        super(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+        super(ModArmorMaterials.FARMER, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
         this.hasFlower = hasFlower;
     }
 

@@ -11,13 +11,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ChoppingBoardBuilder implements RecipeBuilder {
     private static final String NAME = "chopping_board";
 
     private Ingredient ingredient = Ingredient.EMPTY;
-    private ItemStack result = ItemStack.EMPTY;
+    private List<ItemStack> results = List.of();
     private int cutCount = 3;
     private ResourceLocation modelId;
 
@@ -36,17 +39,22 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
     }
 
     public ChoppingBoardBuilder setResult(ItemStack stack) {
-        this.result = stack;
+        this.results = List.of(stack);
         return this;
     }
 
     public ChoppingBoardBuilder setResult(ItemLike itemLike) {
-        this.result = new ItemStack(itemLike);
+        this.results = List.of(new ItemStack(itemLike));
         return this;
     }
 
     public ChoppingBoardBuilder setResult(ItemLike itemLike, int count) {
-        this.result = new ItemStack(itemLike, count);
+        this.results = List.of(new ItemStack(itemLike, count));
+        return this;
+    }
+
+    public ChoppingBoardBuilder setResults(ItemStack... stacks) {
+        this.results = List.of(stacks);
         return this;
     }
 
@@ -61,18 +69,18 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
     }
 
     @Override
-    public RecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public @NotNull RecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
         return this;
     }
 
     @Override
-    public RecipeBuilder group(@Nullable String groupName) {
+    public @NotNull RecipeBuilder group(@Nullable String groupName) {
         return this;
     }
 
     @Override
-    public Item getResult() {
-        return this.result.getItem();
+    public @NotNull Item getResult() {
+        return this.results.getFirst().getItem();
     }
 
     @Override
@@ -90,7 +98,7 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
 
     @Override
     public void save(RecipeOutput recipeOutput, ResourceLocation id) {
-        ChoppingBoardRecipe recipe = new ChoppingBoardRecipe(this.ingredient, this.result, this.cutCount, this.modelId);
+        ChoppingBoardRecipe recipe = new ChoppingBoardRecipe(this.ingredient, this.results, this.cutCount, this.modelId);
         recipeOutput.accept(id, recipe, null);
     }
 }

@@ -39,7 +39,7 @@ public class ReiChoppingBoardRecipeCategory implements DisplayCategory<DefaultCu
 
     @Override
     public List<Widget> setupDisplay(DefaultCustomDisplay display, Rectangle bounds) {
-        List<Widget> widgets = new ArrayList<>();
+        List<Widget> widgets = new ArrayList<>(3 + display.getOutputEntries().size());
         int startX = bounds.x;
         int startY = bounds.y;
 
@@ -49,10 +49,18 @@ public class ReiChoppingBoardRecipeCategory implements DisplayCategory<DefaultCu
                 .entries(display.getInputEntries().getFirst())
                 .disableBackground()
                 .markInput());
-        widgets.add(Widgets.createSlot(new Point(startX + 128, startY + 30))
-                .entries(display.getOutputEntries().getFirst())
-                .disableBackground()
-                .markOutput());
+        if (!display.getOutputEntries().isEmpty()) {
+            widgets.add(Widgets.createSlot(new Point(startX + 128, startY + 30))
+                    .entries(display.getOutputEntries().getFirst())
+                    .disableBackground()
+                    .markOutput());
+        }
+        int outputStartX = 128 - (display.getOutputEntries().size() - 2) * 12;
+        for (int index = 1; index < display.getOutputEntries().size(); index++) {
+            widgets.add(Widgets.createSlot(new Point(startX + outputStartX + (index - 1) * 24, startY + 54))
+                    .entries(display.getOutputEntries().get(index))
+                    .markOutput());
+        }
 
         return widgets;
     }
@@ -88,7 +96,9 @@ public class ReiChoppingBoardRecipeCategory implements DisplayCategory<DefaultCu
         registry.getRecipeManager().getAllRecipesFor(ModRecipes.CHOPPING_BOARD_RECIPE)
                 .forEach(r -> {
                     List<EntryIngredient> input = ReiUtil.ofIngredients(r.value().getIngredients());
-                    List<EntryIngredient> output = ReiUtil.ofItemStacks(r.value().getResult());
+                    List<EntryIngredient> output = r.value().getResults().stream()
+                            .flatMap(result -> ReiUtil.ofItemStacks(result).stream())
+                            .toList();
 
                     registry.add(new DefaultCustomDisplay(r, input, output) {
                         @Override

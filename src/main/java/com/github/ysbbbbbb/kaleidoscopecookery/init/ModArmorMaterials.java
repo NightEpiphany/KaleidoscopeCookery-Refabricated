@@ -1,8 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.google.common.collect.Maps;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -13,6 +11,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.world.item.ArmorItem.Type.*;
 
@@ -21,12 +20,7 @@ public final class ModArmorMaterials {
             BuiltInRegistries.ARMOR_MATERIAL,
             ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "cookery_farmer"),
             new ArmorMaterial(
-                    Util.make(Maps.newHashMap(), map -> {
-                        map.put(HELMET, 1);
-                        map.put(CHESTPLATE, 4);
-                        map.put(LEGGINGS, 5);
-                        map.put(BOOTS, 2);
-                    }),
+                    Map.of(HELMET, 3, CHESTPLATE, 4, LEGGINGS, 5, BOOTS, 2),
                     12,
                     SoundEvents.ARMOR_EQUIP_LEATHER,
                     () -> Ingredient.of(Items.LEATHER),

@@ -36,7 +36,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -97,7 +96,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     private float liftAngle = 5f;
     private int progress = 0;
 
-    private @Nullable Mob bindEntity;
+    private @Nullable LivingEntity bindEntity;
     private Vec3 offset = Vec3.ZERO;
 
     public MillstoneBlockEntity(BlockPos pos, BlockState state) {
@@ -145,10 +144,10 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         // 服务器端检查实体是否还存在
         if (bindEntity == null) {
             // 必须距离磨盘足够近才可以（5 格）
-            if (serverLevel.getEntity(entityId) instanceof Mob mob
-                && mob.isAlive() && mob.distanceToSqr(center) < maxDistanceSqr
-                && this.canBindEntity(mob)) {
-                this.bindEntity(mob);
+            if (serverLevel.getEntity(entityId) instanceof LivingEntity entity
+                && entity.isAlive() && entity.distanceToSqr(center) < maxDistanceSqr
+                && this.canBindEntity(entity)) {
+                this.bindEntity(entity);
             } else {
                 this.entityId = Util.NIL_UUID;
                 this.cacheRot = 0f;
@@ -159,12 +158,9 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         } else if (!bindEntity.isAlive()
                    || bindEntity.distanceToSqr(center) >= maxDistanceSqr
                    || bindEntity.fallDistance > 0.5f
-                   || bindEntity.isInWall()
-                   || this.saddleEntityIsControlling(bindEntity)) {
-            this.entityId = Util.NIL_UUID;
-            this.bindEntity = null;
+                   || bindEntity.isInWall()) {
+            this.unbindEntity();
             this.cacheRot = rot;
-            this.liftAngle = 0f;
             this.refresh();
             return;
         }
@@ -327,51 +323,47 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         return saddleable.isSaddled() && mob.getControllingPassenger() != null;
     }
 
-    public boolean canBindEntity(Mob mob) {
-        if (!mob.getType().is(TagMod.MILLSTONE_BINDABLE)) {
+    public boolean canBindEntity(LivingEntity entity) {
+        if (entity.getBbHeight() < 1 || entity.getType().is(TagMod.MILLSTONE_BIND_BLACKLIST)) {
             return false;
         }
-        if (mob.getVehicle() != null) {
+        if (entity.getVehicle() != null) {
             // 骑乘的生物不能被绑定
             return false;
         }
-        // 禁止童工！
-        if (mob.isBaby()) {
-            return false;
-        }
-        // 已经被骑乘的生物不能被绑定
-        if (this.saddleEntityIsControlling(mob)) {
-            return false;
-        }
-        // 如果是可驯服生物，必须已经被驯服才行
-        return switch (mob) {
-            case AbstractHorse horse -> horse.isTamed();
-            case TamableAnimal tamableAnimal -> tamableAnimal.isTame();
-            case OwnableEntity ownable -> ownable.getOwnerUUID() != null;
-            default -> true;
-        };
+        return !(entity instanceof Mob mob) || !this.saddleEntityIsControlling(mob);
     }
 
-    public void bindEntity(Mob mob) {
+    public void bindEntity(LivingEntity entity) {
         if (this.level == null || this.level.isClientSide) {
             // 仅在服务器端绑定实体
             return;
         }
-        if (!mob.isAlive()) {
+        if (!entity.isAlive() || !this.canBindEntity(entity)) {
             return;
         }
-        this.entityId = mob.getUUID();
-        this.bindEntity = mob;
+        this.entityId = entity.getUUID();
+        this.bindEntity = entity;
         // 缓存角度纠正
         float rot = this.getRotation(this.level, 0);
         this.cacheRot = fixRot(this.cacheRot - (rot - this.cacheRot));
 
         // 读取数据地图，获取抬升角度
-        MillstoneBindableData data = MillstoneBindableDataReloadListener.INSTANCE.getOrDefault(mob.getType(), MillstoneBindableData.DEFAULT);
+        MillstoneBindableData data = MillstoneBindableDataReloadListener.INSTANCE.getOrDefault(entity.getType(), MillstoneBindableData.DEFAULT);
         this.rotSpeedTick = data.rotSpeedTick();
         this.liftAngle = data.liftAngle();
         this.offset = data.offset();
         this.refresh();
+    }
+
+    public boolean isBoundTo(LivingEntity entity) {
+        return this.bindEntity == entity || this.entityId.equals(entity.getUUID());
+    }
+
+    public void unbindEntity() {
+        this.entityId = Util.NIL_UUID;
+        this.bindEntity = null;
+        this.liftAngle = 0f;
     }
 
     public Optional<RecipeHolder<MillstoneRecipe>> matchRecipe(SimpleInput input, Level level) {

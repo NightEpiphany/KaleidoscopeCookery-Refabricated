@@ -11,7 +11,6 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -41,7 +40,7 @@ public class EmiChoppingBoardRecipe extends BasicEmiRecipe {
         registry.getRecipeManager().getAllRecipesFor(ModRecipes.CHOPPING_BOARD_RECIPE).forEach(recipeHolder -> {
             ChoppingBoardRecipe r = recipeHolder.value();
             List<EmiIngredient> inputs = r.getIngredients().stream().map(EmiIngredient::of).toList();
-            List<EmiStack> outputs = List.of(EmiStack.of(r.getResultItem(RegistryAccess.EMPTY)));
+            List<EmiStack> outputs = r.getResults().stream().map(EmiStack::of).toList();
             registry.addRecipe(new EmiChoppingBoardRecipe(recipeHolder.id(), inputs, outputs));
         });
     }
@@ -52,9 +51,17 @@ public class EmiChoppingBoardRecipe extends BasicEmiRecipe {
 
         widgets.addSlot(inputs.getFirst(), 38, 27)
                 .drawBack(false);
-        widgets.addSlot(outputs.getFirst(), 124, 26)
-                .drawBack(false)
-                .recipeContext(this)
-                .large(true);
+        if (!outputs.isEmpty()) {
+            widgets.addSlot(outputs.getFirst(), 124, 26)
+                    .drawBack(false)
+                    .recipeContext(this)
+                    .large(true);
+        }
+        int startX = 124 - (outputs.size() - 2) * 12;
+        for (int index = 1; index < outputs.size(); index++) {
+            widgets.addSlot(outputs.get(index), startX + (index - 1) * 24, 54)
+                    .recipeContext(this)
+                    .large(true);
+        }
     }
 }

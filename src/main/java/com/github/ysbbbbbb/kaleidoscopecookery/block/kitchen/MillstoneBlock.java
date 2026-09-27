@@ -17,8 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -210,16 +209,15 @@ public class MillstoneBlock extends HorizontalDirectionalBlock implements Entity
     @Override
     public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
         // 每 5 tick 检查一次
-        if (pEntity instanceof Mob mob && !pLevel.isClientSide && pLevel.getGameTime() % 5 == 4) {
+        if (pEntity instanceof LivingEntity entity && !pLevel.isClientSide && pLevel.getGameTime() % 5 == 4) {
             NinePart part = pState.getValue(PART);
             BlockPos centerPos = pPos.subtract(new Vec3i(part.getPosX(), 0, part.getPosY()));
             BlockEntity blockEntity = pLevel.getBlockEntity(centerPos);
-            if (mob.getFirstPassenger() instanceof ServerPlayer player && mob instanceof AbstractHorse horse && horse.isTamed()) {
-                // 检查实体的乘客是不是玩家，如果是，那么给予成就
-                ModTrigger.EVENT.trigger(player, ModEventTriggerType.DRIVE_THE_MILLSTONE);
-            }
-            if (blockEntity instanceof MillstoneBlockEntity millstone && !millstone.hasEntity() && millstone.canBindEntity(mob)) {
-                millstone.bindEntity(mob);
+            if (blockEntity instanceof MillstoneBlockEntity millstone && !millstone.hasEntity() && millstone.canBindEntity(entity)) {
+                millstone.bindEntity(entity);
+                if (entity instanceof OwnableEntity ownable && ownable.getOwner() instanceof ServerPlayer player) {
+                    ModTrigger.EVENT.trigger(player, ModEventTriggerType.DRIVE_THE_MILLSTONE);
+                }
             }
         }
     }

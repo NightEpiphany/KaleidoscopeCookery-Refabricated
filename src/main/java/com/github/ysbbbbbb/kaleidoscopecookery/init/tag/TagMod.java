@@ -145,7 +145,9 @@ public interface TagMod {
     /**
      * 可以拉磨的生物，必须继承自 Mob
      */
+    @Deprecated
     TagKey<EntityType<?>> MILLSTONE_BINDABLE = entityTag("millstone_bindable");
+    TagKey<EntityType<?>> MILLSTONE_BIND_BLACKLIST = entityTag("millstone_bind_blacklist");
     /**
      * 可以促进本模组水稻生长的水生生物
      */

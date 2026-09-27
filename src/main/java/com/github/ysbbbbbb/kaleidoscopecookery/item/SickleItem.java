@@ -4,21 +4,25 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.event.SickleHarvestEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.TeaTreeBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEnchantments;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.SimpleTier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BushBlock;
@@ -68,14 +72,16 @@ public class SickleItem extends SwordItem {
 
         BlockPos pos = context.getClickedPos();
         ItemStack stack = context.getItemInHand();
-        int breakCount = 0;
-        // 搜索方块的 5x5x2 范围内的可收割作物、草丛、灌木等并收割
-        for (int x = -2; x <= 2; x++) {
+        int sweepLevel = Mth.clamp(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT)
+                .getHolder(ModEnchantments.SWEEP)
+                .map(enchantment -> EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack))
+                .orElse(0), 0, 3);
+        int radius = 2 + sweepLevel;
+        // 每级清扫扩大收割半径，最大为 11x11x2。
+        for (int x = -radius; x <= radius; x++) {
             for (int y = 0; y <= 1; y++) {
-                for (int z = -2; z <= 2; z++) {
-                    if (harvest(pos, x, y, z, level, player, stack)) {
-                        breakCount++;
-                    }
+                for (int z = -radius; z <= radius; z++) {
+                    harvest(pos, x, y, z, level, player, stack);
                 }
             }
         }
@@ -85,7 +91,7 @@ public class SickleItem extends SwordItem {
                 SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(),
                 1.0F, 1.0F);
         player.sweepAttack();
-        stack.hurtAndBreak(breakCount, player, EquipmentSlot.MAINHAND);
+        stack.hurtAndBreak(1 << sweepLevel, player, LivingEntity.getSlotForHand(context.getHand()));
         player.getCooldowns().addCooldown(this, 10);
         return InteractionResult.SUCCESS;
     }

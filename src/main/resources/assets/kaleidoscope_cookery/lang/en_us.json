@@ -33,6 +33,11 @@
   "jade.kaleidoscope_cookery.teapot.remaining_time": "Time remaining: %s s",
   "config.jade.plugin_kaleidoscope_cookery.teapot": "Teapot",
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "Bamboo Tray",
+  "enchantment.kaleidoscope_cookery.quick_knife": "Quick Knife",
+  "enchantment.kaleidoscope_cookery.sweep": "Sweep",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Stores food and potions.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "Right-click to eat.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Consumes food until your hunger is full.",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "Dry (clear sky): %ss",
