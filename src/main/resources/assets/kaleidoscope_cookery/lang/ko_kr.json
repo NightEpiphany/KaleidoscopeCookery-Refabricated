@@ -33,6 +33,8 @@
   "jade.kaleidoscope_cookery.teapot.remaining_time": "남은 시간: %s초",
   "config.jade.plugin_kaleidoscope_cookery.teapot": "티팟",
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "대나무 쟁반",
+  "enchantment.kaleidoscope_cookery.quick_knife": "빠른 칼",
+  "enchantment.kaleidoscope_cookery.sweep": "청소하다",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "음식과 물약을 보관합니다.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "우클릭하여 먹습니다.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "허기가 가득 찰 때까지 음식을 먹습니다.",
