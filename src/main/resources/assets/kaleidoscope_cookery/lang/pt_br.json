@@ -33,6 +33,9 @@
   "jade.kaleidoscope_cookery.teapot.remaining_time": "Tempo restante: %s s",
   "config.jade.plugin_kaleidoscope_cookery.teapot": "Bule de Chá",
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "Bandeja de Bambu",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Armazena comida e poções.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "Clique com o botão direito para comer.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Consuma comida até ficar satisfeito.",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "Seco (céu limpo): %ss",

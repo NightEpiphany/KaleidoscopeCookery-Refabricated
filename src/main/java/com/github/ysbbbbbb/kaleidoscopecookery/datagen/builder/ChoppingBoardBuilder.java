@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,15 +16,17 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ChoppingBoardBuilder implements RecipeBuilder {
     private static final String NAME = "chopping_board";
 
     private Ingredient ingredient = Ingredient.EMPTY;
-    private ItemStack result = ItemStack.EMPTY;
+    private List<ItemStack> results = List.of();
     private int cutCount = 3;
     private ResourceLocation modelId;
 
@@ -42,17 +45,22 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
     }
 
     public ChoppingBoardBuilder setResult(ItemStack stack) {
-        this.result = stack;
+        this.results = List.of(stack);
         return this;
     }
 
     public ChoppingBoardBuilder setResult(ItemLike itemLike) {
-        this.result = new ItemStack(itemLike);
+        this.results = List.of(new ItemStack(itemLike));
         return this;
     }
 
     public ChoppingBoardBuilder setResult(ItemLike itemLike, int count) {
-        this.result = new ItemStack(itemLike, count);
+        this.results = List.of(new ItemStack(itemLike, count));
+        return this;
+    }
+
+    public ChoppingBoardBuilder setResults(ItemStack... stacks) {
+        this.results = List.of(stacks);
         return this;
     }
 
@@ -67,49 +75,49 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
     }
 
     @Override
-    public RecipeBuilder unlockedBy(String criterionName, CriterionTriggerInstance criterionTrigger) {
+    public @NonNull RecipeBuilder unlockedBy(@NonNull String criterionName, @NonNull CriterionTriggerInstance criterionTrigger) {
         return this;
     }
 
     @Override
-    public RecipeBuilder group(@Nullable String groupName) {
+    public @NonNull RecipeBuilder group(@Nullable String groupName) {
         return this;
     }
 
     @Override
-    public Item getResult() {
-        return this.result.getItem();
+    public @NonNull Item getResult() {
+        return this.results.get(0).getItem();
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> output) {
+    public void save(@NonNull Consumer<FinishedRecipe> output) {
         String path = RecipeBuilder.getDefaultRecipeId(this.getResult()).getPath();
         ResourceLocation filePath = new ResourceLocation(KaleidoscopeCookery.MOD_ID, NAME + "/" + path);
         this.save(output, filePath);
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> output, String recipeId) {
+    public void save(@NonNull Consumer<FinishedRecipe> output, @NonNull String recipeId) {
         ResourceLocation filePath = new ResourceLocation(KaleidoscopeCookery.MOD_ID, NAME + "/" + recipeId);
         this.save(output, filePath);
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
-        recipeOutput.accept(new ChoppingBoardRecipe(id, this.ingredient, this.result, this.cutCount, this.modelId));
+    public void save(Consumer<FinishedRecipe> recipeOutput, @NonNull ResourceLocation id) {
+        recipeOutput.accept(new ChoppingBoardRecipe(id, this.ingredient, this.results, this.cutCount, this.modelId));
     }
 
     public static class ChoppingBoardRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final Ingredient ingredient;
-        private final ItemStack result;
+        private final List<ItemStack> results;
         private final int cutCount;
         private final ResourceLocation modelId;
 
-        public ChoppingBoardRecipe(ResourceLocation id, Ingredient ingredient, ItemStack result, int cutCount, ResourceLocation modelId) {
+        public ChoppingBoardRecipe(ResourceLocation id, Ingredient ingredient, List<ItemStack> results, int cutCount, ResourceLocation modelId) {
             this.id = id;
             this.ingredient = ingredient;
-            this.result = result;
+            this.results = results;
             this.cutCount = cutCount;
             this.modelId = modelId;
         }
@@ -117,23 +125,27 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
         @Override
         public void serializeRecipeData(JsonObject json) {
             json.add("ingredient", this.ingredient.toJson());
-            JsonObject itemJson = new JsonObject();
-            itemJson.addProperty("item", Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(this.result.getItem())).toString());
-            if (this.result.getCount() > 1) {
-                itemJson.addProperty("count", this.result.getCount());
+            JsonArray resultArray = new JsonArray();
+            for (ItemStack result : this.results) {
+                JsonObject itemJson = new JsonObject();
+                itemJson.addProperty("item", Objects.requireNonNull( BuiltInRegistries.ITEM.getKey(result.getItem())).toString());
+                if (result.getCount() > 1) {
+                    itemJson.addProperty("count", result.getCount());
+                }
+                resultArray.add(itemJson);
             }
-            json.add("result", itemJson);
+            json.add("result", resultArray);
             json.addProperty("cut_count", this.cutCount);
             json.addProperty("model_id", this.modelId.toString());
         }
 
         @Override
-        public ResourceLocation getId() {
+        public @NonNull ResourceLocation getId() {
             return this.id;
         }
 
         @Override
-        public RecipeSerializer<?> getType() {
+        public @NonNull RecipeSerializer<?> getType() {
             return ModRecipes.CHOPPING_BOARD_SERIALIZER;
         }
 

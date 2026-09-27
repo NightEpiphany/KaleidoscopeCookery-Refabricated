@@ -16,8 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -46,6 +45,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -212,18 +212,19 @@ public class MillstoneBlock extends HorizontalDirectionalBlock implements Entity
     }
 
     @Override
-    public void stepOn(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @NotNull Entity pEntity) {
+    public void stepOn(@NonNull Level level, @NonNull BlockPos pos, @NonNull BlockState state, @NonNull Entity entity) {
         // 每 5 tick 检查一次
-        if (pEntity instanceof Mob mob && !pLevel.isClientSide && pLevel.getGameTime() % 5 == 4) {
-            NinePart part = pState.getValue(PART);
-            BlockPos centerPos = pPos.subtract(new Vec3i(part.getPosX(), 0, part.getPosY()));
-            BlockEntity blockEntity = pLevel.getBlockEntity(centerPos);
-            if (mob.getFirstPassenger() instanceof ServerPlayer player && mob instanceof AbstractHorse horse && horse.isTamed()) {
-                ModTrigger.EVENT.trigger(player, ModEventTriggerType.DRIVE_THE_MILLSTONE);
-            }
-            // 检查实体的乘客是不是玩家，如果是，那么给予成就
-            if (blockEntity instanceof MillstoneBlockEntity millstone && !millstone.hasEntity() && millstone.canBindEntity(mob)) {
-                millstone.bindEntity(mob);
+        if (entity instanceof LivingEntity livingEntity && !level.isClientSide && level.getGameTime() % 5 == 4) {
+            NinePart part = state.getValue(PART);
+            BlockPos centerPos = pos.subtract(new Vec3i(part.getPosX(), 0, part.getPosY()));
+            BlockEntity blockEntity = level.getBlockEntity(centerPos);
+            if (blockEntity instanceof MillstoneBlockEntity millstone && !millstone.hasEntity()
+                    && millstone.canBindEntity(livingEntity)) {
+                millstone.bindEntity(livingEntity);
+                // 检查实体是否有主人，有那么尝试寻找主人给予成就
+                if (livingEntity instanceof OwnableEntity ownable && ownable.getOwner() instanceof ServerPlayer player) {
+                    ModTrigger.EVENT.trigger(player, ModEventTriggerType.DRIVE_THE_MILLSTONE);
+                }
             }
         }
     }

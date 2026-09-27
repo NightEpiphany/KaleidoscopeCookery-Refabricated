@@ -37,11 +37,18 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -56,9 +63,77 @@ public class CookeryGameTests implements FabricGameTest {
     private static final BlockPos POT = new BlockPos(1, 1, 1);
 
     @GameTest(template = EMPTY_STRUCTURE)
+    public void customEnchantmentsRestrictSurvivalAnvilTargets(GameTestHelper helper) {
+        Player player = helper.makeMockSurvivalPlayer();
+        player.getAbilities().instabuild = false;
+        player.experienceLevel = 100;
+        for (Item knife : new Item[]{ModItems.IRON_KITCHEN_KNIFE, ModItems.GOLD_KITCHEN_KNIFE,
+                ModItems.DIAMOND_KITCHEN_KNIFE, ModItems.NETHERITE_KITCHEN_KNIFE}) {
+            assertAnvilEnchantment(helper, player, knife, ModEnchantments.QUICK_KNIFE, true);
+            assertAnvilEnchantment(helper, player, knife, ModEnchantments.SWEEP, false);
+        }
+        assertAnvilEnchantment(helper, player, ModItems.SICKLE, ModEnchantments.QUICK_KNIFE, false);
+        assertAnvilEnchantment(helper, player, ModItems.SICKLE, ModEnchantments.SWEEP, true);
+        assertAnvilEnchantment(helper, player, Items.IRON_SWORD, ModEnchantments.QUICK_KNIFE, false);
+        assertAnvilEnchantment(helper, player, Items.IRON_SWORD, ModEnchantments.SWEEP, false);
+        assertAnvilEnchantment(helper, player, Items.ENCHANTED_BOOK, ModEnchantments.QUICK_KNIFE, true);
+        assertAnvilEnchantment(helper, player, Items.ENCHANTED_BOOK, ModEnchantments.SWEEP, true);
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void creativeAnvilBypassesCustomEnchantmentTargetChecks(GameTestHelper helper) {
+        Player player = helper.makeMockPlayer();
+        player.getAbilities().instabuild = true;
+        helper.assertTrue(!ModEnchantments.QUICK_KNIFE.canEnchant(new ItemStack(ModItems.SICKLE)),
+                "Quick Knife's target predicate must reject sickles");
+        helper.assertTrue(!ModEnchantments.SWEEP.canEnchant(new ItemStack(ModItems.IRON_KITCHEN_KNIFE)),
+                "Sweep's target predicate must reject kitchen knives");
+        assertAnvilEnchantment(helper, player, ModItems.SICKLE, ModEnchantments.QUICK_KNIFE, true);
+        assertAnvilEnchantment(helper, player, ModItems.IRON_KITCHEN_KNIFE, ModEnchantments.SWEEP, true);
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void customEnchantmentsRestrictEnchantingTableCandidates(GameTestHelper helper) {
+        for (Item item : new Item[]{ModItems.IRON_KITCHEN_KNIFE, ModItems.GOLD_KITCHEN_KNIFE,
+                ModItems.DIAMOND_KITCHEN_KNIFE, ModItems.NETHERITE_KITCHEN_KNIFE,
+                ModItems.SICKLE, Items.IRON_SWORD, Items.IRON_PICKAXE, Items.BOOK}) {
+            ItemStack stack = new ItemStack(item);
+            for (Enchantment enchantment : new Enchantment[]{ModEnchantments.QUICK_KNIFE, ModEnchantments.SWEEP}) {
+                for (int level = enchantment.getMinLevel(); level <= enchantment.getMaxLevel(); level++) {
+                    boolean offered = EnchantmentHelper.getAvailableEnchantmentResults(enchantment.getMinCost(level), stack, false)
+                            .stream().anyMatch(candidate -> candidate.enchantment == enchantment);
+                    helper.assertTrue(offered == (stack.is(Items.BOOK) || enchantment.canEnchant(stack)),
+                            "Enchanting table must honor custom targets: " + enchantment.getDescriptionId() + " on " + item);
+                }
+            }
+        }
+        helper.succeed();
+    }
+
+    private static void assertAnvilEnchantment(GameTestHelper helper, Player player, Item target,
+                                               Enchantment enchantment, boolean allowed) {
+        AnvilMenu menu = new AnvilMenu(0, player.getInventory());
+        menu.getSlot(AnvilMenu.INPUT_SLOT).set(new ItemStack(target));
+        menu.getSlot(AnvilMenu.ADDITIONAL_SLOT).set(
+                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, enchantment.getMaxLevel())));
+        menu.createResult();
+        ItemStack output = menu.getSlot(AnvilMenu.RESULT_SLOT).getItem();
+        helper.assertTrue(output.isEmpty() != allowed,
+                "Unexpected anvil result: " + enchantment.getDescriptionId() + " on " + target);
+        if (allowed) {
+            helper.assertTrue(EnchantmentHelper.getEnchantments(output).getOrDefault(enchantment, 0) == enchantment.getMaxLevel(),
+                    "Anvil output must contain the requested enchantment");
+            helper.assertTrue(menu.getSlot(AnvilMenu.RESULT_SLOT).mayPickup(player), "Player must be able to take the anvil output");
+        }
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
     public void lunchBagSupportsFullHungerAndCannotContainItself(GameTestHelper helper) {
         Player player = helper.makeMockSurvivalPlayer();
         player.getFoodData().setFoodLevel(20);
+        player.getFoodData().setSaturation(0);
         ItemStack bag = new ItemStack(ModItems.TRANSMUTATION_LUNCH_BAG);
         ItemStackHandler items = new ItemStackHandler(16);
         items.setStackInSlot(0, new ItemStack(Items.APPLE, 2));
@@ -71,7 +146,77 @@ public class CookeryGameTests implements FabricGameTest {
         bag.finishUsingItem(helper.getLevel(), player);
         helper.assertTrue(TransmutationLunchBagItem.getItems(bag).getStackInSlot(0).getCount() == 1,
                 "Using the bag must consume one contained apple");
+        helper.assertTrue(player.getFoodData().getFoodLevel() == 20 && player.getFoodData().getSaturationLevel() > 0,
+                "Eating at full hunger must restore saturation without exceeding full hunger");
         helper.assertTrue(!TransmutationLunchBagItem.canAdd(bag), "Food metadata must not enable nesting lunch bags");
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void lunchBagGrantsFoodEffectsEvenAtFullSaturation(GameTestHelper helper) {
+        Player player = helper.makeMockSurvivalPlayer();
+        player.getFoodData().setFoodLevel(20);
+        player.getFoodData().setSaturation(20);
+        ItemStack bag = new ItemStack(ModItems.TRANSMUTATION_LUNCH_BAG);
+        ItemStackHandler items = TransmutationLunchBagItem.getItems(bag);
+        items.setStackInSlot(0, new ItemStack(Items.GOLDEN_APPLE, 2));
+        items.setStackInSlot(1, new ItemStack(Items.APPLE, 3));
+        TransmutationLunchBagItem.setItems(bag, items);
+        player.setItemInHand(InteractionHand.MAIN_HAND, bag);
+
+        for (int use = 0; use < 2; use++) {
+            player.removeAllEffects();
+            helper.assertTrue(bag.getItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND).getResult().consumesAction(),
+                    "Full hunger and saturation must not prevent repeated use");
+            helper.assertTrue(bag.finishUsingItem(helper.getLevel(), player) == bag, "Eating must retain the lunch bag");
+            player.stopUsingItem();
+            items = TransmutationLunchBagItem.getItems(bag);
+            helper.assertTrue(items.getStackInSlot(0).getCount() == 1 - use, "Each use must consume exactly one food");
+            helper.assertTrue(items.getStackInSlot(1).getCount() == 3, "Full hunger must not consume food from later slots");
+            helper.assertTrue(player.hasEffect(MobEffects.REGENERATION) && player.hasEffect(MobEffects.ABSORPTION),
+                    "Contained food must grant its effects even at full hunger and saturation");
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void lunchBagStillFillsHungerAndStopsWhenFull(GameTestHelper helper) {
+        Player player = helper.makeMockSurvivalPlayer();
+        player.getFoodData().setFoodLevel(10);
+        player.getFoodData().setSaturation(0);
+        ItemStack bag = new ItemStack(ModItems.TRANSMUTATION_LUNCH_BAG);
+        ItemStackHandler items = TransmutationLunchBagItem.getItems(bag);
+        items.setStackInSlot(0, new ItemStack(Items.APPLE));
+        items.setStackInSlot(1, new ItemStack(Items.APPLE, 4));
+        TransmutationLunchBagItem.setItems(bag, items);
+
+        bag.finishUsingItem(helper.getLevel(), player);
+        items = TransmutationLunchBagItem.getItems(bag);
+        helper.assertTrue(player.getFoodData().getFoodLevel() == 20, "The bag must keep eating until hunger is full");
+        helper.assertTrue(items.getStackInSlot(0).isEmpty() && items.getStackInSlot(1).getCount() == 2,
+                "Filling ten hunger points must consume three apples across slots and preserve the rest");
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void lunchBagPotionBeforeFoodDoesNotPreventEatingAtFullHunger(GameTestHelper helper) {
+        Player player = helper.makeMockSurvivalPlayer();
+        player.getFoodData().setFoodLevel(20);
+        player.getFoodData().setSaturation(0);
+        ItemStack bag = new ItemStack(ModItems.TRANSMUTATION_LUNCH_BAG);
+        ItemStackHandler items = TransmutationLunchBagItem.getItems(bag);
+        items.setStackInSlot(0, PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SWIFTNESS));
+        items.setStackInSlot(1, new ItemStack(Items.APPLE));
+        TransmutationLunchBagItem.setItems(bag, items);
+        player.setItemInHand(InteractionHand.MAIN_HAND, bag);
+
+        bag.finishUsingItem(helper.getLevel(), player);
+        helper.assertTrue(player.hasEffect(MobEffects.MOVEMENT_SPEED), "Potion effects must still apply");
+        helper.assertTrue(player.getInventory().contains(new ItemStack(Items.GLASS_BOTTLE)), "Drinking must return the bottle");
+        helper.assertTrue(player.getFoodData().getSaturationLevel() > 0, "A preceding potion must not skip the first food");
+        helper.assertTrue(!TransmutationLunchBagItem.hasItems(bag), "Consuming the last potion and food must empty the bag");
+        helper.assertTrue(!bag.getItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND).getResult().consumesAction(),
+                "An empty bag must not start another use");
         helper.succeed();
     }
 

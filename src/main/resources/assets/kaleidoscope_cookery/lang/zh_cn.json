@@ -33,6 +33,11 @@
   "jade.kaleidoscope_cookery.teapot.remaining_time": "剩余时间：%s 秒",
   "config.jade.plugin_kaleidoscope_cookery.teapot": "茶壶",
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "竹匾",
+  "enchantment.kaleidoscope_cookery.quick_knife": "快刀手",
+  "enchantment.kaleidoscope_cookery.sweep": "清扫",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "可以收纳食物与药水",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "右键可以直接进食",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "消耗包内的食物直至饱食度回满",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "晒干（晴天露天）：%s 秒",

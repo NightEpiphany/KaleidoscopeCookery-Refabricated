@@ -19,6 +19,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +27,7 @@ import java.util.function.Consumer;
 
 public class StockpotRecipeBuilder implements RecipeBuilder {
     private static final String NAME = "stockpot";
-    private List<Ingredient> ingredients = Lists.newArrayList();
+    private final List<Ingredient> ingredients = Lists.newArrayList();
     private ItemStack result = ItemStack.EMPTY;
     private int time = StockpotRecipeSerializer.DEFAULT_TIME;
     private Ingredient carrier = StockpotRecipeSerializer.DEFAULT_CARRIER;
@@ -117,35 +118,35 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public RecipeBuilder unlockedBy(String criterionName, CriterionTriggerInstance criterionTrigger) {
+    public @NonNull RecipeBuilder unlockedBy(@NonNull String criterionName, @NonNull CriterionTriggerInstance criterionTrigger) {
         return this;
     }
 
     @Override
-    public RecipeBuilder group(@Nullable String groupName) {
+    public @NonNull RecipeBuilder group(@Nullable String groupName) {
         return this;
     }
 
     @Override
-    public Item getResult() {
+    public @NonNull Item getResult() {
         return this.result.getItem();
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> output) {
+    public void save(@NonNull Consumer<FinishedRecipe> output) {
         String path = RecipeBuilder.getDefaultRecipeId(this.getResult()).getPath();
         ResourceLocation filePath = new ResourceLocation(KaleidoscopeCookery.MOD_ID, NAME + "/" + path);
         this.save(output, filePath);
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> output, String recipeId) {
+    public void save(@NonNull Consumer<FinishedRecipe> output, @NonNull String recipeId) {
         ResourceLocation filePath = new ResourceLocation(KaleidoscopeCookery.MOD_ID, NAME + "/" + recipeId);
         this.save(output, filePath);
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> recipeOutput, @NonNull ResourceLocation id) {
         recipeOutput.accept(new StockpotFinishedRecipe(id, this.ingredients, this.soupBase, this.result,
                 this.time, this.carrier, this.cookingTexture, this.finishedTexture, this.cookingBubbleColor, this.finishedBubbleColor));
     }
@@ -201,12 +202,12 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
         }
 
         @Override
-        public ResourceLocation getId() {
+        public @NonNull ResourceLocation getId() {
             return this.id;
         }
 
         @Override
-        public RecipeSerializer<?> getType() {
+        public @NonNull RecipeSerializer<?> getType() {
             return ModRecipes.STOCKPOT_SERIALIZER;
         }
 

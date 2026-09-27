@@ -21,8 +21,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -54,26 +54,35 @@ public class ChoppingBoardRecipeCategory implements IRecipeCategory<ChoppingBoar
     }
 
     @Override
-    public void draw(@NotNull ChoppingBoardRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(@NonNull ChoppingBoardRecipe recipe, @NonNull IRecipeSlotsView recipeSlotsView, @NonNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
         this.bgDraw.draw(guiGraphics);
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, ChoppingBoardRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, ChoppingBoardRecipe recipe, @NonNull IFocusGroup focuses) {
         Ingredient input = recipe.getIngredient();
-        ItemStack output = recipe.getResult();
 
         builder.addSlot(RecipeIngredientRole.INPUT, 38, 27).addIngredients(input);
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 30).addItemStack(output);
+        List<ItemStack> outputs = recipe.getResults();
+        if (!outputs.isEmpty()) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 30).addItemStack(outputs.get(0));
+        }
+        int additionalCount = outputs.size() - 1;
+        int startX = 128 - (additionalCount - 1) * 12;
+        for (int index = 1; index < outputs.size(); index++) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, startX + (index - 1) * 24, 54)
+                    .setStandardSlotBackground()
+                    .addItemStack(outputs.get(index));
+        }
     }
 
     @Override
-    public @NotNull RecipeType<ChoppingBoardRecipe> getRecipeType() {
+    public @NonNull RecipeType<ChoppingBoardRecipe> getRecipeType() {
         return TYPE;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public @NonNull Component getTitle() {
         return TITLE;
     }
 

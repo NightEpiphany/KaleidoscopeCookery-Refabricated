@@ -9,7 +9,7 @@ import dev.latvian.mods.kubejs.recipe.component.StringComponent;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 
 public interface ChoppingBoardRecipeSchema {
-    RecipeKey<OutputItem> OUTPUT = ItemComponents.OUTPUT.key("result");
+    RecipeKey<?> OUTPUT = ItemComponents.OUTPUT.or(ItemComponents.OUTPUT_ARRAY).key("result");
     RecipeKey<InputItem> INGREDIENT = ItemComponents.INPUT.key("ingredient");
     RecipeKey<String> MODEL_ID = StringComponent.ID.key("model_id");
     RecipeKey<Integer> CUT_COUNT = NumberComponent.INT.key("cut_count").optional(4);

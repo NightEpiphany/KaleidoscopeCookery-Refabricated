@@ -18,6 +18,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,7 @@ public class PotRecipeBuilder implements RecipeBuilder {
     private int time = 200;
     private int stirFryCount = 3;
     private Ingredient carrier = Ingredient.EMPTY;
-    private List<Ingredient> ingredients = Lists.newArrayList();
+    private final List<Ingredient> ingredients = Lists.newArrayList();
     private ItemStack result = ItemStack.EMPTY;
 
     public static PotRecipeBuilder builder() {
@@ -102,35 +103,35 @@ public class PotRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public RecipeBuilder unlockedBy(String criterionName, CriterionTriggerInstance criterionTrigger) {
+    public @NonNull RecipeBuilder unlockedBy(@NonNull String criterionName, @NonNull CriterionTriggerInstance criterionTrigger) {
         return this;
     }
 
     @Override
-    public RecipeBuilder group(@Nullable String groupName) {
+    public @NonNull RecipeBuilder group(@Nullable String groupName) {
         return this;
     }
 
     @Override
-    public Item getResult() {
+    public @NonNull Item getResult() {
         return this.result.getItem();
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> output) {
+    public void save(@NonNull Consumer<FinishedRecipe> output) {
         String path = RecipeBuilder.getDefaultRecipeId(this.getResult()).getPath();
         ResourceLocation filePath = new ResourceLocation(KaleidoscopeCookery.MOD_ID, NAME + "/" + path);
         this.save(output, filePath);
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> output, String recipeId) {
+    public void save(@NonNull Consumer<FinishedRecipe> output, @NonNull String recipeId) {
         ResourceLocation filePath = new ResourceLocation(KaleidoscopeCookery.MOD_ID, NAME + "/" + recipeId);
         this.save(output, filePath);
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> recipeOutput, @NonNull ResourceLocation id) {
         recipeOutput.accept(new PotFinishedRecipe(id, this.time, this.stirFryCount, this.carrier, this.ingredients, this.result));
     }
 
@@ -172,12 +173,12 @@ public class PotRecipeBuilder implements RecipeBuilder {
         }
 
         @Override
-        public ResourceLocation getId() {
+        public @NonNull ResourceLocation getId() {
             return this.id;
         }
 
         @Override
-        public RecipeSerializer<?> getType() {
+        public @NonNull RecipeSerializer<?> getType() {
             return ModRecipes.POT_SERIALIZER;
         }
 

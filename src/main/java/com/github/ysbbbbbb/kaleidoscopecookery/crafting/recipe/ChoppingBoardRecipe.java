@@ -10,14 +10,23 @@ import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class ChoppingBoardRecipe extends SingleItemRecipe {
     private final int cutCount;
     private final ResourceLocation modelId;
+    private final List<ItemStack> results;
 
-    public ChoppingBoardRecipe(ResourceLocation id, Ingredient ingredient, ItemStack result, int cutCount, ResourceLocation modelId) {
-        super(ModRecipes.CHOPPING_BOARD_RECIPE, ModRecipes.CHOPPING_BOARD_SERIALIZER, id, StringUtils.EMPTY, ingredient, result);
+    public ChoppingBoardRecipe(ResourceLocation id, Ingredient ingredient, List<ItemStack> results, int cutCount, ResourceLocation modelId) {
+        super(ModRecipes.CHOPPING_BOARD_RECIPE, ModRecipes.CHOPPING_BOARD_SERIALIZER, id, StringUtils.EMPTY, ingredient,
+                results.isEmpty() ? ItemStack.EMPTY : results.get(0));
         this.cutCount = Math.max(cutCount, 1);
         this.modelId = modelId;
+        this.results = results.stream().map(ItemStack::copy).toList();
+    }
+
+    public List<ItemStack> getResults() {
+        return results;
     }
 
     @Override

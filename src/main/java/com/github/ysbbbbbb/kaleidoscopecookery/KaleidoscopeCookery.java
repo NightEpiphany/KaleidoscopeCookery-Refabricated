@@ -37,6 +37,7 @@ public final class KaleidoscopeCookery implements ModInitializer {
         ModLootModifier.registerLootModifiers();
         ModTrades.registerTrades();
         ModSoupBases.registerSoupBases();
+        ModEnchantments.registerEnchantments();
         // 注册额外的战利品表事件
         ExtraLootTableDrop.register();
         // 木材兼容

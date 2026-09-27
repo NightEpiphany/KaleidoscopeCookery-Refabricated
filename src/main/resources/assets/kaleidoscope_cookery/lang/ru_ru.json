@@ -33,6 +33,9 @@
   "jade.kaleidoscope_cookery.teapot.remaining_time": "Осталось: %s с",
   "config.jade.plugin_kaleidoscope_cookery.teapot": "Чайник",
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "Бамбуковый поднос",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Хранит еду и зелья.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "ПКМ — использовать.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Еда расходуется до полного насыщения.",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "Сухой (солнечный день): %ss",

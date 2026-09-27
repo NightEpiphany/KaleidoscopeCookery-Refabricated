@@ -33,6 +33,9 @@
   "jade.kaleidoscope_cookery.teapot.remaining_time": "残り時間：%s 秒",
   "config.jade.plugin_kaleidoscope_cookery.teapot": "ティーポット",
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "竹の札",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "食べ物とポーションを収納します。",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "右クリックで食べられます。",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "満腹になるまで食べ物を消費します。",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "乾いた （晴れ）: %ss",
