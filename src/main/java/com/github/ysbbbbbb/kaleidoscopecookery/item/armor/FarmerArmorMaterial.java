@@ -6,6 +6,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jspecify.annotations.NonNull;
 
 public class FarmerArmorMaterial implements ArmorMaterial {
     public static final ArmorMaterial INSTANCE = new FarmerArmorMaterial();
@@ -39,17 +40,17 @@ public class FarmerArmorMaterial implements ArmorMaterial {
     }
 
     @Override
-    public SoundEvent getEquipSound() {
+    public @NonNull SoundEvent getEquipSound() {
         return SoundEvents.ARMOR_EQUIP_LEATHER;
     }
 
     @Override
-    public Ingredient getRepairIngredient() {
+    public @NonNull Ingredient getRepairIngredient() {
         return Ingredient.of(Items.LEATHER);
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "cookery_farmer";
     }
 
