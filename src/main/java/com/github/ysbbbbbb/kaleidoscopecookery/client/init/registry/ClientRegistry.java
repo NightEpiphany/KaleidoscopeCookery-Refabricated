@@ -6,6 +6,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.event.FlatulenceEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.PotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.TipOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TrashcanOverlayEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.ColdCutHamSlicesModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.MillstoneModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.TeapotModel;
@@ -18,21 +19,31 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.render.item.StrawHatArmorR
 import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplacerReloadListener;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.ponder.init.PonderCompat;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.trinkets.init.TrinketsCompactClient;
+import com.github.ysbbbbbb.kaleidoscopecookery.config.ClientConfig;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFluids;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.*;
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraftforge.fml.config.ModConfig;
+
+import static com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery.MOD_ID;
 
 @Environment(EnvType.CLIENT)
 public final class ClientRegistry {
     public static void init() {
+        ForgeConfigRegistry.INSTANCE.register(MOD_ID, ModConfig.Type.CLIENT, ClientConfig.init());
         // 注册盔甲渲染器
         ArmorRenderer.register(new StrawHatArmorRenderer(), ModItems.STRAW_HAT, ModItems.STRAW_HAT_FLOWER);
         modCompatClient();
@@ -40,6 +51,22 @@ public final class ClientRegistry {
         registerClientEvents();
         registerBlockEntityRenderers();
         registerResourceReloadListeners();
+        ModModelLoading.register();
+        ModClientTooltip.register();
+        ModEntitiesRender.register();
+        ModFluidRenderers.register();
+        ModParticleFactoryRegistry.register();
+        ModBlockRenderLayerMap.register();
+        ModFluids.registerFluidRenderers();
+
+        FabricLoader
+                .getInstance()
+                .getModContainer(MOD_ID)
+                .ifPresent(container -> ResourceManagerHelper.registerBuiltinResourcePack(
+                        new ResourceLocation("kc", "kaleidoscope_classic_texture"),
+                        container,
+                        ResourcePackActivationType.NORMAL
+                ));
     }
 
     private static void registerItemProperties() {

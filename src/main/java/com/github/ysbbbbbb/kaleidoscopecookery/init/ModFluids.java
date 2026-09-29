@@ -2,6 +2,12 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.MilkFluid;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -10,18 +16,23 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.Optional;
 
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings("all")
 public final class ModFluids {
     public static final ResourceLocation MILK_ID = new ResourceLocation("minecraft", "milk");
 
@@ -59,5 +70,40 @@ public final class ModFluids {
     public static boolean matchesTeaFluid(ResourceLocation expected, ResourceLocation actual) {
         return expected.equals(actual) || (MILK_ID.equals(expected)
                 && BuiltInRegistries.FLUID.get(actual).getBucket() == Items.MILK_BUCKET);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void registerFluidRenderers() {
+        Fluid milk = BuiltInRegistries.FLUID.getOptional(MILK_ID)
+                .orElseThrow(() ->
+                        new IllegalStateException("Milk fluid was not initialized"));
+        registerSingleStateRender(milk, "block/milk_still", 0xFFFFFFFF);
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static void registerSingleStateRender(Fluid still, String stillTexture, int color) {
+        ResourceLocation stillId = id(stillTexture);
+        FluidRenderHandlerRegistry.INSTANCE.register(still, still, new SimpleFluidRenderHandler(stillId, stillId, stillId, color));
+        registration(still, color, stillId);
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static void registration(Fluid fluid, int color, ResourceLocation stillId) {
+        FluidVariantRendering.register(fluid, new FluidVariantRenderHandler() {
+            @Override
+            public TextureAtlasSprite[] getSprites(FluidVariant fluidVariant) {
+                TextureAtlasSprite stillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(stillId);
+                return new TextureAtlasSprite[]{stillSprite, stillSprite};
+            }
+
+            @Override
+            public int getColor(FluidVariant fluidVariant, BlockAndTintGetter view, BlockPos pos) {
+                return color;
+            }
+        });
+    }
+
+    private static ResourceLocation id(String path) {
+        return new ResourceLocation(KaleidoscopeCookery.MOD_ID, path);
     }
 }
