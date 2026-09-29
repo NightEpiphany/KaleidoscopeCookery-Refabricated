@@ -3,29 +3,35 @@ package com.github.ysbbbbbb.kaleidoscopecookery.item;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.SickleHarvestEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.TeaTreeBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEnchantments;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
+
+
 
 public class SickleItem extends WithTooltipsItem {
 
@@ -49,14 +55,15 @@ public class SickleItem extends WithTooltipsItem {
 
         BlockPos pos = context.getClickedPos();
         ItemStack stack = context.getItemInHand();
-        int breakCount = 0;
-        // 搜索方块的 5x5x2 范围内的可收割作物、草丛、灌木等并收割
-        for (int x = -2; x <= 2; x++) {
+        int sweepLevel = Mth.clamp(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+                .get(ModEnchantments.SWEEP)
+                .map(enchantment -> EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack)).orElse(0), 0, 3);
+        int radius = 2 + sweepLevel;
+        // 默认 5x5x2，每级清扫扩大半径，最大 11x11x2。
+        for (int x = -radius; x <= radius; x++) {
             for (int y = 0; y <= 1; y++) {
-                for (int z = -2; z <= 2; z++) {
-                    if (harvest(pos, x, y, z, serverLevel, player, stack)) {
-                        breakCount++;
-                    }
+                for (int z = -radius; z <= radius; z++) {
+                    harvest(pos, x, y, z, serverLevel, player, stack);
                 }
             }
         }
@@ -70,7 +77,7 @@ public class SickleItem extends WithTooltipsItem {
         if (player.level() instanceof ServerLevel) {
             ((ServerLevel)player.level()).sendParticles(ParticleTypes.SWEEP_ATTACK, player.getX() + d, player.getY(0.5), player.getZ() + e, 0, d, 0.0, e, 0.0);
         }
-        stack.hurtAndBreak(breakCount, player, EquipmentSlot.MAINHAND);
+        stack.hurtAndBreak(1 << sweepLevel, player, context.getHand() == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         player.getCooldowns().addCooldown(stack, 10);
         return InteractionResult.SUCCESS;
     }

@@ -13,6 +13,11 @@ import java.util.List;
 
 public class ChoppingBoardViewType implements ReliableClientRecipeType {
     public static final ChoppingBoardViewType INSTANCE = new ChoppingBoardViewType();
+    private int outputSlots = 2;
+
+    void includeOutputs(int count) {
+        outputSlots = Math.max(outputSlots, count);
+    }
 
     private ChoppingBoardViewType() {
     }
@@ -29,7 +34,7 @@ public class ChoppingBoardViewType implements ReliableClientRecipeType {
 
     @Override
     public int getDisplayHeight() {
-        return 58;
+        return 58 + ((outputSlots - 1) / 2) * 20;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class ChoppingBoardViewType implements ReliableClientRecipeType {
 
     @Override
     public int getSlotCount() {
-        return 3;
+        return 2 + outputSlots;
     }
 
     @Override
@@ -47,6 +52,9 @@ public class ChoppingBoardViewType implements ReliableClientRecipeType {
         slotDefinition.addItemSlot(0, 16, 8);
         slotDefinition.addItemSlot(1, 48, 8);
         slotDefinition.addItemSlot(2, 75, 20);
+        for (int i = 1; i < outputSlots; i++) {
+            slotDefinition.addItemSlot(2 + i, 75 + (i % 2) * 20, 38 + ((i - 1) / 2) * 20);
+        }
     }
 
     @Override

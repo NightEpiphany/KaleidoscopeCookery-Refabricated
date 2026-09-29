@@ -43,7 +43,7 @@ public class ModRRVPlugin implements ReliableRecipeViewerClientPlugin {
     private static void addChoppingBoardRecipes(List<ReliableClientRecipe> recipeList) {
         ClientRecipeManager.INSTANCE.getRecipesForType(ModRecipes.CHOPPING_BOARD_RECIPE).forEach(holder -> {
             var recipe = holder.value();
-            recipeList.add(new ChoppingBoardViewRecipe(holder.id().identifier(), recipe.getIngredient(), recipe.getResult()));
+            recipeList.add(new ChoppingBoardViewRecipe(holder.id().identifier(), recipe.getIngredient(), recipe.getResults()));
         });
     }
 

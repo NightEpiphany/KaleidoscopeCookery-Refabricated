@@ -20,11 +20,14 @@ import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ChoppingBoardBuilder implements RecipeBuilder {
     private static final String NAME = "chopping_board";
 
     private Ingredient ingredient = Ingredient.of();
-    private ItemStackTemplate result;
+    private List<ItemStackTemplate> results = List.of();
     private int cutCount = 3;
     private Identifier modelId;
 
@@ -43,17 +46,22 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
     }
 
     public ChoppingBoardBuilder setResult(ItemStack stack) {
-        this.result = ItemStackTemplate.fromNonEmptyStack(stack);
+        this.results = List.of(ItemStackTemplate.fromNonEmptyStack(stack));
         return this;
     }
 
     public ChoppingBoardBuilder setResult(ItemLike itemLike) {
-        this.result = new ItemStackTemplate(itemLike.asItem());
+        this.results = List.of(new ItemStackTemplate(itemLike.asItem()));
         return this;
     }
 
     public ChoppingBoardBuilder setResult(ItemLike itemLike, int count) {
-        this.result = new ItemStackTemplate(itemLike.asItem(), count);
+        this.results = List.of(new ItemStackTemplate(itemLike.asItem(), count));
+        return this;
+    }
+
+    public ChoppingBoardBuilder setResults(ItemStack... stacks) {
+        this.results = Arrays.stream(stacks).map(ItemStackTemplate::fromNonEmptyStack).toList();
         return this;
     }
 
@@ -78,7 +86,7 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
     }
 
     public Item getResult() {
-        return this.result.item().value();
+        return this.results.getFirst().item().value();
     }
 
     @Override
@@ -106,7 +114,7 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
 
     @Override
     public void save(RecipeOutput recipeOutput, @NonNull ResourceKey<Recipe<?>> id) {
-        ChoppingBoardRecipe recipe = new ChoppingBoardRecipe(this.ingredient, this.result, this.cutCount, this.modelId);
+        ChoppingBoardRecipe recipe = new ChoppingBoardRecipe(this.ingredient, this.results, this.cutCount, this.modelId);
         recipeOutput.accept(id, recipe, null);
     }
 }
