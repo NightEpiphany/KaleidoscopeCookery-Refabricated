@@ -60,6 +60,11 @@ public class ReiChoppingBoardRecipeCategory implements DisplayCategory<ReiChoppi
                 .disableBackground()
                 .markOutput());
 
+        int outputStartX = 128 - (display.getOutputEntries().size() - 2) * 12;
+        for (int index = 1; index < display.getOutputEntries().size(); index++) {
+            widgets.add(Widgets.createSlot(new Point(startX + outputStartX + (index - 1) * 24, startY + 54))
+                    .entries(display.getOutputEntries().get(index)).markOutput());
+        }
         return widgets;
     }
 
@@ -112,7 +117,7 @@ public class ReiChoppingBoardRecipeCategory implements DisplayCategory<ReiChoppi
         }
 
         public ChoppingBoardRecipeDisplay(RecipeHolder<ChoppingBoardRecipe> holder) {
-            this(holder.id().identifier(), ReiUtil.ofIngredients(holder.value().getIngredient()), ReiUtil.ofItemStacks(holder.value().getResult().create()));
+            this(holder.id().identifier(), ReiUtil.ofIngredients(holder.value().getIngredient()), holder.value().getResults().stream().flatMap(result -> ReiUtil.ofItemStacks(result.create()).stream()).toList());
         }
 
 

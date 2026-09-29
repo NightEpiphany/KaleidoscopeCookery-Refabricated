@@ -4,7 +4,7 @@
   "ingredient": "minecraft:cooked_cod",
   "model_id": "kaleidoscope_cookery:cooked_cod",
   "result": {
-    "count": 2,
+    "count": 3,
     "id": "minecraft:bone"
   }
 }

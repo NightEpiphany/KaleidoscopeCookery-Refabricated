@@ -17,7 +17,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
@@ -43,10 +42,15 @@ public class ChoppingBoardRecipeCategory implements IRecipeCategory<RecipeHolder
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ChoppingBoardRecipe> recipe, @NonNull IFocusGroup focuses) {
         Ingredient input = recipe.value().getIngredient();
-        ItemStack output = recipe.value().getResult().create();
+        var outputs = recipe.value().getResults();
 
         builder.addSlot(RecipeIngredientRole.INPUT, 38, 27).add(input);
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 30).add(output);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 30).add(outputs.getFirst().create());
+        int startX = 128 - (outputs.size() - 2) * 12;
+        for (int index = 1; index < outputs.size(); index++) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, startX + (index - 1) * 24, 54)
+                    .setStandardSlotBackground().add(outputs.get(index).create());
+        }
     }
 
     @Override

@@ -143,8 +143,13 @@ public interface TagMod {
      */
     TagKey<EntityType<?>> PIG_OIL_SOURCE = entityTag("pig_oil_source");
     /**
+     * 拉磨生物的黑名单，必须继承自 Mob
+     */
+    TagKey<EntityType<?>> MILLSTONE_BIND_BLACKLIST = entityTag("millstone_bind_blacklist");
+    /**
      * 可以拉磨的生物，必须继承自 Mob
      */
+    @Deprecated
     TagKey<EntityType<?>> MILLSTONE_BINDABLE = entityTag("millstone_bindable");
     /**
      * 可以促进本模组水稻生长的水生生物

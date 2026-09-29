@@ -36,25 +36,25 @@ public class FoodEffectGameTest {
     }
 
     @GameTest
-    public void lunchBagConsumesOnlyTheFirstStoredFood(GameTestHelper helper) {
+    public void lunchBagConsumesFoodInOrderUntilFull(GameTestHelper helper) {
         var player = helper.makeMockServerPlayerInLevel();
         player.getFoodData().setFoodLevel(0);
 
         ItemStackHandler contents = new ItemStackHandler(16);
         contents.setStackInSlot(0, new ItemStack(net.minecraft.world.item.Items.APPLE, 2));
-        contents.setStackInSlot(1, new ItemStack(net.minecraft.world.item.Items.BREAD, 2));
+        contents.setStackInSlot(1, new ItemStack(net.minecraft.world.item.Items.BREAD, 4));
         ItemStack bag = ModItems.TRANSMUTATION_LUNCH_BAG.getDefaultInstance();
         TransmutationLunchBagItem.setItems(bag, contents);
 
         bag.finishUsingItem(helper.getLevel(), player);
 
-        helper.assertTrue(player.getFoodData().getFoodLevel() == 4,
-                Component.literal("Lunch bag did not consume the first stored food"));
+        helper.assertTrue(player.getFoodData().getFoodLevel() == 20,
+                Component.literal("Lunch bag must consume food until full"));
         ItemStackHandler remaining = TransmutationLunchBagItem.getItems(bag);
-        helper.assertTrue(remaining.getStackInSlot(0).getCount() == 1,
-                Component.literal("Lunch bag consumed more than one apple"));
-        helper.assertTrue(remaining.getStackInSlot(1).getCount() == 2,
-                Component.literal("Lunch bag skipped FIFO order or consumed a second food"));
+        helper.assertTrue(remaining.getSlots() == 24 && remaining.getStackInSlot(0).isEmpty(),
+                Component.literal("Lunch bag must expand old contents and consume apples first"));
+        helper.assertTrue(remaining.getStackInSlot(1).getCount() == 1,
+                Component.literal("Lunch bag must stop consuming bread once full"));
         helper.succeed();
     }
 }

@@ -37,8 +37,6 @@ import net.minecraft.util.Util;
 import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.OwnableEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.equine.AbstractChestedHorse;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -91,7 +89,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     private ItemStack input = ItemStack.EMPTY;
     private int progress = 0;
     // 绑定的实体
-    private @Nullable EntityReference<Mob> bindRef;
+    private @Nullable EntityReference<LivingEntity> bindRef;
     private Vec3 offset = Vec3.ZERO;
 
     public MillstoneBlockEntity(BlockPos pos, BlockState state) {
@@ -135,11 +133,11 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         float rot = this.getRotation(level, 0);
         Vec3 center = Vec3.atBottomCenterOf(this.getBlockPos());
         double maxDistanceSqr = 5 * 5;
-        Mob bindEntity = getBindMob(level);
+        LivingEntity bindEntity = getBindEntity(level);
         // 如果实体存在，检查是否需要更新位置
         if (bindEntity == null) {
             // 必须距离磨盘足够近才可以（5 格）
-            if (serverLevel.getEntity(entityId) instanceof Mob mob
+            if (serverLevel.getEntity(entityId) instanceof LivingEntity mob
                 && mob.isAlive()
                 && mob.distanceToSqr(center) < maxDistanceSqr
                 && this.canBindEntity(mob)) {
@@ -153,8 +151,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             }
         } else if (!bindEntity.isAlive()
                    || bindEntity.distanceToSqr(center) >= maxDistanceSqr
-                   || bindEntity.isInWall()
-                   || this.saddleEntityIsControlling(bindEntity)) {
+                   || bindEntity.isInWall()) {
             this.entityId = Util.NIL_UUID;
             this.bindRef = null;
             this.cacheRot = rot;
@@ -337,56 +334,59 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         return saddled.isSaddled() && mob.getControllingPassenger() != null;
     }
 
-    @SuppressWarnings("deprecation")
+
     public boolean canBindEntity(Mob mob) {
-        if (!mob.getType().builtInRegistryHolder().is(TagMod.MILLSTONE_BINDABLE)) {
+        return canBindEntity((LivingEntity) mob);
+    }
+
+    @SuppressWarnings("deprecation")
+    public boolean canBindEntity(LivingEntity entity) {
+        if (entity.getBbHeight() < 1 || entity.getType().builtInRegistryHolder().is(TagMod.MILLSTONE_BIND_BLACKLIST)
+                || entity.getVehicle() != null) {
             return false;
         }
-        // 骑乘的生物不能被绑定
-        if (mob.getVehicle() != null) {
-            return false;
-        }
-        // 禁止童工！
-        if (mob.isBaby()) {
-            return false;
-        }
-        // 已经被骑乘的生物不能被绑定
-        if (this.saddleEntityIsControlling(mob)) {
-            return false;
-        }
-        // 如果是可驯服生物，必须已经被驯服才行
-        return switch (mob) {
-            case AbstractHorse horse -> horse.isTamed();
-            case TamableAnimal tamableAnimal -> tamableAnimal.isTame();
-            case OwnableEntity ownable -> ownable.getOwner() != null;
-            default -> true;
-        };
+        return !(entity instanceof Mob mob) || !this.saddleEntityIsControlling(mob);
     }
 
     public void bindEntity(Mob mob) {
-        if (this.level == null || this.level.isClientSide()) {
-            // 仅在服务器端绑定实体
+        bindEntity((LivingEntity) mob);
+    }
+
+    public void bindEntity(LivingEntity entity) {
+        if (this.level == null || this.level.isClientSide() || !entity.isAlive() || !this.canBindEntity(entity)) {
             return;
         }
-        // 移除实体的乘客
-        if (mob.getControllingPassenger() != null) {
-            mob.ejectPassengers();
+        // Preserve the 26.2 handling of passengers when binding.
+        if (entity.getControllingPassenger() != null) {
+            entity.ejectPassengers();
         }
-        if (!mob.isAlive()) {
-            return;
-        }
-        this.entityId = mob.getUUID();
-        this.setBindMob(mob);
-        // 缓存角度纠正
+        this.entityId = entity.getUUID();
+        this.bindRef = EntityReference.of(entity);
         float rot = this.getRotation(this.level, 0);
         this.cacheRot = fixRot(getCacheRot() - (rot - getCacheRot()));
-
-        // 读取数据地图，获取抬升角度
-        MillstoneBindableData data = MillstoneBindableDataReloadListener.INSTANCE.getOrDefault(mob.getType(), MillstoneBindableData.DEFAULT);
+        MillstoneBindableData data = MillstoneBindableDataReloadListener.INSTANCE.getOrDefault(entity.getType(), MillstoneBindableData.DEFAULT);
         this.rotSpeedTick = data.rotSpeedTick();
         this.liftAngle = data.liftAngle();
         this.offset = data.offset();
         this.refresh();
+    }
+
+    public boolean isBoundTo(LivingEntity entity) {
+        return this.entityId.equals(entity.getUUID());
+    }
+
+    @Override
+    public void fillCrashReportCategory(net.minecraft.CrashReportCategory category) {
+        super.fillCrashReportCategory(category);
+        category.setDetail("Cookery millstone bound entity", () -> entityId.toString());
+        category.setDetail("Cookery millstone rotation", () -> "period=" + rotSpeedTick + ", offset=" + cacheRot);
+        category.setDetail("Cookery millstone input", () -> input.toString());
+    }
+
+    public void unbindEntity() {
+        this.entityId = Util.NIL_UUID;
+        this.bindRef = null;
+        this.liftAngle = 0f;
     }
 
     public void sendActionBarMessage(LivingEntity user, String key, Object... args) {
@@ -504,6 +504,12 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     @Nullable
     public Mob getBindMob(Level level) {
-        return EntityReference.get(this.bindRef, level, Mob.class);
+        LivingEntity entity = getBindEntity(level);
+        return entity instanceof Mob mob ? mob : null;
+    }
+
+    @Nullable
+    public LivingEntity getBindEntity(Level level) {
+        return EntityReference.get(this.bindRef, level, LivingEntity.class);
     }
 }

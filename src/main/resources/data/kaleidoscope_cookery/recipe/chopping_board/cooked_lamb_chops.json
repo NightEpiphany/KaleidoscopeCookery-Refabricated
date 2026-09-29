@@ -4,7 +4,7 @@
   "ingredient": "minecraft:cooked_mutton",
   "model_id": "kaleidoscope_cookery:cooked_lamb_chops",
   "result": {
-    "count": 2,
+    "count": 3,
     "id": "kaleidoscope_cookery:cooked_lamb_chops"
   }
 }

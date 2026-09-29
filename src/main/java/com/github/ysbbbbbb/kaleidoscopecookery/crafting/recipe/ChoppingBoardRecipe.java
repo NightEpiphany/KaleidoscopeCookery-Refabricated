@@ -7,12 +7,20 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
 
+import java.util.List;
+
 public class ChoppingBoardRecipe extends SingleItemRecipe {
+    private final List<ItemStackTemplate> results;
     private final int cutCount;
     private final Identifier modelId;
 
     public ChoppingBoardRecipe(Ingredient ingredient, ItemStackTemplate result, int cutCount, Identifier modelId) {
-        super(BaseRecipe.NO_INFO, ingredient, result);
+        this(ingredient, List.of(result), cutCount, modelId);
+    }
+
+    public ChoppingBoardRecipe(Ingredient ingredient, List<ItemStackTemplate> results, int cutCount, Identifier modelId) {
+        super(BaseRecipe.NO_INFO, ingredient, results.getFirst());
+        this.results = List.copyOf(results);
         this.cutCount = Math.max(cutCount, 1);
         this.modelId = modelId;
     }
@@ -53,6 +61,10 @@ public class ChoppingBoardRecipe extends SingleItemRecipe {
 
     public ItemStackTemplate getResult() {
         return this.result();
+    }
+
+    public List<ItemStackTemplate> getResults() {
+        return results;
     }
 
     public int getCutCount() {
