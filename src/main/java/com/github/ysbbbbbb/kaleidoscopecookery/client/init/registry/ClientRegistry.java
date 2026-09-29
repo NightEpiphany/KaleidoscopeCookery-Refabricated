@@ -8,6 +8,9 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.event.FlatulenceEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.PotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TeapotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TrashCanOverlay;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.init.ModClientTooltip;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.init.ModEntitiesRender;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.init.ModParticleFactoryRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.MillstoneModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.TeapotModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.TrashCanModel;
@@ -18,20 +21,32 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.item.StrawHatArmorRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.ponder.init.PonderCompat;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.trinkets.init.TrinketsCompactClient;
+import com.github.ysbbbbbb.kaleidoscopecookery.config.ClientConfig;
+import com.github.ysbbbbbb.kaleidoscopecookery.config.ConfigGetter;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFluids;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+
+import static com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery.MOD_ID;
 
 @Environment(EnvType.CLIENT)
 public final class ClientRegistry {
     public static void init() {
+        if (FabricLoader.getInstance().isModLoaded(ConfigGetter.ID)
+                && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+            ClientConfig.init();
         // 注册盔甲渲染器
         ArmorRenderer.register(new StrawHatArmorRenderer(), ModItems.STRAW_HAT.get(), ModItems.STRAW_HAT_FLOWER.get());
 
@@ -39,6 +54,30 @@ public final class ClientRegistry {
         registerClientEvents();
         registerBlockEntityRenderers();
         modCompatClient();
+
+        ModClientTooltip.register();
+        ModEntitiesRender.register();
+        ModParticleFactoryRegistry.register();
+        ModFluids.registerFluidRenderers();
+
+        FabricLoader
+                .getInstance()
+                .getModContainer(MOD_ID)
+                .ifPresent(container -> {
+                            ResourceLoader.registerBuiltinPack(
+                                    Identifier.withDefaultNamespace("kaleidoscope_eating_animation"),
+                                    container,
+                                    Component.translatable("resourcePack.kaleidoscope_eating_animation"),
+                                    PackActivationType.NORMAL
+                            );
+                            ResourceLoader.registerBuiltinPack(
+                                    Identifier.withDefaultNamespace("kaleidoscope_classic_texture"),
+                                    container,
+                                    Component.translatable("resourcePack.kaleidoscope_classic_texture"),
+                                    PackActivationType.NORMAL
+                            );
+                        }
+                );
     }
 
     private static void registerItemProperties() {
