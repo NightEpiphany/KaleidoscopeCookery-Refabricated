@@ -42,7 +42,7 @@ public final class ModFluids {
         FluidVariantAttributes.register(milk, new FluidVariantAttributeHandler() {
             @Override
             public Component getName(FluidVariant variant) {
-                return Items.MILK_BUCKET.getDescription();
+                return Component.translatable("fluid.minecraft.milk");
             }
 
             @Override
