@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.PlateBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.BambooTrayDispenseBehavior;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.ChoppingBoardDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.OilPotDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.TeapotDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.drink.TeacupBlock;
@@ -79,6 +80,7 @@ public final class CommonRegistry {
     }
 
     public static void registerServerEvents() {
+        MillstoneEntityEvent.register();
         PlaceIngredientEvent.register();
         SatiatedShieldEvent.register();
         FlatulenceServerEvent.register();
@@ -204,5 +206,6 @@ public final class CommonRegistry {
         DispenserBlock.registerBehavior(ModItems.OIL_POT, new OilPotDispenseBehavior());
         DispenserBlock.registerBehavior(ModItems.BAMBOO_TRAY, new BambooTrayDispenseBehavior());
         DispenserBlock.registerBehavior(ModItems.TEAPOT, new TeapotDispenseBehavior());
+        ChoppingBoardDispenseBehavior.register();
     }
 }

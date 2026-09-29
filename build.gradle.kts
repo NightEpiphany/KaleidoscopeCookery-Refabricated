@@ -42,6 +42,9 @@ repositories {
 }
 
 dependencies {
+	testImplementation(platform("org.junit:junit-bom:5.14.2"))
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	// To change the versions see the gradle.properties file
 	minecraft("com.mojang:minecraft:${providers.gradleProperty("minecraft_version").get()}")
 	implementation("maven.modrinth:farmers-delight-refabricated:${providers.gradleProperty("fdrf_version").get()}") {
@@ -63,6 +66,29 @@ dependencies {
 	implementation("mezz.jei:jei-${providers.gradleProperty("jei_version").get()}")
 	implementation("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
 	implementation("maven.modrinth:EsAfCjCV:uo5bAN1Y")
+}
+
+tasks.test {
+	useJUnitPlatform()
+}
+
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "kaleidoscope_cookery_test"
+		enableClientGameTests = true
+		clearRunDirectory = false
+	}
+}
+
+tasks.named("runClientGameTest") {
+	doFirst {
+		// Create Flywheel's worker threads otherwise keep the test JVM alive after shutdown.
+		// This is an isolated test directory; normal client configuration is unaffected.
+		val flywheelConfig = file("build/run/clientGameTest/config/flywheel-client.json")
+		flywheelConfig.parentFile.mkdirs()
+		flywheelConfig.writeText("""{"workerThreads":{"value":0}}""")
+	}
 }
 
 tasks.processResources {

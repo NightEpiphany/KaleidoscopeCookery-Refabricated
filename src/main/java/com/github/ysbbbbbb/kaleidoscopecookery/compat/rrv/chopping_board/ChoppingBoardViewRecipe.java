@@ -14,13 +14,18 @@ import java.util.List;
 public class ChoppingBoardViewRecipe implements ReliableClientRecipe {
     private final Identifier id;
     private final SlotContent ingredient;
-    private final SlotContent result;
+    private final List<SlotContent> results;
     private final SlotContent tool;
 
     public ChoppingBoardViewRecipe(Identifier id, Ingredient ingredient, ItemStackTemplate result) {
+        this(id, ingredient, List.of(result));
+    }
+
+    public ChoppingBoardViewRecipe(Identifier id, Ingredient ingredient, List<ItemStackTemplate> results) {
         this.id = id;
         this.ingredient = SlotContent.of(ingredient);
-        this.result = SlotContent.of(result);
+        this.results = results.stream().map(SlotContent::of).toList();
+        ChoppingBoardViewType.INSTANCE.includeOutputs(results.size());
         this.tool = SlotContent.of(Ingredient.of(ModItems.IRON_KITCHEN_KNIFE));
     }
 
@@ -38,7 +43,9 @@ public class ChoppingBoardViewRecipe implements ReliableClientRecipe {
     public void bindSlots(RecipeViewMenu.SlotFillContext slotFillContext) {
         slotFillContext.bindSlot(0, this.ingredient);
         slotFillContext.bindSlot(1, this.tool);
-        slotFillContext.bindSlot(2, this.result);
+        for (int i = 0; i < this.results.size(); i++) {
+            slotFillContext.bindSlot(2 + i, this.results.get(i));
+        }
     }
 
     @Override
@@ -48,6 +55,6 @@ public class ChoppingBoardViewRecipe implements ReliableClientRecipe {
 
     @Override
     public List<SlotContent> getResults() {
-        return List.of(this.result);
+        return this.results;
     }
 }

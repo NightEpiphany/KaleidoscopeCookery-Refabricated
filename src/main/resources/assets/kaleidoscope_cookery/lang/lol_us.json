@@ -1,4 +1,7 @@
 {
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Holds food n potions.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "Right-click to eat.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Eats food till hunger is full.",
   "item_group.kaleidoscope_cookery.cookery_main.name": "Kaleidoskop: Kookuriez",
   "item_group.kaleidoscope_cookery.cookery_food.name": "Kaleidoskop: Nomz",
   "block.kaleidoscope_cookery.stove": "Hot Stove Thingy",

@@ -2,7 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.compat.appleskin;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.TransmutationLunchBagItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.component.DataComponents;
@@ -29,7 +29,9 @@ public final class AppleSkinCompat implements AppleSkinApi {
     }
 
     private static FoodProperties firstFood(ItemStack bag) {
-        var items = TransmutationLunchBagItem.getItems(bag);
+        var container = bag.get(ModDataComponents.TRANSMUTATION_LUNCH_BAG_ITEMS);
+        if (container == null) return null;
+        var items = container.items();
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             FoodProperties food = stack.get(DataComponents.FOOD);
