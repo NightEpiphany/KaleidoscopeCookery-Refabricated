@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackLinkedSet;
 
+@SuppressWarnings("all")
 public class FoodEffectGameTest {
     @GameTest
     public void creativeInventoryCanHashEveryModItem(GameTestHelper helper) {

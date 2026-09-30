@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.create.automation.init;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.annotations.MarkedNonStable;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.automation.millstone.MillstoneCompat;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.ConfigGetter;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
@@ -9,6 +10,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+@MarkedNonStable
 public class AutomationCompat {
     public static final String ID = "create";
 

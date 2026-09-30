@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 
+@SuppressWarnings("all")
 public class Update16GameTest {
     @GameTest
     public void dispenserCutsChickenIntoAllOutputs(GameTestHelper helper) {
