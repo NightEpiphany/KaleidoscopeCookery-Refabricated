@@ -125,7 +125,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
                     .get(ModEnchantments.QUICK_KNIFE)
                     .map(enchantment -> EnchantmentHelper.getItemEnchantmentLevel(enchantment, cutterItem)).orElse(0);
             this.currentCutCount = (int) Math.min(this.maxCutCount,
-                    (long) this.currentCutCount + (1 << Mth.clamp(enchantmentLevel, 0, 2)));
+                    (long) this.currentCutCount + (1L << Mth.clamp(enchantmentLevel, 0, 2)));
             this.playParticlesSound();
             this.refresh();
             return true;
