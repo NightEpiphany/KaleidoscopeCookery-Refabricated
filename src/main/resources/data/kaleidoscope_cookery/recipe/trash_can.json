@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "C": "minecraft:composter",
-    "I": "#c:ingots/iron"
+    "I": "minecraft:iron_ingot"
   },
   "pattern": [
     "III",
