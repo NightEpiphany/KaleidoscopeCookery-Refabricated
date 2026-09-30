@@ -35,6 +35,8 @@
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "竹匾",
   "enchantment.kaleidoscope_cookery.quick_knife": "快刀手",
   "enchantment.kaleidoscope_cookery.sweep": "清掃",
+  "enchantment.kaleidoscope_cookery.quick_knife.desc": "提升菜刀切菜的效率",
+  "enchantment.kaleidoscope_cookery.sweep.desc": "強化鐮刀除草割菜的橫掃範圍",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "可以收納食物與藥水",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "右鍵可以直接進食",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "消耗袋內的食物直到飽食度回滿",

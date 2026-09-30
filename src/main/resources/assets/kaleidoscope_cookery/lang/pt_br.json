@@ -35,6 +35,8 @@
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "Bandeja de Bambu",
   "enchantment.kaleidoscope_cookery.quick_knife": "Faca Rápida",
   "enchantment.kaleidoscope_cookery.sweep": "Varrer",
+  "enchantment.kaleidoscope_cookery.quick_knife.desc": "Aumente a eficiência da faca ao cortar alimentos.",
+  "enchantment.kaleidoscope_cookery.sweep.desc": "Melhore o alcance varrido da ferramenta foice.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Armazena comida e poções.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "Clique com o botão direito para comer.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Consuma comida até ficar satisfeito.",
