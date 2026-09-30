@@ -6,7 +6,7 @@
       "item": "minecraft:composter"
     },
     "I": {
-      "tag": "c:ingots/iron"
+      "item": "minecraft:iron_ingot"
     }
   },
   "pattern": [
