@@ -4,6 +4,26 @@
     "kaleidoscope_cookery:iron_kitchen_knife",
     "kaleidoscope_cookery:gold_kitchen_knife",
     "kaleidoscope_cookery:diamond_kitchen_knife",
-    "kaleidoscope_cookery:netherite_kitchen_knife"
+    "kaleidoscope_cookery:netherite_kitchen_knife",
+    {
+      "required" : false,
+      "id": "farmersdelight:flint_knife"
+    },
+    {
+      "required" : false,
+      "id": "farmersdelight:iron_knife"
+    },
+    {
+      "required" : false,
+      "id": "farmersdelight:gold_knife"
+    },
+    {
+      "required" : false,
+      "id": "farmersdelight:diamond_knife"
+    },
+    {
+      "required" : false,
+      "id": "farmersdelight:netherite_knife"
+    }
   ]
 }
