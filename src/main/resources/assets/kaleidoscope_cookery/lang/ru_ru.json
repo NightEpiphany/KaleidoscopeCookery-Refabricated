@@ -35,6 +35,8 @@
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "Бамбуковый поднос",
   "enchantment.kaleidoscope_cookery.quick_knife": "Быстрый нож",
   "enchantment.kaleidoscope_cookery.sweep": "Подметать",
+  "enchantment.kaleidoscope_cookery.quick_knife.desc": "Повышай эффективность ножа при нарезке продуктов.",
+  "enchantment.kaleidoscope_cookery.sweep.desc": "Увеличь охват действия серпа.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Хранит еду и зелья.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "ПКМ — использовать.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Еда расходуется до полного насыщения.",
