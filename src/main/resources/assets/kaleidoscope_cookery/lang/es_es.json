@@ -35,6 +35,8 @@
   "config.jade.plugin_kaleidoscope_cookery.bamboo_tray": "Bandeja de bambú",
   "enchantment.kaleidoscope_cookery.quick_knife": "Cuchillo Rápido",
   "enchantment.kaleidoscope_cookery.sweep": "Barrer",
+  "enchantment.kaleidoscope_cookery.quick_knife.desc": "Aumenta la eficiencia del cuchillo al picar alimentos.",
+  "enchantment.kaleidoscope_cookery.sweep.desc": "Mejora el alcance amplio de la herramienta de hoz.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Guarda comida y pociones.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "Clic derecho para comer.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Consume comida hasta llenar el hambre.",
