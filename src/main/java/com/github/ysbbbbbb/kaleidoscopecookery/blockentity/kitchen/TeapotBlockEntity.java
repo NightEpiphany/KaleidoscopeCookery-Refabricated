@@ -557,6 +557,8 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         );
         if (this.teaFluidId == null) {
             this.teaFluidId = TeapotRecipeSerializer.EMPTY_TEA_FLUID;
+        } else if (ModFluids.VANILLA_MILK_ID.equals(this.teaFluidId)) {
+            this.teaFluidId = ModFluids.MILK_ID;
         }
         this.result = valueInput.read(RESULT, ItemStack.CODEC).orElse(ItemStack.EMPTY);
         this.status = valueInput.getIntOr(STATUS, PUT_INGREDIENT);

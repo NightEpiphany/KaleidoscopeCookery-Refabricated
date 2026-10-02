@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.recipe.soupbase.ISoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.StockpotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.renderstate.StockpotBlockEntityRenderState;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.render.soupbase.SimpleSoupBaseRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.MobSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
@@ -28,6 +29,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -49,7 +51,7 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
             if (soupBase != null) {
                 return soupBase.getRender();
             }
-            return null;
+            return new SimpleSoupBaseRender(id);
         });
         this.itemModelResolver = context.itemModelResolver();
         this.entityRenderDispatcher = context.entityRenderer();
@@ -87,6 +89,8 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
             blockEntityRenderState.renderEntity = this.entityRenderDispatcher.extractEntity(blockEntity.renderEntity, f);
         else if (SoupBaseManager.getSoupBase(blockEntityRenderState.soupBaseID) instanceof MobSoupBase soupBase && blockEntity.getLevel() != null) {
             blockEntity.renderEntity = soupBase.getType().create(blockEntity.getLevel(), EntitySpawnReason.BUCKET);
+            if (blockEntity.renderEntity instanceof Pufferfish pufferfish)
+                pufferfish.setPuffState(blockEntity.getLevel().getRandom().nextInt(3));
         }
         blockEntityRenderState.cookingTexture = blockEntity.getCookingTexture();
         blockEntityRenderState.finishedTexture = blockEntity.getFinishedTexture();

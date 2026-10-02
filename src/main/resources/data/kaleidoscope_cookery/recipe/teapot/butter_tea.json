@@ -6,6 +6,6 @@
     "count": 1,
     "id": "kaleidoscope_cookery:butter_tea"
   },
-  "tea_fluid": "minecraft:milk",
+  "tea_fluid_tag": "c:milk",
   "time": 2400
 }

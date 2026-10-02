@@ -20,13 +20,13 @@ public class VillagerMixin {
     private static Set<Item> MOD_WANTED_ITEMS = null;
 
     @Inject(method = "wantsToPickUp", at = @At("HEAD"), cancellable = true)
-    public void onVillagerWantsToPickUp(ServerLevel serverLevel, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
+    public void onVillagerWantsToPickUp(ServerLevel level, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
         // 避免过早初始化，导致读取的 Item 全部为 null
         if (MOD_WANTED_ITEMS == null) {
             MOD_WANTED_ITEMS = ImmutableSet.of(
                     ModItems.TOMATO, ModItems.TOMATO_SEED,
                     ModItems.RED_CHILI, ModItems.GREEN_CHILI, ModItems.CHILI_SEED,
-                    ModItems.LETTUCE, ModItems.LETTUCE_SEED
+                    ModItems.LETTUCE, ModItems.LETTUCE_SEED, ModItems.TEA_SEED, ModItems.WILD_RICE_SEED
             );
         }
         if (MOD_WANTED_ITEMS.contains(itemStack.getItem())) {

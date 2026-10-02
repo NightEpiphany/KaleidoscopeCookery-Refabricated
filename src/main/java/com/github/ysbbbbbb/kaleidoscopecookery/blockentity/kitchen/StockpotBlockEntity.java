@@ -321,25 +321,19 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.applyRecipe(levelIn, container, preEvent.getOutput());
         }
 
-        this.quickCheck.getRecipeFor(container, levelIn).ifPresentOrElse(recipe -> {
-            this.applyRecipe(levelIn, container, recipe);
-        }, () -> {
-            this.flexQuickCheck.getRecipeFor(container, levelIn).ifPresentOrElse(recipe -> {
-                this.applyFlexRecipe(levelIn, container, recipe);
-            }, () -> {
-                this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
-                this.recipe = StockpotRecipeSerializer.getEmptyRecipe();
-                this.flexRecipe = false;
-                this.result = Items.SUSPICIOUS_STEW.getDefaultInstance();
-                this.currentTick = StockpotRecipeSerializer.DEFAULT_TIME;
-                this.takeoutCount = 1;
-                this.carrier = StockpotRecipeSerializer.DEFAULT_CARRIER;
-                this.cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
-                this.finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
-                this.cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
-                this.finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
-            });
-        });
+        this.quickCheck.getRecipeFor(container, levelIn).ifPresentOrElse(recipe -> this.applyRecipe(levelIn, container, recipe), () -> this.flexQuickCheck.getRecipeFor(container, levelIn).ifPresentOrElse(recipe -> this.applyFlexRecipe(levelIn, container, recipe), () -> {
+            this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
+            this.recipe = StockpotRecipeSerializer.getEmptyRecipe();
+            this.flexRecipe = false;
+            this.result = Items.SUSPICIOUS_STEW.getDefaultInstance();
+            this.currentTick = StockpotRecipeSerializer.DEFAULT_TIME;
+            this.takeoutCount = 1;
+            this.carrier = StockpotRecipeSerializer.DEFAULT_CARRIER;
+            this.cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
+            this.finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
+            this.cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
+            this.finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
+        }));
 
         // 触发事件，允许其他 mod 在配方匹配后进行操作
         StockpotMatchRecipeEvent.Post postEvent = new StockpotMatchRecipeEvent.Post(levelIn, this, container, this.recipeId);
@@ -606,7 +600,13 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
                 RecipeHolder<StockpotRecipe> stockpotRecipe = serverLevel.recipeAccess().byKeyTyped(ModRecipes.STOCKPOT_RECIPE, recipeKey);
                 this.recipe = Objects.requireNonNullElseGet(stockpotRecipe, StockpotRecipeSerializer::getEmptyRecipe);
             }
-            if (valueInput.contains(SOUP_BASE_ID)) this.soupBaseId = Identifier.tryParse(valueInput.getString(SOUP_BASE_ID).orElse(ModSoupBases.WATER.toString()));
+            if (valueInput.contains(SOUP_BASE_ID)) {
+                this.soupBaseId = Identifier.tryParse(valueInput.getString(SOUP_BASE_ID).orElse(ModSoupBases.WATER.toString()));
+                assert this.soupBaseId != null;
+                if (ModFluids.VANILLA_MILK_ID.equals(this.soupBaseId)) {
+                    this.soupBaseId = ModFluids.MILK_ID;
+                }
+            }
             if (valueInput.contains(RESULT)) this.result = valueInput.read(RESULT, ItemStack.CODEC).orElse(ItemStack.EMPTY);
             this.status = valueInput.getIntOr(STATUS, PUT_SOUP_BASE);
             this.currentTick = valueInput.getIntOr(CURRENT_TICK, 0);

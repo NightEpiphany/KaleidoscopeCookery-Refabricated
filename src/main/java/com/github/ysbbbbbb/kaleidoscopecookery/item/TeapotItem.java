@@ -283,7 +283,7 @@ public class TeapotItem extends BlockItem {
             if (fluidId.equals(EMPTY_TEA_FLUID.toString())) {
                 return 0x9df7ff;
             }
-            if (ModFluids.MILK_ID.equals(Objects.requireNonNull(Identifier.tryParse(fluidId)))) {
+            if (ModFluids.isMilkId(Identifier.tryParse(fluidId))) {
                 return 0xf4eee1;
             }
             if (fluidId.contains("honey")) {

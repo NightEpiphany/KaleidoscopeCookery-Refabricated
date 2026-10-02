@@ -5,6 +5,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * 按照社区统一规范，使用的 Tag
@@ -83,6 +84,8 @@ public interface TagCommon {
 
     TagKey<Block> ORES = blockTag("ores");
 
+    TagKey<Fluid> MILKS = fluidTag("milk");
+
     // 农夫乐事
     TagKey<Item> FD_KNIVES = TagKey.create(Registries.ITEM, Identifier.parse("farmersdelight:tools/knives"));
     TagKey<Block> FD_HEAT_SOURCES = TagKey.create(Registries.BLOCK, Identifier.parse("farmersdelight:heat_sources"));
@@ -93,6 +96,10 @@ public interface TagCommon {
     // FTB 连锁
     TagKey<Block> FTB_SINGLE_CROP_HARVESTING_BLACKLIST = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("ftbultimine", "single_crop_harvesting_blacklist"));
     TagKey<Block> FTB_EXCLUDED_BLOCKS = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("ftbultimine", "excluded_blocks"));
+
+    static TagKey<Fluid> fluidTag(String name) {
+        return TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", name));
+    }
 
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", name));

@@ -40,6 +40,8 @@
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "可以收納食物與藥水",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "右鍵可以直接進食",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "消耗袋內的食物直到飽食度回滿",
+  "block.kaleidoscope_cookery.shelf_mushroom_pot_soup": "層孔菇瓦罐湯",
+  "tooltip.kaleidoscope_cookery.shelf_mushroom_pot_soup.maxim": "秋天的味道，我知道！",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "曬乾（晴天露天）：%s 秒",
