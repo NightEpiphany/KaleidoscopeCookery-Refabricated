@@ -11,6 +11,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import net.minecraft.CrashReportCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -168,6 +169,11 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
         }
     }
 
+    @Override
+    public boolean hasItemOnBoard() {
+        return !this.currentCutStack.isEmpty();
+    }
+
     private void resetBoardData() {
         this.modelId = null;
         this.results = List.of();
@@ -212,7 +218,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
     }
 
     @Override
-    public void fillCrashReportCategory(net.minecraft.CrashReportCategory category) {
+    public void fillCrashReportCategory(@NonNull CrashReportCategory category) {
         super.fillCrashReportCategory(category);
         category.setDetail("Cookery cutting progress", () -> currentCutCount + "/" + maxCutCount);
         category.setDetail("Cookery cutting input", () -> currentCutStack.toString());
