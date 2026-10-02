@@ -395,7 +395,7 @@ public class CookeryGameTests implements FabricGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
     public void butterTeaRecipeAcceptsMilkProvidersOnly(GameTestHelper helper) {
         var recipe = (TeapotRecipe) helper.getLevel().getRecipeManager()
-                .byKey(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "teapot/butter_tea")).orElseThrow();
+                .byKey(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "teapot/butter_tea_1")).orElseThrow();
         for (Fluid fluid : BuiltInRegistries.FLUID) {
             if (fluid.getBucket() == Items.MILK_BUCKET) {
                 helper.assertTrue(recipe.matches(new TeapotContainer(new ItemStack(ModItems.BUTTER_TEA_BAG),
@@ -634,7 +634,7 @@ public class CookeryGameTests implements FabricGameTest {
 
     @GameTest(template = EMPTY_STRUCTURE)
     public void newRecipesAndEffectsAreRegistered(GameTestHelper helper) {
-        for (String tea : new String[]{"barley_tea", "biluochun", "butter_tea", "flower_tea", "oolong", "sakura_fubuki", "tieguanyin"}) {
+        for (String tea : new String[]{"barley_tea", "biluochun", "butter_tea_1", "flower_tea", "oolong", "sakura_fubuki", "tieguanyin"}) {
             helper.assertTrue(helper.getLevel().getRecipeManager().byKey(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "teapot/" + tea)).isPresent(), "Missing tea recipe: " + tea);
         }
         for (int i = 1; i <= 9; i++) {
