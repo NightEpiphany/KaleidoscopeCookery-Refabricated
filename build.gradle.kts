@@ -64,6 +64,8 @@ dependencies {
 	implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabric_api_version").get()}")
 	implementation ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${providers.gradleProperty("forge_config_api_version").get()}")
 	implementation("mezz.jei:jei-${providers.gradleProperty("jei_version").get()}")
+	// mezz config
+	implementation("maven.modrinth:7tEfOcA7:Wf6Q6vG2")
 	implementation("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
 	implementation("maven.modrinth:EsAfCjCV:uo5bAN1Y")
 }

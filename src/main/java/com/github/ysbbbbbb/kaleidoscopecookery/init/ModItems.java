@@ -77,9 +77,9 @@ public final class ModItems {
     // Tools
     public static final Item COPPER_KITCHEN_KNIFE = registerItem("copper_kitchen_knife", p -> new KitchenKnifeItem(p, ToolMaterial.COPPER, 2.5F, -2.4F), new Item.Properties());
     public static final Item IRON_KITCHEN_KNIFE = registerItem("iron_kitchen_knife", p -> new KitchenKnifeItem(p, ToolMaterial.IRON, 3.0F, -2.4F), new Item.Properties());
-    public static final Item GOLD_KITCHEN_KNIFE = registerItem("gold_kitchen_knife", p -> new KitchenKnifeItem(p, ToolMaterial.GOLD, 3.0F, -2.4F), new Item.Properties());
-    public static final Item DIAMOND_KITCHEN_KNIFE = registerItem("diamond_kitchen_knife", p -> new KitchenKnifeItem(p, ToolMaterial.DIAMOND, 3.0F, -2.4F), new Item.Properties());
-    public static final Item NETHERITE_KITCHEN_KNIFE = registerItem("netherite_kitchen_knife", p -> new KitchenKnifeItem(p, ToolMaterial.NETHERITE, 3.0F, -2.4F), new Item.Properties());
+    public static final Item GOLD_KITCHEN_KNIFE = registerItem("gold_kitchen_knife", p -> new KitchenKnifeItem(p, ToolMaterial.GOLD, 3.0F, -2.3F), new Item.Properties());
+    public static final Item DIAMOND_KITCHEN_KNIFE = registerItem("diamond_kitchen_knife", p -> new KitchenKnifeItem(p, ToolMaterial.DIAMOND, 3.0F, -2.5F), new Item.Properties());
+    public static final Item NETHERITE_KITCHEN_KNIFE = registerItem("netherite_kitchen_knife", p -> new KitchenKnifeItem(p, ToolMaterial.NETHERITE, 3.0F, -2.5F), new Item.Properties());
     public static final Item SICKLE = registerItem("sickle", SickleItem::new, new Item.Properties());
 
     // Special items
