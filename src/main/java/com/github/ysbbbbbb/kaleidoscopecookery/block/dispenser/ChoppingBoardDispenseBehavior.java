@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.DispenserBlock;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class ChoppingBoardDispenseBehavior extends OptionalDispenseItemBehavior {
     private final boolean knife;
@@ -21,7 +22,7 @@ public class ChoppingBoardDispenseBehavior extends OptionalDispenseItemBehavior 
     }
 
     @Override
-    protected @NotNull ItemStack execute(BlockSource source, ItemStack stack) {
+    protected @NotNull ItemStack execute(BlockSource source, @NonNull ItemStack stack) {
         this.setSuccess(false);
         Direction facing = source.state().getValue(DispenserBlock.FACING);
         BlockPos boardPos = source.pos().relative(facing);
@@ -30,6 +31,11 @@ public class ChoppingBoardDispenseBehavior extends OptionalDispenseItemBehavior 
             this.setSuccess(this.knife
                     ? board.onCutItem(source.level(), null, stack)
                     : board.onPutItem(source.level(), null, stack));
+            if (this.knife && board.hasItemOnBoard())
+                if (stack.getDamageValue() >= stack.getMaxDamage())
+                    stack.shrink(1);
+                else
+                    stack.setDamageValue(stack.getDamageValue() + 1);
         }
         return stack;
     }
@@ -37,6 +43,7 @@ public class ChoppingBoardDispenseBehavior extends OptionalDispenseItemBehavior 
     public static void register() {
         ChoppingBoardDispenseBehavior knifeBehavior = new ChoppingBoardDispenseBehavior(true);
         DispenserBlock.registerBehavior(ModItems.IRON_KITCHEN_KNIFE, knifeBehavior);
+        DispenserBlock.registerBehavior(ModItems.COPPER_KITCHEN_KNIFE, knifeBehavior);
         DispenserBlock.registerBehavior(ModItems.GOLD_KITCHEN_KNIFE, knifeBehavior);
         DispenserBlock.registerBehavior(ModItems.DIAMOND_KITCHEN_KNIFE, knifeBehavior);
         DispenserBlock.registerBehavior(ModItems.NETHERITE_KITCHEN_KNIFE, knifeBehavior);

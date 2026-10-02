@@ -92,7 +92,7 @@ public class ReiChoppingBoardRecipeCategory implements DisplayCategory<ReiChoppi
         registry.add(new ReiChoppingBoardRecipeCategory());
         registry.addWorkstations(ReiChoppingBoardRecipeCategory.ID,
                 ReiUtil.ofItem(ModItems.CHOPPING_BOARD),
-                ReiUtil.ofIngredient(Ingredient.of(ModItems.DIAMOND_KITCHEN_KNIFE, ModItems.IRON_KITCHEN_KNIFE, ModItems.GOLD_KITCHEN_KNIFE, ModItems.NETHERITE_KITCHEN_KNIFE)));
+                ReiUtil.ofIngredient(Ingredient.of(ModItems.DIAMOND_KITCHEN_KNIFE, ModItems.IRON_KITCHEN_KNIFE, ModItems.GOLD_KITCHEN_KNIFE, ModItems.NETHERITE_KITCHEN_KNIFE, ModItems.COPPER_KITCHEN_KNIFE)));
     }
 
     public static class ChoppingBoardRecipeDisplay extends BasicDisplay {
