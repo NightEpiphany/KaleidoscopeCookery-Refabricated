@@ -80,6 +80,14 @@ public class ShapedRecipeProvider extends ModRecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
+        this.shaped(RecipeCategory.TOOLS, ModItems.COPPER_KITCHEN_KNIFE)
+                .pattern("##")
+                .pattern("#S")
+                .define('#', CommonTags.Items.INGOTS_COPPER)
+                .define('S', Items.STICK)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
         this.shaped(RecipeCategory.TOOLS, ModItems.DIAMOND_KITCHEN_KNIFE)
                 .pattern("##")
                 .pattern("#S")
