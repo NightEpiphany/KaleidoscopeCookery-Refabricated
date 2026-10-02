@@ -180,6 +180,11 @@ public final class TeaFluidHelper {
         if (id == null || id.equals(TeapotRecipeSerializer.EMPTY_TEA_FLUID)) {
             return ItemStack.EMPTY;
         }
+        // Milk has no vanilla fluid registry entry in this Minecraft version;
+        // keep both the legacy and mod ids displayable as the vanilla milk bucket.
+        if (ModFluids.isMilkId(id)) {
+            return Items.MILK_BUCKET.getDefaultInstance();
+        }
         if (isPhysicalFluid(id)) {
             Fluid fluid = BuiltInRegistries.FLUID.getValue(id);
             return fluid.getBucket().getDefaultInstance();
