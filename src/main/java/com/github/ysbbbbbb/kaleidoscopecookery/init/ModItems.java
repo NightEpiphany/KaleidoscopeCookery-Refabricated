@@ -53,10 +53,10 @@ public final class ModItems {
     public static final Item COLD_CUT_HAM_SLICES = new LiftBlockItem(ModBlocks.COLD_CUT_HAM_SLICES, "cold_cut_ham_slices");
 
     // Tools
-    public static final Item IRON_KITCHEN_KNIFE = new KitchenKnifeItem(Tiers.IRON);
-    public static final Item GOLD_KITCHEN_KNIFE = new KitchenKnifeItem(Tiers.GOLD);
-    public static final Item DIAMOND_KITCHEN_KNIFE = new KitchenKnifeItem(Tiers.DIAMOND);
-    public static final Item NETHERITE_KITCHEN_KNIFE = new KitchenKnifeItem(Tiers.NETHERITE);
+    public static final Item IRON_KITCHEN_KNIFE = new KitchenKnifeItem(KitchenKnifeItem.KnifeTiers.IRON);
+    public static final Item GOLD_KITCHEN_KNIFE = new KitchenKnifeItem(KitchenKnifeItem.KnifeTiers.GOLD);
+    public static final Item DIAMOND_KITCHEN_KNIFE = new KitchenKnifeItem(KitchenKnifeItem.KnifeTiers.DIAMOND);
+    public static final Item NETHERITE_KITCHEN_KNIFE = new KitchenKnifeItem(KitchenKnifeItem.KnifeTiers.NETHERITE);
     public static final Item SICKLE = new SickleItem();
 
     // Special items
