@@ -16,5 +16,6 @@
     "count": 9,
     "id": "kaleidoscope_cookery:clay_pot_milk_tea"
   },
-  "soup_base": "minecraft:milk"
+  "soup_base": "kaleidoscope_cookery:milk",
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_pod"
 }

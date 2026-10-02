@@ -10,5 +10,6 @@
   "result": {
     "count": 5,
     "id": "kaleidoscope_cookery:zongzi"
-  }
+  },
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_green"
 }

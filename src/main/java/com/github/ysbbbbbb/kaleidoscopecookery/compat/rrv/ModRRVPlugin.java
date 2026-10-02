@@ -137,9 +137,9 @@ public class ModRRVPlugin implements ReliableRecipeViewerClientPlugin {
     private static void addTeapotRecipes(List<ReliableClientRecipe> recipeList) {
         ClientRecipeManager.INSTANCE.getRecipesForType(ModRecipes.TEAPOT_RECIPE).forEach(holder -> {
             var recipe = holder.value();
-            ItemStack teaFluid = TeaFluidHelper.getFilledContainer(recipe.teaFluid());
+            ItemStack teaFluid = TeaFluidHelper.getFilledContainer(recipe.displayTeaFluid());
             if (teaFluid.isEmpty()) {
-                KaleidoscopeCookery.LOGGER.warn("Skipping RRV teapot recipe {} because tea fluid {} has no display container", holder.id().identifier(), recipe.teaFluid());
+                KaleidoscopeCookery.LOGGER.warn("Skipping RRV teapot recipe {} because tea fluid {} has no display container", holder.id().identifier(), recipe.displayTeaFluid());
                 return;
             }
 

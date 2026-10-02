@@ -139,7 +139,7 @@ public class ReiTeapotRecipeCategory implements DisplayCategory<ReiTeapotRecipeC
         }
 
         public TeapotRecipeDisplay(RecipeHolder<TeapotRecipe> holder) {
-            this(holder.id().identifier(), ReiUtil.ofItemStacks(TeaFluidHelper.getFilledContainer(holder.value().teaFluid())), getIngredientInputs(holder.value()), ReiUtil.ofItemStacks(holder.value().result().create().copyWithCount(TeapotRecipe.OUTPUT_COUNT)), holder.value().time());
+            this(holder.id().identifier(), ReiUtil.ofItemStacks(TeaFluidHelper.getFilledContainer(holder.value().displayTeaFluid())), getIngredientInputs(holder.value()), ReiUtil.ofItemStacks(holder.value().result().create().copyWithCount(TeapotRecipe.OUTPUT_COUNT)), holder.value().time());
         }
 
         public List<EntryIngredient> getFluidInput() {
