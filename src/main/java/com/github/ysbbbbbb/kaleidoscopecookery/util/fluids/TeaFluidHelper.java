@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.util.fluids;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.TeapotRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFluids;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -93,7 +94,7 @@ public final class TeaFluidHelper {
             return Component.translatable("mco.configure.world.slot.empty");
         }
         if (isPhysicalFluid(id)) {
-            if (id.toString().contains("minecraft:milk")) {
+            if (ModFluids.isMilkId(id)) {
                 return Component.translatable("fluid.minecraft.milk");
             }
             Fluid fluid = BuiltInRegistries.FLUID.get(id);

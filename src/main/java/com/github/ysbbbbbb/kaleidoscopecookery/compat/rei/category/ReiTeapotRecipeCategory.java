@@ -103,7 +103,7 @@ public class ReiTeapotRecipeCategory implements DisplayCategory<ReiTeapotRecipeC
     public static void registerDisplays(DisplayRegistry registry) {
         registry.getRecipeManager().getAllRecipesFor(ModRecipes.TEAPOT_RECIPE)
                 .forEach(r -> {
-                    Item bucket = TeaFluidHelper.getFilledContainer(r.value().teaFluid()).getItem();
+                    Item bucket = TeaFluidHelper.getFilledContainer(r.value().displayTeaFluid()).getItem();
                     List<EntryIngredient> fluidInput = ReiUtil.ofItems(bucket);
                     List<EntryIngredient> inputs = List.of(EntryIngredient.of(Arrays.stream(r.value().ingredient().getItems())
                             .map(stack -> EntryStacks.of(stack.copyWithCount(r.value().ingredientCount())))

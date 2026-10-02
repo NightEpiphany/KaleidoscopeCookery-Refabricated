@@ -591,6 +591,9 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         }
         if (tag.contains(SOUP_BASE_ID)) {
             this.soupBaseId = ResourceLocation.tryParse(tag.getString(SOUP_BASE_ID));
+            if (ModFluids.VANILLA_MILK_ID.equals(this.soupBaseId)) {
+                this.soupBaseId = ModFluids.MILK_ID;
+            }
         }
         if (tag.contains(RESULT)) {
             this.result = ItemStack.parseOptional(registries, tag.getCompound(RESULT));

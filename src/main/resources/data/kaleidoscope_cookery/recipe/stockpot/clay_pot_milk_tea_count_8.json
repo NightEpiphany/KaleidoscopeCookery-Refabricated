@@ -33,5 +33,5 @@
     "count": 8,
     "id": "kaleidoscope_cookery:clay_pot_milk_tea"
   },
-  "soup_base": "minecraft:milk"
+  "soup_base": "kaleidoscope_cookery:milk"
 }

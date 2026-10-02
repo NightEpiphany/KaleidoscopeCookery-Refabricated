@@ -37,6 +37,8 @@ public final class MilkGameTests implements FabricGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
     public void milkBucketsSupportTransactions(GameTestHelper helper) {
         var milk = BuiltInRegistries.FLUID.get(ModFluids.MILK_ID);
+        helper.assertTrue(ModFluids.MILK_ID.getNamespace().equals(KaleidoscopeCookery.MOD_ID),
+                "Milk fluid must use the mod namespace");
         helper.assertTrue(milk != Fluids.EMPTY && milk.getBucket() == Items.MILK_BUCKET, "Milk fluid is not registered");
         helper.assertTrue(milk.is(TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath("c", "milk"))),
                 "Milk fluid tag is missing");

@@ -47,7 +47,7 @@ public class EmiTeapotRecipe extends BasicEmiRecipe {
 
         registry.getRecipeManager().getAllRecipesFor(ModRecipes.TEAPOT_RECIPE).forEach(r -> {
             TeapotRecipe value = r.value();
-            Item bucket = TeaFluidHelper.getFilledContainer(value.teaFluid()).getItem();
+            Item bucket = TeaFluidHelper.getFilledContainer(value.displayTeaFluid()).getItem();
             List<EmiIngredient> inputs = List.of(EmiIngredient.of(Arrays.stream(value.ingredient().getItems())
                     .map(stack -> EmiStack.of(stack.copyWithCount(value.ingredientCount())))
                     .toList()));

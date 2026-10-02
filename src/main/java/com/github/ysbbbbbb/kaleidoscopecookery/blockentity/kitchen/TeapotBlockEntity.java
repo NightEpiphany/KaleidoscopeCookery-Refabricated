@@ -502,7 +502,8 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         this.input = ItemStack.parseOptional(registries, tag.getCompound(INPUT));
         ResourceLocation savedFluid = ResourceLocation.tryParse(tag.getString(TEA_FLUID_ID));
         this.teaFluidId = savedFluid == null || savedFluid.getPath().isEmpty()
-                ? TeapotRecipeSerializer.EMPTY_TEA_FLUID : savedFluid;
+                ? TeapotRecipeSerializer.EMPTY_TEA_FLUID
+                : ModFluids.VANILLA_MILK_ID.equals(savedFluid) ? ModFluids.MILK_ID : savedFluid;
         this.result = ItemStack.parseOptional(registries, tag.getCompound(RESULT));
         this.status = tag.getInt(STATUS);
         this.currentTick = tag.contains(CURRENT_TICK) ? tag.getInt(CURRENT_TICK) : -1;

@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * 按照社区统一规范，使用的 Tag
@@ -95,8 +96,16 @@ public interface TagCommon {
     TagKey<Block> FTB_SINGLE_CROP_HARVESTING_BLACKLIST = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("ftbultimine", "single_crop_harvesting_blacklist"));
     TagKey<Block> FTB_EXCLUDED_BLOCKS = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("ftbultimine", "excluded_blocks"));
     TagKey<Block> ORES = blockTag("ores");
+
+    // 牛奶液体类型
+    TagKey<Fluid> MILKS = fluidTag("milk");
+
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
+    }
+
+    static TagKey<Fluid> fluidTag(String name) {
+        return TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath("c", name));
     }
 
     /**

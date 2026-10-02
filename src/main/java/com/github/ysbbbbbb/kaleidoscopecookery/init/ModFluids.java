@@ -25,16 +25,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.Optional;
 
 @SuppressWarnings("all")
 public final class ModFluids {
-    public static final ResourceLocation MILK_ID = ResourceLocation.withDefaultNamespace("milk");
+    /** 模组默认牛奶液体注册键 */
+    public static final ResourceLocation MILK_ID = ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "milk");
+    /** 兼容性键位，不可注册 */
+    public static final ResourceLocation VANILLA_MILK_ID = ResourceLocation.withDefaultNamespace("milk");
 
     public static void registerFluids() {
         Fluid milk = BuiltInRegistries.FLUID.getOptional(MILK_ID).orElseGet(() ->
@@ -56,7 +61,7 @@ public final class ModFluids {
             }
         });
 
-        // Let a mod's dedicated milk bucket provider take precedence.
+        // 桶物品液体倾倒逻辑
         FluidStorage.ITEM.registerFallback((stack, context) -> stack.is(Items.MILK_BUCKET)
                 ? new FullItemFluidStorage(context, Items.BUCKET, FluidVariant.of(milk), FluidConstants.BUCKET)
                 : null);
@@ -65,16 +70,39 @@ public final class ModFluids {
     }
 
     public static boolean matchesTeaFluid(ResourceLocation expected, ResourceLocation actual) {
-        return expected.equals(actual) || (MILK_ID.equals(expected)
-                && BuiltInRegistries.FLUID.get(actual).getBucket() == Items.MILK_BUCKET);
+        if (expected.equals(actual)) {
+            return true;
+        }
+        if (!isMilkId(expected) || actual == null) {
+            return false;
+        }
+        Fluid fluid = BuiltInRegistries.FLUID.getOptional(actual).orElse(Fluids.EMPTY);
+        return fluid != Fluids.EMPTY && fluid.getBucket() == Items.MILK_BUCKET;
+    }
+
+    public static boolean isMilkId(ResourceLocation id) {
+        return MILK_ID.equals(id) || VANILLA_MILK_ID.equals(id);
+    }
+
+    public static boolean matchesFluidTag(ResourceLocation actual, TagKey<Fluid> tag) {
+        return actual != null && BuiltInRegistries.FLUID.getOptional(actual)
+                .map(fluid -> fluid.is(tag))
+                .orElse(false);
     }
 
     @Environment(EnvType.CLIENT)
     public static void registerFluidRenderers() {
         Fluid milk = BuiltInRegistries.FLUID.getOptional(MILK_ID)
+                .or(/*基本上不可能，但是以防万一*/() -> BuiltInRegistries.FLUID.getOptional(VANILLA_MILK_ID))
                 .orElseThrow(() ->
                         new IllegalStateException("Milk fluid was not initialized"));
-        registerSingleStateRender(milk, "block/milk_still", 0xFFFFFFFF);
+        registerSingleStateRender(
+                milk,
+                BuiltInRegistries.FLUID.getKey(milk).getNamespace().equals("minecraft") ?
+                "block/milk_still" :
+                "stockpot/milk",
+                0xFFFFFFFF
+        );
     }
 
     @Environment(EnvType.CLIENT)

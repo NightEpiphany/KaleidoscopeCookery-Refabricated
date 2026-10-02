@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "minecraft:milk"
+    "kaleidoscope_cookery:milk",
+    {
+      "id": "minecraft:milk",
+      "required": false
+    }
   ]
 }
