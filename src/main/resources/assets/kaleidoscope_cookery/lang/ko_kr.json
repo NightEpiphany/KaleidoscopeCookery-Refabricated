@@ -40,6 +40,8 @@
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "음식과 물약을 보관합니다.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "우클릭하여 먹습니다.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "허기가 가득 찰 때까지 음식을 먹습니다.",
+  "block.kaleidoscope_cookery.shelf_mushroom_pot_soup": "선반 버섯 냄비국",
+  "tooltip.kaleidoscope_cookery.shelf_mushroom_pot_soup.maxim": "가을의 맛.",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "건조한 (맑아): %ss",

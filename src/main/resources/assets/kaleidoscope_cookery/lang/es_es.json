@@ -40,6 +40,8 @@
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Guarda comida y pociones.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "Clic derecho para comer.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Consume comida hasta llenar el hambre.",
+  "block.kaleidoscope_cookery.shelf_mushroom_pot_soup": "Sopa de Champiñones de Estante",
+  "tooltip.kaleidoscope_cookery.shelf_mushroom_pot_soup.maxim": "Sabor de otoño.",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "Seco (cielo despejado): %ss",

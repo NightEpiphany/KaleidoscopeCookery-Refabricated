@@ -40,6 +40,8 @@
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "食べ物とポーションを収納します。",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "右クリックで食べられます。",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "満腹になるまで食べ物を消費します。",
+  "block.kaleidoscope_cookery.shelf_mushroom_pot_soup": "サルノコシカケの土鍋スープ",
+  "tooltip.kaleidoscope_cookery.shelf_mushroom_pot_soup.maxim": "秋の味~",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "乾いた （晴れ）: %ss",
