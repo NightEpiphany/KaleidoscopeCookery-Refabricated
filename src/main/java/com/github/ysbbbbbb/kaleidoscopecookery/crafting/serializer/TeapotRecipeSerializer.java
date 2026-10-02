@@ -32,15 +32,6 @@ public class TeapotRecipeSerializer {
             ItemStackTemplate.CODEC.fieldOf("result").forGetter(TeapotRecipe::result)
     ).apply(inst, TeapotRecipe::new));
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, TeapotRecipe> STREAM_CODEC = StreamCodec.composite(
-            Identifier.STREAM_CODEC, TeapotRecipe::teaFluid,
-            Ingredient.CONTENTS_STREAM_CODEC, TeapotRecipe::ingredient,
-            ByteBufCodecs.VAR_INT, TeapotRecipe::ingredientCount,
-            ByteBufCodecs.VAR_INT, TeapotRecipe::time,
-            ItemStackTemplate.STREAM_CODEC, TeapotRecipe::result,
-            TeapotRecipe::new
-    );
-
     private static final StreamCodec<RegistryFriendlyByteBuf, Optional<TagKey<Fluid>>> FLUID_TAG_STREAM_CODEC = StreamCodec.of(
             (buf, tag) -> {
                 buf.writeBoolean(tag.isPresent());
@@ -49,6 +40,16 @@ public class TeapotRecipeSerializer {
             buf -> buf.readBoolean()
                     ? Optional.of(TagKey.create(Registries.FLUID, Identifier.STREAM_CODEC.decode(buf)))
                     : Optional.empty());
+
+    private static final StreamCodec<RegistryFriendlyByteBuf, TeapotRecipe> STREAM_CODEC = StreamCodec.composite(
+            Identifier.STREAM_CODEC, TeapotRecipe::teaFluid,
+            FLUID_TAG_STREAM_CODEC, TeapotRecipe::teaFluidTag,
+            Ingredient.CONTENTS_STREAM_CODEC, TeapotRecipe::ingredient,
+            ByteBufCodecs.VAR_INT, TeapotRecipe::ingredientCount,
+            ByteBufCodecs.VAR_INT, TeapotRecipe::time,
+            ItemStackTemplate.STREAM_CODEC, TeapotRecipe::result,
+            TeapotRecipe::new
+    );
 
     public static @NonNull MapCodec<TeapotRecipe> codec() {
         return CODEC;

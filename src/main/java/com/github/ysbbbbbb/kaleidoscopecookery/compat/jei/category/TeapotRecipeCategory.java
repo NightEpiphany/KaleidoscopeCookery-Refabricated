@@ -21,7 +21,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
@@ -69,7 +68,7 @@ public class TeapotRecipeCategory implements IRecipeCategory<RecipeHolder<Teapot
                 .toList();
         ItemStack output = recipe.result().create().copyWithCount(TeapotRecipe.OUTPUT_COUNT);
 
-        Item bucket = TeaFluidHelper.getFilledContainer(recipe.displayTeaFluid()).getItem();
+        ItemStack bucket = TeaFluidHelper.getFilledContainer(recipe.displayTeaFluid());
 
         builder.addSlot(RecipeIngredientRole.INPUT, 65, 0).setStandardSlotBackground().add(bucket);
         builder.addSlot(RecipeIngredientRole.INPUT, 83, 0).setStandardSlotBackground().addItemStacks(inputs);
