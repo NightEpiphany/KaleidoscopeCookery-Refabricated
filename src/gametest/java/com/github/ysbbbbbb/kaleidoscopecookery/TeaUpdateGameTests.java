@@ -53,7 +53,7 @@ public class TeaUpdateGameTests implements FabricGameTest {
     public void recipesAndMilkAreLoaded(GameTestHelper helper) {
         var manager = helper.getLevel().getRecipeManager();
         for (String path : new String[]{"bamboo_tray", "tea_banner", "red_lantern", "long_bench",
-                "eight_immortals_table", "butter_tea_bag", "teapot/butter_tea",
+                "eight_immortals_table", "butter_tea_bag", "teapot/butter_tea_1",
                 "stockpot/clay_pot_milk_tea_count_1", "stockpot/tea_egg_count_4"}) {
             helper.assertTrue(manager.byKey(ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, path)).isPresent(),
                     "Missing recipe: " + path);

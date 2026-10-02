@@ -118,7 +118,7 @@ public final class MilkGameTests implements FabricGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
     public void butterTeaMatchesMilkProvidersOnly(GameTestHelper helper) {
         var recipe = (TeapotRecipe) helper.getLevel().getRecipeManager().byKey(
-                ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "teapot/butter_tea")).orElseThrow().value();
+                ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "teapot/butter_tea_1")).orElseThrow().value();
         for (var fluid : BuiltInRegistries.FLUID) {
             if (fluid.getBucket() == Items.MILK_BUCKET) {
                 helper.assertTrue(recipe.matches(new TeapotInput(ModItems.BUTTER_TEA_BAG.getDefaultInstance(),
