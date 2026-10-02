@@ -25,16 +25,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.Optional;
 
 @SuppressWarnings("all")
 public final class ModFluids {
-    public static final ResourceLocation MILK_ID = new ResourceLocation("minecraft", "milk");
+    public static final ResourceLocation MILK_ID = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "milk");
+    public static final ResourceLocation VANILLA_MILK_ID = new ResourceLocation("minecraft", "milk");
 
     public static void registerFluids() {
         Fluid milk = BuiltInRegistries.FLUID.getOptional(MILK_ID).orElseGet(() ->
@@ -68,16 +71,38 @@ public final class ModFluids {
 
     // 兼容其他模组的牛奶注册类型
     public static boolean matchesTeaFluid(ResourceLocation expected, ResourceLocation actual) {
-        return expected.equals(actual) || (MILK_ID.equals(expected)
-                && BuiltInRegistries.FLUID.get(actual).getBucket() == Items.MILK_BUCKET);
+        if (expected == null || actual == null) {
+            return false;
+        }
+        if (expected.equals(actual)) {
+            return true;
+        }
+        if (!isMilkId(expected)) {
+            return false;
+        }
+        Fluid fluid = BuiltInRegistries.FLUID.getOptional(actual).orElse(Fluids.EMPTY);
+        return fluid != Fluids.EMPTY && fluid.getBucket() == Items.MILK_BUCKET;
+    }
+
+    public static boolean isMilkId(ResourceLocation id) {
+        return MILK_ID.equals(id) || VANILLA_MILK_ID.equals(id);
+    }
+
+    public static boolean matchesFluidTag(ResourceLocation actual, TagKey<Fluid> tag) {
+        return actual != null && BuiltInRegistries.FLUID.getOptional(actual)
+                .map(fluid -> fluid.is(tag))
+                .orElse(false);
     }
 
     @Environment(EnvType.CLIENT)
     public static void registerFluidRenderers() {
         Fluid milk = BuiltInRegistries.FLUID.getOptional(MILK_ID)
+                .or(() -> BuiltInRegistries.FLUID.getOptional(VANILLA_MILK_ID))
                 .orElseThrow(() ->
                         new IllegalStateException("Milk fluid was not initialized"));
-        registerSingleStateRender(milk, "block/milk_still", 0xFFFFFFFF);
+        String texture = BuiltInRegistries.FLUID.getKey(milk).getNamespace().equals("minecraft")
+                ? "block/milk_still" : "stockpot/milk";
+        registerSingleStateRender(milk, texture, 0xFFFFFFFF);
     }
 
     @Environment(EnvType.CLIENT)

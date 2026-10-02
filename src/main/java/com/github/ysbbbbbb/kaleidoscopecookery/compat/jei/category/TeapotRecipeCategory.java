@@ -78,7 +78,7 @@ public class TeapotRecipeCategory implements IRecipeCategory<TeapotRecipe> {
                 .toList();
         ItemStack output = recipe.result().copyWithCount(TeapotRecipe.OUTPUT_COUNT);
 
-        Fluid fluid = BuiltInRegistries.FLUID.get(recipe.teaFluid());
+        Fluid fluid = BuiltInRegistries.FLUID.get(recipe.displayTeaFluid());
         Item bucket = fluid.getBucket();
 
         builder.addSlot(RecipeIngredientRole.INPUT, 65, 0).setStandardSlotBackground().addItemLike(bucket);

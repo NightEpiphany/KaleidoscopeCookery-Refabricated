@@ -54,7 +54,6 @@ public final class ClientRegistry {
         ModModelLoading.register();
         ModClientTooltip.register();
         ModEntitiesRender.register();
-        ModFluidRenderers.register();
         ModParticleFactoryRegistry.register();
         ModBlockRenderLayerMap.register();
         ModFluids.registerFluidRenderers();

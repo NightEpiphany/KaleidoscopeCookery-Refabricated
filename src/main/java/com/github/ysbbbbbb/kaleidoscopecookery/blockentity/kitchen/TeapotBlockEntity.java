@@ -579,7 +579,8 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         if (rawId.isBlank()) {
             return TeapotRecipeSerializer.EMPTY_TEA_FLUID;
         }
-        return new ResourceLocation(rawId);
+        ResourceLocation id = new ResourceLocation(rawId);
+        return ModFluids.VANILLA_MILK_ID.equals(id) ? ModFluids.MILK_ID : id;
     }
 
     public ItemStack getResult() {

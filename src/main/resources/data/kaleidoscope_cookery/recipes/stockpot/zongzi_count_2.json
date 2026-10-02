@@ -4,7 +4,7 @@
   "cooking_texture": "kaleidoscope_cookery:stockpot/default_cooking",
   "empty_carrier": true,
   "finished_bubble_color": 16034443,
-  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished",
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_green",
   "ingredients": [
     {
       "item": "kaleidoscope_cookery:raw_zongzi"

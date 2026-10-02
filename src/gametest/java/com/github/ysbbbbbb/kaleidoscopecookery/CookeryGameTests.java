@@ -28,10 +28,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -645,6 +647,17 @@ public class CookeryGameTests implements FabricGameTest {
         ModItems.TEA_EGG.finishUsingItem(new ItemStack(ModItems.TEA_EGG), helper.getLevel(), player);
         helper.assertTrue(player.hasEffect(ModEffects.SULFUR.get()), "Tea eggs must grant Sulfur");
         helper.assertTrue(player.getEffect(ModEffects.SULFUR.get()).getDuration() == 1200, "Tea egg effect must last one minute");
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void milkFluidUsesModIdAndCommonTag(GameTestHelper helper) {
+        Fluid milk = BuiltInRegistries.FLUID.get(ModFluids.MILK_ID);
+        helper.assertTrue(milk != Fluids.EMPTY, "Mod milk fluid is not registered");
+        helper.assertTrue(ModFluids.MILK_ID.getNamespace().equals(KaleidoscopeCookery.MOD_ID),
+                "Milk fluid must use the mod namespace");
+        helper.assertTrue(milk.is(TagKey.create(Registries.FLUID, new ResourceLocation("c", "milk"))),
+                "Milk fluid must be in the common milk tag");
         helper.succeed();
     }
 

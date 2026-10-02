@@ -25,7 +25,8 @@ public class VillagerMixin {
             MOD_WANTED_ITEMS = ImmutableSet.of(
                     ModItems.TOMATO, ModItems.TOMATO_SEED,
                     ModItems.RED_CHILI, ModItems.GREEN_CHILI, ModItems.CHILI_SEED,
-                    ModItems.LETTUCE, ModItems.LETTUCE_SEED
+                    ModItems.LETTUCE, ModItems.LETTUCE_SEED,
+                    ModItems.TEA_SEED, ModItems.WILD_RICE_SEED
             );
         }
         if (MOD_WANTED_ITEMS.contains(stack.getItem())) {

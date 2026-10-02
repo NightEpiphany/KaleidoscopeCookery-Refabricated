@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.level.material.Fluid;
 @Environment(EnvType.CLIENT)
 public class MobSoupBaseRender extends FluidSoupBaseRender {
@@ -48,6 +49,9 @@ public class MobSoupBaseRender extends FluidSoupBaseRender {
             stockpot.renderEntity = mobType.create(world);
             if (stockpot.renderEntity != null) {
                 stockpot.renderEntity.setOnGround(true);
+                if (stockpot.renderEntity instanceof Pufferfish pufferfish) {
+                    pufferfish.setPuffState(world.random.nextInt(3));
+                }
             }
         }
 
