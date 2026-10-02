@@ -1,0 +1,11 @@
+{
+  "type": "kaleidoscope_cookery:flex_stockpot",
+  "carrier": "minecraft:flower_pot",
+  "ingredients": [
+    "minecraft:shelf_mushroom"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_cookery:shelf_mushroom_pot_soup"
+  }
+}

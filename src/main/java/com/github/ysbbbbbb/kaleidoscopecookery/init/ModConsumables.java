@@ -960,6 +960,15 @@ public interface ModConsumables {
             .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(WARMTH, 5 * 60 * 20), 1.0F))
             .build();
 
+    // 棕色蘑菇瓦罐汤
+    Consumable SHELF_MUSHROOM_POT_SOUP_BLOCK = Consumables.defaultFood()
+            .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(WARMTH, 5 * 60 * 20), 1.0F))
+            .build();
+
+    Consumable SHELF_MUSHROOM_POT_SOUP_ITEM = Consumables.defaultFood()
+            .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(WARMTH, 5 * 60 * 20), 1.0F))
+            .build();
+
     // 红色蘑菇瓦罐汤
     Consumable RED_MUSHROOM_POT_SOUP_BLOCK = Consumables.defaultFood()
             .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(WARMTH, 5 * 60 * 20), 1.0F))

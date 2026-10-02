@@ -1,0 +1,229 @@
+{
+  "variants": {
+    "bites=0,facing=east,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 90
+    },
+    "bites=0,facing=east,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 90
+    },
+    "bites=0,facing=east,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 90
+    },
+    "bites=0,facing=east,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 90
+    },
+    "bites=0,facing=east,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 90
+    },
+    "bites=0,facing=north,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0"
+    },
+    "bites=0,facing=north,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0"
+    },
+    "bites=0,facing=north,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0"
+    },
+    "bites=0,facing=north,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0"
+    },
+    "bites=0,facing=north,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0"
+    },
+    "bites=0,facing=south,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 180
+    },
+    "bites=0,facing=south,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 180
+    },
+    "bites=0,facing=south,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 180
+    },
+    "bites=0,facing=south,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 180
+    },
+    "bites=0,facing=south,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 180
+    },
+    "bites=0,facing=west,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 270
+    },
+    "bites=0,facing=west,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 270
+    },
+    "bites=0,facing=west,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 270
+    },
+    "bites=0,facing=west,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 270
+    },
+    "bites=0,facing=west,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_0",
+      "y": 270
+    },
+    "bites=1,facing=east,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 90
+    },
+    "bites=1,facing=east,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 90
+    },
+    "bites=1,facing=east,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 90
+    },
+    "bites=1,facing=east,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 90
+    },
+    "bites=1,facing=east,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 90
+    },
+    "bites=1,facing=north,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1"
+    },
+    "bites=1,facing=north,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1"
+    },
+    "bites=1,facing=north,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1"
+    },
+    "bites=1,facing=north,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1"
+    },
+    "bites=1,facing=north,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1"
+    },
+    "bites=1,facing=south,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 180
+    },
+    "bites=1,facing=south,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 180
+    },
+    "bites=1,facing=south,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 180
+    },
+    "bites=1,facing=south,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 180
+    },
+    "bites=1,facing=south,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 180
+    },
+    "bites=1,facing=west,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 270
+    },
+    "bites=1,facing=west,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 270
+    },
+    "bites=1,facing=west,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 270
+    },
+    "bites=1,facing=west,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 270
+    },
+    "bites=1,facing=west,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_1",
+      "y": 270
+    },
+    "bites=2,facing=east,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 90
+    },
+    "bites=2,facing=east,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 90
+    },
+    "bites=2,facing=east,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 90
+    },
+    "bites=2,facing=east,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 90
+    },
+    "bites=2,facing=east,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 90
+    },
+    "bites=2,facing=north,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2"
+    },
+    "bites=2,facing=north,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2"
+    },
+    "bites=2,facing=north,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2"
+    },
+    "bites=2,facing=north,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2"
+    },
+    "bites=2,facing=north,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2"
+    },
+    "bites=2,facing=south,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 180
+    },
+    "bites=2,facing=south,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 180
+    },
+    "bites=2,facing=south,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 180
+    },
+    "bites=2,facing=south,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 180
+    },
+    "bites=2,facing=south,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 180
+    },
+    "bites=2,facing=west,quality=0": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 270
+    },
+    "bites=2,facing=west,quality=1": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 270
+    },
+    "bites=2,facing=west,quality=2": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 270
+    },
+    "bites=2,facing=west,quality=3": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 270
+    },
+    "bites=2,facing=west,quality=4": {
+      "model": "kaleidoscope_cookery:block/food/shelf_mushroom_pot_soup/shelf_mushroom_pot_soup_2",
+      "y": 270
+    }
+  }
+}

@@ -40,6 +40,8 @@
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Хранит еду и зелья.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "ПКМ — использовать.",
   "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Еда расходуется до полного насыщения.",
+  "block.kaleidoscope_cookery.shelf_mushroom_pot_soup": "Суп с грибами в горшочке",
+  "tooltip.kaleidoscope_cookery.shelf_mushroom_pot_soup.maxim": "Вкус осени.",
 
 
   "jei.kaleidoscope_cookery.bamboo_tray.drying": "Сухой (солнечный день): %ss",

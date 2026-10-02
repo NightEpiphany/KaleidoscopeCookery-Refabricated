@@ -72,7 +72,7 @@ dependencies {
 	compileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${providers.gradleProperty("rei_version").get()}")
 	compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${providers.gradleProperty("rei_version").get()}")
 	compileOnly ("me.shedaniel.cloth:cloth-config-fabric:26.3.158")
-	compileOnly ("dev.architectury:architectury-fabric:21.0.2")
+	compileOnly ("dev.architectury:architectury-fabric:22.0.3")
 	compileOnly ("maven.modrinth:create-fly:${providers.gradleProperty("create_version").get()}")
 	implementation("net.fabricmc:fabric-loader:${providers.gradleProperty("loader_version").get()}")
 	implementation("maven.modrinth:jade:${providers.gradleProperty("jade_version").get()}")

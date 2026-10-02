@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.recipe.soupbase.ISoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.StockpotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.renderstate.StockpotBlockEntityRenderState;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.render.soupbase.SimpleSoupBaseRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.MobSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
@@ -27,7 +28,10 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -39,6 +43,9 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBlockEntity, StockpotBlockEntityRenderState> {
+    /*汤锅的可渲染实体只会做一层渲染，不会将真实实体属性添加到世界当中*/
+    private static int nextRenderEntityId = Integer.MIN_VALUE;
+
     private final Function<Identifier, ISoupBaseRender> soupBaseRender;
     private final ItemModelResolver itemModelResolver;
     private final EntityRenderDispatcher entityRenderDispatcher;
@@ -49,7 +56,7 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
             if (soupBase != null) {
                 return soupBase.getRender();
             }
-            return null;
+            return new SimpleSoupBaseRender(id);
         });
         this.itemModelResolver = context.itemModelResolver();
         this.entityRenderDispatcher = context.entityRenderer();
@@ -86,12 +93,22 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
         if (blockEntity.renderEntity != null)
             blockEntityRenderState.renderEntity = this.entityRenderDispatcher.extractEntity(blockEntity.renderEntity, f);
         else if (SoupBaseManager.getSoupBase(blockEntityRenderState.soupBaseID) instanceof MobSoupBase soupBase && blockEntity.getLevel() != null) {
-            blockEntity.renderEntity = soupBase.getType().create(blockEntity.getLevel(), EntitySpawnReason.BUCKET);
+            blockEntity.renderEntity = createRenderEntity(soupBase, blockEntity.getLevel());
         }
         blockEntityRenderState.cookingTexture = blockEntity.getCookingTexture();
         blockEntityRenderState.finishedTexture = blockEntity.getFinishedTexture();
         blockEntityRenderState.takeOutCount = blockEntity.getTakeoutCount();
         blockEntityRenderState.output = blockEntity.getResult();
+    }
+
+    private static @Nullable Entity createRenderEntity(MobSoupBase soupBase, Level level) {
+        Entity entity = soupBase.getType().create(level, EntitySpawnReason.BUCKET);
+        if (entity != null)
+            entity.setId(nextRenderEntityId++);
+        // 河豚随机膨胀形态
+        if (entity instanceof Pufferfish pufferfish)
+            pufferfish.setPuffState(level.getRandom().nextInt(3));
+        return entity;
     }
 
     @Override

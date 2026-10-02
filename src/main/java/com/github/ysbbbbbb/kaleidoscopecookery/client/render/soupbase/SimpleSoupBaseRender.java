@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
 
-@Deprecated
 public class SimpleSoupBaseRender implements ISoupBaseRender {
     private final Identifier soupBaseTexture;
 

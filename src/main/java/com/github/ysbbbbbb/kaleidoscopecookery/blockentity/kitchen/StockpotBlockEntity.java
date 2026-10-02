@@ -606,7 +606,12 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
                 RecipeHolder<StockpotRecipe> stockpotRecipe = serverLevel.recipeAccess().byKeyTyped(ModRecipes.STOCKPOT_RECIPE, recipeKey);
                 this.recipe = Objects.requireNonNullElseGet(stockpotRecipe, StockpotRecipeSerializer::getEmptyRecipe);
             }
-            if (valueInput.contains(SOUP_BASE_ID)) this.soupBaseId = Identifier.tryParse(valueInput.getString(SOUP_BASE_ID).orElse(ModSoupBases.WATER.toString()));
+            if (valueInput.contains(SOUP_BASE_ID)) {
+                this.soupBaseId = Identifier.tryParse(valueInput.getString(SOUP_BASE_ID).orElse(ModSoupBases.WATER.toString()));
+                if (ModFluids.VANILLA_MILK_ID.equals(this.soupBaseId)) {
+                    this.soupBaseId = ModFluids.MILK_ID;
+                }
+            }
             if (valueInput.contains(RESULT)) this.result = valueInput.read(RESULT, ItemStack.CODEC).orElse(ItemStack.EMPTY);
             this.status = valueInput.getIntOr(STATUS, PUT_SOUP_BASE);
             this.currentTick = valueInput.getIntOr(CURRENT_TICK, 0);

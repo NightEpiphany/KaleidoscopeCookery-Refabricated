@@ -206,6 +206,13 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
                 .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.BUDDHA_JUMPS_OVER_THE_WALL), 1)
                 .save(consumer, "buddha_jumps_over_the_wall");
 
+        StockpotRecipeBuilder.builder()
+                .addInput(Items.SHELF_MUSHROOM, Items.SHELF_MUSHROOM, Items.SHELF_MUSHROOM,
+                        Items.SHELF_MUSHROOM, Items.SHELF_MUSHROOM, Items.SHELF_MUSHROOM)
+                .setCarrier(Items.FLOWER_POT)
+                .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.SHELF_MUSHROOM_POT_SOUP), 1)
+                .save(consumer, "shelf_mushroom_pot_soup");
+
         // 妯＄硦閰嶆柟
         FlexStockpotRecipeBuilder.builder()
                 .addInput(Items.BONE)
@@ -359,6 +366,12 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
                 .setCarrier(Items.FLOWER_POT)
                 .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.BUDDHA_JUMPS_OVER_THE_WALL), 1)
                 .save(consumer, "buddha_jumps_over_the_wall");
+
+        FlexStockpotRecipeBuilder.builder()
+                .addInput(Items.SHELF_MUSHROOM)
+                .setCarrier(Items.FLOWER_POT)
+                .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.SHELF_MUSHROOM_POT_SOUP), 1)
+                .save(consumer, "shelf_mushroom_pot_soup");
     }
 
     private void addRiceRecipes(RecipeOutput consumer) {

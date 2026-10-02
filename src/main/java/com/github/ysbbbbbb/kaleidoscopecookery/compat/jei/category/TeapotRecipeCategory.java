@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.TeapotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.TeaFluidHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -16,7 +17,6 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -24,7 +24,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -70,8 +69,7 @@ public class TeapotRecipeCategory implements IRecipeCategory<RecipeHolder<Teapot
                 .toList();
         ItemStack output = recipe.result().create().copyWithCount(TeapotRecipe.OUTPUT_COUNT);
 
-        Fluid fluid = BuiltInRegistries.FLUID.getValue(recipe.teaFluid());
-        Item bucket = fluid.getBucket();
+        Item bucket = TeaFluidHelper.getFilledContainer(recipe.displayTeaFluid()).getItem();
 
         builder.addSlot(RecipeIngredientRole.INPUT, 65, 0).setStandardSlotBackground().add(bucket);
         builder.addSlot(RecipeIngredientRole.INPUT, 83, 0).setStandardSlotBackground().addItemStacks(inputs);

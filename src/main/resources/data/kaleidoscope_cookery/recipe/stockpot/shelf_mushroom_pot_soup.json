@@ -2,11 +2,11 @@
   "type": "kaleidoscope_cookery:stockpot",
   "carrier": "minecraft:flower_pot",
   "ingredients": [
-    "#kaleidoscope_cookery:tea_bags"
+    "minecraft:shelf_mushroom",
+    "minecraft:shelf_mushroom"
   ],
   "result": {
     "count": 1,
-    "id": "kaleidoscope_cookery:clay_pot_milk_tea"
-  },
-  "soup_base": "kaleidoscope_cookery:milk"
+    "id": "kaleidoscope_cookery:shelf_mushroom_pot_soup"
+  }
 }

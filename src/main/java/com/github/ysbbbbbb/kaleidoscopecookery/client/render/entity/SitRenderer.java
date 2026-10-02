@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 
 @Deprecated
 @Environment(EnvType.CLIENT)
@@ -22,7 +23,7 @@ public class SitRenderer extends EntityRenderer<SitEntity, EntityRenderState> {
         return EMPTY;
     }
     @Override
-    public EntityRenderState createRenderState() {
+    public @NonNull EntityRenderState createRenderState() {
         return new EntityRenderState();
     }
 

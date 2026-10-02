@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "F": "#c:fences/wooden",
+    "F": "#minecraft:wooden_fences",
     "G": "minecraft:grindstone",
     "S": "minecraft:stick",
     "T": "minecraft:smooth_stone"

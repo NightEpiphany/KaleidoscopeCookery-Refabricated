@@ -644,6 +644,15 @@ public interface ModFoods {
             .nutrition(18).saturationModifier(0.667F)
             .alwaysEdible().build();
 
+    // 层孔菇瓦罐汤
+    FoodProperties SHELF_MUSHROOM_POT_SOUP_BLOCK = (new FoodProperties.Builder())
+            .nutrition(4).saturationModifier(0.667F)
+            .alwaysEdible().build();
+
+    FoodProperties SHELF_MUSHROOM_POT_SOUP_ITEM = (new FoodProperties.Builder())
+            .nutrition(13).saturationModifier(0.667F)
+            .alwaysEdible().build();
+
     // 红色蘑菇瓦罐汤
     FoodProperties RED_MUSHROOM_POT_SOUP_BLOCK = (new FoodProperties.Builder())
             .nutrition(6).saturationModifier(0.667F)

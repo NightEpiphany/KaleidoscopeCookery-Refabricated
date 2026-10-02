@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ChoppingBoard
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEnchantments;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFluids;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.TransmutationLunchBagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.ItemStackHandler;
@@ -13,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
@@ -25,9 +27,25 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.tags.TagKey;
 
 @SuppressWarnings("all")
 public class Update16GameTest {
+    @GameTest
+    public void modMilkIsNamespacedAndTagged(GameTestHelper helper) {
+        var milk = BuiltInRegistries.FLUID.getValue(ModFluids.MILK_ID);
+        helper.assertTrue(ModFluids.MILK_ID.getNamespace().equals("kaleidoscope_cookery"),
+                Component.literal("Milk fluid must use the mod namespace"));
+        helper.assertTrue(milk.getBucket() == Items.MILK_BUCKET,
+                Component.literal("Mod milk must use the vanilla milk bucket"));
+        helper.assertTrue(milk.is(TagKey.create(Registries.FLUID,
+                        net.minecraft.resources.Identifier.fromNamespaceAndPath("c", "milk"))),
+                Component.literal("Mod milk must be in the common milk tag"));
+        helper.assertTrue(ModFluids.isMilkId(ModFluids.VANILLA_MILK_ID),
+                Component.literal("Legacy vanilla milk key must remain recognized"));
+        helper.succeed();
+    }
+
     @GameTest
     public void dispenserCutsChickenIntoAllOutputs(GameTestHelper helper) {
         BlockPos boardPos = new BlockPos(1, 1, 1);
