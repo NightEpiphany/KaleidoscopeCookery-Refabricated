@@ -87,7 +87,7 @@ public class ReiSteamerRecipeCategory implements DisplayCategory<ReiSteamerRecip
         registry.add(new ReiSteamerRecipeCategory());
         registry.addWorkstations(ReiSteamerRecipeCategory.ID,
                 ReiUtil.ofItem(ModItems.STEAMER),
-                ReiUtil.ofIngredient(Ingredient.of(ModItems.DIAMOND_KITCHEN_KNIFE, ModItems.IRON_KITCHEN_KNIFE, ModItems.GOLD_KITCHEN_KNIFE, ModItems.NETHERITE_KITCHEN_KNIFE)));
+                ReiUtil.ofIngredient(Ingredient.of(ModItems.DIAMOND_KITCHEN_KNIFE, ModItems.IRON_KITCHEN_KNIFE, ModItems.GOLD_KITCHEN_KNIFE, ModItems.NETHERITE_KITCHEN_KNIFE, ModItems.COPPER_KITCHEN_KNIFE)));
     }
 
     public static class SteamerRecipeDisplay extends BasicDisplay {
