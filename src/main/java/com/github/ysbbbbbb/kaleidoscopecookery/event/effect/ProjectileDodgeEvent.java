@@ -3,7 +3,9 @@ package com.github.ysbbbbbb.kaleidoscopecookery.event.effect;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.ProjectileImpactEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEffects;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -11,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -46,14 +47,22 @@ public class ProjectileDodgeEvent {
                 if (instance.isInfiniteDuration()){
                     return;
                 }
-                if (instance.getDuration() <= DODGE_COST) {
+                int remainingDuration = durationAfterDodge(instance.getDuration());
+                if (remainingDuration == 0) {
                     living.removeEffect(ModEffects.PROJECTILE_DODGE);
                 } else {
-                    instance.duration -= DODGE_COST;
+                    instance.duration = remainingDuration;
                     living.forceAddEffect(instance, null);
                 }
             }
         }
+    }
+
+    static int durationAfterDodge(int duration) {
+        if (duration == MobEffectInstance.INFINITE_DURATION) {
+            return duration;
+        }
+        return duration <= DODGE_COST ? 0 : duration - DODGE_COST;
     }
 
     /**
@@ -65,7 +74,7 @@ public class ProjectileDodgeEvent {
      * @param maxAttempts 最大尝试次数
      */
     public static void randomTeleport(Level level, LivingEntity living, double range, int maxAttempts) {
-        if (level.isClientSide()) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
 
@@ -73,7 +82,7 @@ public class ProjectileDodgeEvent {
         double y = living.getY();
         double z = living.getZ();
         int minH = level.getMinY();
-        int maxH = ((ServerLevel) level).getLogicalHeight();
+        int maxH = serverLevel.getLogicalHeight();
 
         for (int i = 0; i < maxAttempts; ++i) {
             double targetX = x + (living.getRandom().nextDouble() - 0.5) * range;
@@ -85,8 +94,19 @@ public class ProjectileDodgeEvent {
             }
 
             Vec3 previousPos = living.position();
-            level.gameEvent(GameEvent.TELEPORT, previousPos, GameEvent.Context.of(living));
-            if (living.randomTeleport(targetX, targetY, targetZ, true, state -> !state.is(Blocks.AIR))) {
+            if (living.randomTeleport(targetX, targetY, targetZ, true, BlockTags.ENDERMAN_DOES_NOT_TELEPORT_TO)) {
+                level.gameEvent(GameEvent.TELEPORT, previousPos, GameEvent.Context.of(living));
+                serverLevel.sendParticles(
+                        ParticleTypes.PORTAL,
+                        previousPos.x,
+                        previousPos.y + living.getBbHeight() * 0.5,
+                        previousPos.z,
+                        32,
+                        living.getBbWidth() * 0.5,
+                        living.getBbHeight() * 0.5,
+                        living.getBbWidth() * 0.5,
+                        0.1
+                );
                 SoundEvent soundEvent = SoundEvents.ENDERMAN_TELEPORT;
                 level.playSound(null, x, y, z, soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F);
                 living.playSound(soundEvent, 1.0F, 1.0F);
