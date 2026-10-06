@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_pufferfish",
   "ingredients": [
     "#c:crops/lettuce",
     "#c:crops/lettuce",

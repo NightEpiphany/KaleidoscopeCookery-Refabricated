@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_red_mushroom",
   "carrier": "minecraft:flower_pot",
   "ingredients": [
     "minecraft:red_mushroom",

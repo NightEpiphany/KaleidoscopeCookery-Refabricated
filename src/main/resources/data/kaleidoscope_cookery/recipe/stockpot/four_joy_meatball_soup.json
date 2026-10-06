@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_cheesy",
   "ingredients": [
     "kaleidoscope_cookery:raw_meatball",
     "kaleidoscope_cookery:raw_meatball",
