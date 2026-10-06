@@ -3,9 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.compat.farmersdelight;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.StockpotMatchRecipeEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
-import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -14,6 +12,7 @@ import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 import vectorwing.farmersdelight.common.registry.ModRecipeTypes;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CookingPotCompat {
     static void getTransformRecipeForJei(Level level, List<StockpotRecipe> recipes) {
@@ -38,20 +37,41 @@ public class CookingPotCompat {
         );
     }
 
-    @SuppressWarnings("deprecation")
     static void afterStockpotRecipeMatch(StockpotMatchRecipeEvent.Post event) {
-        RecipeManager recipeManager = event.getLevel().getRecipeManager();
+        if (!event.getRawOutput().equals(StockpotRecipeSerializer.EMPTY_ID)) {
+            return;
+        }
+        afterStockpotRecipeMatch(event, event.getLevel().getRecipeManager()
+                .getAllRecipesFor(ModRecipeTypes.COOKING.get()));
+    }
 
+    static void afterStockpotRecipeMatch(StockpotMatchRecipeEvent.Post event, List<CookingPotRecipe> recipes) {
         if (!event.getRawOutput().equals(StockpotRecipeSerializer.EMPTY_ID)) {
             return;
         }
 
         // 开始寻找农夫乐事的厨锅配方进行匹配
-        NonNullList<ItemStack> items = event.getContainer().getItems();
-        RecipeWrapper wrapper = new RecipeWrapper(new ItemStackHandler(items.toArray(ItemStack[]::new)));
-        recipeManager.getRecipeFor(ModRecipeTypes.COOKING.get(), wrapper, event.getLevel()).ifPresent(recipe -> {
+        findMatchingRecipe(recipes, event.getContainer().getItems()).ifPresent(recipe -> {
             // 如果找到匹配的农夫乐事厨锅配方，则将其转换为本模组汤锅配方
             event.setOutput(transformRecipe(recipe, event.getLevel()));
         });
+    }
+
+    static Optional<CookingPotRecipe> findMatchingRecipe(List<CookingPotRecipe> recipes, List<ItemStack> items) {
+        StackedContents contents = new StackedContents();
+        int ingredientCount = 0;
+        for (int slot = 0; slot < CookingPotRecipe.INPUT_SLOTS; slot++) {
+            ItemStack item = slot < items.size() ? items.get(slot) : ItemStack.EMPTY;
+            if (!item.isEmpty()) {
+                ingredientCount++;
+                contents.accountStack(item, 1);
+            }
+        }
+        for (CookingPotRecipe recipe : recipes) {
+            if (ingredientCount == recipe.getIngredients().size() && contents.canCraft(recipe, null)) {
+                return Optional.of(recipe);
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -6,7 +6,8 @@
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
-      "com.github.ysbbbbbb.kaleidoscopecookery.CookeryGameTests"
+      "com.github.ysbbbbbb.kaleidoscopecookery.CookeryGameTests",
+      "com.github.ysbbbbbb.kaleidoscopecookery.compat.farmersdelight.CookingPotCompatGameTests"
     ],
     "server": [
       "com.github.ysbbbbbb.kaleidoscopecookery.CookeryTestInitializer"

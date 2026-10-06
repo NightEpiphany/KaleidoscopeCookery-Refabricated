@@ -8,7 +8,8 @@ public final class CookeryTestInitializer implements DedicatedServerModInitializ
     @Override
     public void onInitializeServer() {
         if (System.getProperty("fabric-api.gametest") != null) {
-            GameTestRegistry.getAllTestFunctions().removeIf(test -> !test.getTestName().startsWith("cookerygametests."));
+            GameTestRegistry.getAllTestFunctions().removeIf(test -> !test.getTestName().startsWith("cookerygametests.")
+                    && !test.getTestName().startsWith("cookingpotcompatgametests."));
         }
     }
 }
