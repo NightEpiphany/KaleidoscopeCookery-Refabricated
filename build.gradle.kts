@@ -78,7 +78,7 @@ dependencies {
 	implementation("maven.modrinth:jade:${providers.gradleProperty("jade_version").get()}")
 	implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabric_api_version").get()}")
 	implementation("maven.modrinth:EsAfCjCV:PHjDtQay")
-	compileOnly ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${providers.gradleProperty("forge_config_api_version").get()}")
+	implementation ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${providers.gradleProperty("forge_config_api_version").get()}")
 	implementation("mezz.jei:jei-${providers.gradleProperty("jei_version").get()}")
 	implementation("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
 	testImplementation("net.fabricmc:fabric-loader-junit:${providers.gradleProperty("loader_version").get()}")

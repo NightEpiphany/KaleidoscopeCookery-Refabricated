@@ -5,7 +5,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.recipe.soupbase.ISoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.StockpotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.renderstate.StockpotBlockEntityRenderState;
-import com.github.ysbbbbbb.kaleidoscopecookery.client.render.soupbase.SimpleSoupBaseRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.MobSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
@@ -50,13 +49,11 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
     private final ItemModelResolver itemModelResolver;
     private final EntityRenderDispatcher entityRenderDispatcher;
 
+    @SuppressWarnings("all")
     public StockpotBlockEntityRender(BlockEntityRendererProvider.Context context) {
         this.soupBaseRender = Util.memoize(id -> {
             ISoupBase soupBase = SoupBaseManager.getSoupBase(id);
-            if (soupBase != null) {
-                return soupBase.getRender();
-            }
-            return new SimpleSoupBaseRender(id);
+            return soupBase == null ? null : soupBase.getRender();
         });
         this.itemModelResolver = context.itemModelResolver();
         this.entityRenderDispatcher = context.entityRenderer();
@@ -125,6 +122,9 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
         }
         int status = blockEntityRenderState.status;
         ISoupBaseRender soupBase = this.soupBaseRender.apply(blockEntityRenderState.soupBaseID);
+        if (soupBase == null) {
+            return;
+        }
         if (status == StockpotBlockEntity.PUT_INGREDIENT) {
             soupBase.renderWhenPutIngredient(blockEntityRenderState, 0, poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0.38f, cameraRenderState);
             renderItems(blockEntityRenderState, poseStack, submitNodeCollector);
