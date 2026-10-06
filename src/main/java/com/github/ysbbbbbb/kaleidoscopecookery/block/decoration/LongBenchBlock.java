@@ -1,14 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.decoration;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.entity.ISittable;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -22,15 +20,12 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-import java.util.List;
-
-public class LongBenchBlock extends Block implements SimpleWaterloggedBlock {
+public class LongBenchBlock extends Block implements SimpleWaterloggedBlock, ISittable {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -106,26 +101,6 @@ public class LongBenchBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public @NotNull InteractionResult useWithoutItem(@NonNull BlockState state, @NonNull Level level, @NonNull BlockPos pos, Player player, @NonNull BlockHitResult hitResult) {
-        if (player.isSecondaryUseActive()) {
-            return InteractionResult.PASS;
-        }
-        if (!level.isClientSide()) {
-            List<SitEntity> entities = level.getEntitiesOfClass(SitEntity.class, new AABB(pos));
-            if (entities.isEmpty()) {
-                SitEntity sitEntity = new SitEntity(level, pos, 0.5);
-                Direction facing = state.getValue(AXIS) == Direction.Axis.X ? Direction.SOUTH : Direction.EAST;
-                sitEntity.setYRot(facing.toYRot());
-                level.addFreshEntity(sitEntity);
-                player.startRiding(sitEntity);
-                return InteractionResult.SUCCESS;
-            }
-            return InteractionResult.PASS;
-        }
-        return InteractionResult.SUCCESS;
-    }
-
-    @Override
     public @NotNull FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
@@ -138,5 +113,10 @@ public class LongBenchBlock extends Block implements SimpleWaterloggedBlock {
     @Override
     public @NotNull VoxelShape getShape(BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull CollisionContext context) {
         return state.getValue(AXIS) == Direction.Axis.X ? EAST_WEST : NORTH_SOUTH;
+    }
+
+    @Override
+    public float renderHeightOffset() {
+        return 0.486F;
     }
 }

@@ -3,42 +3,40 @@ package com.github.ysbbbbbb.kaleidoscopecookery.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.annotations.ServerThreadSafe;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
-import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 /**
- * Use this class to manage sit entities correctly
+ * 这个工具类用于正确处理座位和实体之间的交互逻辑
  */
 public class SitUtil {
     /**
-     * <dimension type id, <position, <entity, previous player position>>> This map only gets populated server side.
+     * <维度类型ID, <位置, 实体>> 此映射关系仅针对服务端
      */
-    private static final Map<Identifier, Map<BlockPos, Pair<SitEntity, Vec3>>> OCCUPIED = new HashMap<>();
+    @ServerThreadSafe
+    private static final Map<Identifier, Map<BlockPos, SitEntity>> OCCUPIED = new HashMap<>();
 
     private SitUtil() {}
 
     /**
-     * Adds a sit entity to the map that keeps track of them. This does not spawn the entity itself.
+     * 在映射表内添加一个坐下实体并持续跟踪缓存，这不会生成实体本身
      *
-     * @param level The level to add the entity in
-     * @param blockPos The position at which to add the entity
-     * @param entity The entity to add
-     * @param playerPos The position of the player who is sitting down. Used for correctly positioning the player after
-     *            dismounting
-     * @return true if the entity was added, false otherwise. This is always false on the client.
+     * @param level 世界盒子
+     * @param blockPos 添加实体的方块位置
+     * @param entity 待加入的实体
+     * @return 添加成功则返回 true，注意仅服务端。客户端永远返回false
      */
-    public static boolean addSitEntity(Level level, BlockPos blockPos, SitEntity entity, Vec3 playerPos) {
+    public static boolean addSitEntity(Level level, BlockPos blockPos, SitEntity entity) {
         if (!level.isClientSide()) {
             Identifier id = getDimensionTypeId(level);
 
-            OCCUPIED.computeIfAbsent(id, unused -> new HashMap<>());
-            OCCUPIED.get(id).put(blockPos, Pair.of(entity, playerPos));
+            OCCUPIED.computeIfAbsent(id, _ -> new HashMap<>());
+            OCCUPIED.get(id).put(blockPos, entity);
             return true;
         }
 
@@ -46,11 +44,11 @@ public class SitUtil {
     }
 
     /**
-     * Removes a sit entity from the map that keeps track of them. This does not remove the entity itself.
+     * 从跟踪它们的映射表中移除一个坐下实体。这不会移除实体本身。
      *
-     * @param level The level to remove the entity from
-     * @param pos The position to remove the entity from
-     * @return true if the entity was removed, false otherwise. This is always false on the client.
+     * @param level 要从中移除实体的世界
+     * @param pos 要从中移除实体的位置
+     * @return 如果实体被移除则返回 true，否则返回 false。在客户端上始终返回 false。
      */
     public static boolean removeSitEntity(Level level, BlockPos pos) {
         if (!level.isClientSide()) {
@@ -66,53 +64,29 @@ public class SitUtil {
     }
 
     /**
-     * Gets the sit entity that is situated at the given position in the given level
+     * 获取位于给定世界中给定位置的坐下实体
      *
-     * @param level The level to get the entity from
-     * @param pos The position to get the entity from
-     * @return The entity at the given position in the given level, null if there is none. This is always null on the client.
+     * @param level 要从中获取实体的世界
+     * @param pos 要从中获取实体的位置
+     * @return 给定世界中给定位置的实体，如果没有则为 null。在客户端上始终为 null。
      */
     public static SitEntity getSitEntity(Level level, BlockPos pos) {
         if (!level.isClientSide()) {
             Identifier id = getDimensionTypeId(level);
 
             if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos))
-                return OCCUPIED.get(id).get(pos).getLeft();
+                return OCCUPIED.get(id).get(pos);
         }
 
         return null;
     }
 
     /**
-     * Gets the position the player was at before he sat down
+     * 检查在给定世界中给定方块位置是否有玩家坐着
      *
-     * @param player The player
-     * @param sitEntity The sit entity the player is sitting on
-     * @return The position the player was at before he sat down, null if the player is not sitting. This is always null on the
-     *         client.
-     */
-    public static Vec3 getPreviousPlayerPosition(Player player, SitEntity sitEntity) {
-        if (!player.level().isClientSide()) {
-            Identifier id = getDimensionTypeId(player.level());
-
-            if (OCCUPIED.containsKey(id)) {
-                for (Pair<SitEntity, Vec3> pair : OCCUPIED.get(id).values()) {
-                    if (pair.getLeft() == sitEntity)
-                        return pair.getRight();
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Checks whether there is a player sitting at the given block position in the given level
-     *
-     * @param level The level to check in
-     * @param pos The position to check at
-     * @return true if a player is sitting at the given position in the given level, false otherwise. This is always false on the
-     *         client.
+     * @param level 要检查的世界
+     * @param pos 要检查的位置
+     * @return 如果在给定世界中给定位置有玩家坐着则返回 true，否则返回 false。在客户端上始终返回 false。
      */
     public static boolean isOccupied(Level level, BlockPos pos) {
         Identifier id = getDimensionTypeId(level);
@@ -121,15 +95,15 @@ public class SitUtil {
     }
 
     /**
-     * Checks whether a player is sitting anywhere
+     * 检查是否有玩家坐在任意位置
      *
-     * @param player The player to check
-     * @return true if the given player is sitting anywhere, false otherwise
+     * @param player 要检查的玩家
+     * @return 如果给定玩家坐在任意位置则返回 true，否则返回 false
      */
     public static boolean isPlayerSitting(Player player) {
         for (var entry : OCCUPIED.entrySet()) {
-            for (Pair<SitEntity, Vec3> pair : entry.getValue().values()) {
-                if (pair.getLeft().hasPassenger(player))
+            for (SitEntity entity : entry.getValue().values()) {
+                if (entity.hasPassenger(player))
                     return true;
             }
         }

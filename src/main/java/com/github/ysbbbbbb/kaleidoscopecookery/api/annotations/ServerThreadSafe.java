@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 // 用于修复C2ME的异步区块序列化存储
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD,ElementType.FIELD})
 public @interface ServerThreadSafe {
 }

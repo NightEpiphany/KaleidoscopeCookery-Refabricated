@@ -83,4 +83,9 @@ public class CookStoolBlock extends HorizontalDirectionalBlock implements Simple
         }
         return EAST_WEST;
     }
+
+    @Override
+    public float renderHeightOffset() {
+        return 0.4652F;
+    }
 }
