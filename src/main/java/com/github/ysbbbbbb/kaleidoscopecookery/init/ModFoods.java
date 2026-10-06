@@ -24,28 +24,28 @@ public interface ModFoods {
 
     // 猪儿虫
     FoodProperties CATERPILLAR = (new FoodProperties.Builder())
-            .nutrition(18).saturationMod(0.2F).alwaysEat()
+            .nutrition(18).saturationMod(0.2F).alwaysEat().meat()
             .effect(new MobEffectInstance(CONFUSION, 200), 1F)
             .build();
 
     // 刺身
     FoodProperties SASHIMI = (new FoodProperties.Builder())
-            .nutrition(1).saturationMod(0.5F)
+            .nutrition(1).saturationMod(0.5F).meat()
             .alwaysEat().build();
 
     // 生羊排
     FoodProperties RAW_LAMB_CHOPS = (new FoodProperties.Builder())
-            .nutrition(1).saturationMod(0.5F)
+            .nutrition(1).saturationMod(0.5F).meat()
             .alwaysEat().build();
 
     // 生牛杂
     FoodProperties RAW_COW_OFFAL = (new FoodProperties.Builder())
-            .nutrition(2).saturationMod(0.3F)
+            .nutrition(2).saturationMod(0.3F).meat()
             .alwaysEat().build();
 
     // 生五花肉
     FoodProperties RAW_PORK_BELLY = (new FoodProperties.Builder())
-            .nutrition(2).saturationMod(0.3F)
+            .nutrition(2).saturationMod(0.3F).meat()
             .alwaysEat().build();
 
     // 生驴肉
@@ -65,17 +65,17 @@ public interface ModFoods {
 
     // 熟羊排
     FoodProperties COOKED_LAMB_CHOPS = (new FoodProperties.Builder())
-            .nutrition(3).saturationMod(0.8F)
+            .nutrition(3).saturationMod(0.8F).meat()
             .alwaysEat().build();
 
     // 熟牛杂
     FoodProperties COOKED_COW_OFFAL = (new FoodProperties.Builder())
-            .nutrition(4).saturationMod(0.8F)
+            .nutrition(4).saturationMod(0.8F).meat()
             .alwaysEat().build();
 
     // 熟五花肉
     FoodProperties COOKED_PORK_BELLY = (new FoodProperties.Builder())
-            .nutrition(4).saturationMod(0.8F)
+            .nutrition(4).saturationMod(0.8F).meat()
             .alwaysEat().build();
 
     // 熟驴肉
