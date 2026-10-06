@@ -41,4 +41,9 @@ public interface IChoppingBoard {
      * 播放切菜板时的音效和粒子
      */
     void playParticlesSound();
+
+    /**
+     * 菜板上面是否有物品
+     */
+    boolean hasItemOnBoard();
 }

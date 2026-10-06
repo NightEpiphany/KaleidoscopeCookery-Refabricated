@@ -28,15 +28,15 @@ public class ChoppingBoardDispenseBehavior extends OptionalDispenseItemBehavior 
         BlockPos boardPos = source.getPos().relative(facing);
         BlockEntity blockEntity = source.getLevel().getBlockEntity(boardPos);
         if (blockEntity instanceof IChoppingBoard board) {
-            boolean success = knife
+            // onPutItem consumes the ingredient itself.
+            this.setSuccess(this.knife
                     ? board.onCutItem(source.getLevel(), null, stack)
-                    : board.onPutItem(source.getLevel(), null, stack);
-            if (success) {
-                this.setSuccess(true);
-                if (!knife) {
+                    : board.onPutItem(source.getLevel(), null, stack));
+            if (this.knife && board.hasItemOnBoard())
+                if (stack.getDamageValue() >= stack.getMaxDamage())
                     stack.shrink(1);
-                }
-            }
+                else
+                    stack.setDamageValue(stack.getDamageValue() + 1);
         }
         return stack;
     }
