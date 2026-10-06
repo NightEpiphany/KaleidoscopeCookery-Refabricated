@@ -4,10 +4,11 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemJsonOpsUtil;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
@@ -19,8 +20,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 
 public class RiceBowlRecipe extends CustomRecipe {
-    @SuppressWarnings("deprecation")
-    public static final Ingredient COOKED_RICE = Ingredient.of(HolderSet.emptyNamed(ItemJsonOpsUtil.INSTANCE, TagCommon.COOKED_RICE));
+    public static final TagKey<Item> COOKED_RICE = TagCommon.COOKED_RICE;
 
     private final Ingredient ingredient;
     private final ItemStackTemplate result;
@@ -43,7 +43,7 @@ public class RiceBowlRecipe extends CustomRecipe {
         }
 
         // 有且只能有一个物品匹配 COOKED_RICE
-        return items.stream().filter(COOKED_RICE).count() == 1;
+        return items.stream().filter(stack -> stack.is(COOKED_RICE)).count() == 1;
     }
 
     @Override
@@ -51,6 +51,18 @@ public class RiceBowlRecipe extends CustomRecipe {
         ItemStack assembled = result.create();
         copyBestQuality(container, assembled);
         return assembled;
+    }
+
+    @Override
+    public @NotNull NonNullList<ItemStack> getRemainingItems(@NonNull CraftingInput container) {
+        NonNullList<ItemStack> remainingItems = CraftingRecipe.defaultCraftingReminder(container);
+        for (int i = 0; i < container.size(); i++) {
+            if (container.getItem(i).is(COOKED_RICE)) {
+                // 米饭的碗成为盖浇饭容器，不应作为合成剩余物返还。
+                remainingItems.set(i, Items.BOWL.getDefaultInstance());
+            }
+        }
+        return remainingItems;
     }
 
 
@@ -69,23 +81,11 @@ public class RiceBowlRecipe extends CustomRecipe {
     }
 
 
-    public @NotNull NonNullList<Ingredient> getIngredients() {
+    public @NotNull NonNullList<Ingredient> getIngredients(HolderLookup.Provider registries) {
         NonNullList<Ingredient> ingredients = NonNullList.create();
         ingredients.add(this.ingredient);
-        ingredients.add(COOKED_RICE);
+        ingredients.add(Ingredient.of(registries.lookupOrThrow(Registries.ITEM).getOrThrow(COOKED_RICE)));
         return ingredients;
-    }
-
-    @Override
-    public @NotNull NonNullList<ItemStack> getRemainingItems(@NonNull CraftingInput container) {
-        NonNullList<ItemStack> remainingItems = CraftingRecipe.defaultCraftingReminder(container);
-        for (int i = 0; i < container.size(); i++) {
-            if (COOKED_RICE.test(container.getItem(i))) {
-                // 米饭的碗成为盖浇饭容器，不应作为合成剩余物返还。
-                remainingItems.set(i, Items.BOWL.getDefaultInstance());
-            }
-        }
-        return remainingItems;
     }
 
 

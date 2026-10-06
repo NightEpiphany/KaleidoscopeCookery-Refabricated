@@ -57,10 +57,10 @@ public class BowlFoodBlockItem extends BlockItem implements ICustomEatEffect {
     private final Optional<ItemLike> usingConvertsTo;
 
     public BowlFoodBlockItem(Block block, FoodProperties properties, Consumable consumable, @Nullable ItemLike usingConvertsTo, String name) {
-        super(block, new Item.Properties().stacksTo(16).useBlockDescriptionPrefix().usingConvertsTo(Items.BOWL)
+        super(block, new Properties().stacksTo(16).useBlockDescriptionPrefix().usingConvertsTo(usingConvertsTo == null ? Items.BOWL : usingConvertsTo.asItem())
                 .food(properties, consumable).setId(PortHelper.createItemId(name))
         );
-        this.usingConvertsTo = Optional.ofNullable(usingConvertsTo);
+        this.usingConvertsTo = Optional.of(usingConvertsTo == null ? Items.BOWL : usingConvertsTo.asItem());
     }
 
     @Override

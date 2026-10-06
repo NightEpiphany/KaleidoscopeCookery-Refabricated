@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.SitUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -24,11 +25,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+
+import java.util.function.Predicate;
 
 public class SitEntity extends Entity {
     public static final int DEFAULT = 0;
     public static final int TRASH_CAN = 1;
+    private static final Direction[] DISMOUNT_DIRECTIONS = {
+            Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH
+    };
     private static final EntityDataAccessor<Integer> SIT_TYPE = SynchedEntityData.defineId(SitEntity.class, EntityDataSerializers.INT);
     private int passengerTick = 0;
 
@@ -36,14 +43,13 @@ public class SitEntity extends Entity {
         super(type, level);
     }
 
-    public SitEntity(Level level, BlockPos pos) {
+    protected SitEntity(Level level) {
         this(ModEntities.SIT, level);
-        this.setPos(pos.getX() + 0.5, pos.getY() + 0.4375, pos.getZ() + 0.5);
         this.noPhysics = true;
     }
 
     public SitEntity(Level level, BlockPos pos, double y) {
-        this(level, pos);
+        this(level);
         this.setPos(pos.getX() + 0.5, pos.getY() + y, pos.getZ() + 0.5);
     }
 
@@ -88,17 +94,21 @@ public class SitEntity extends Entity {
 
     @Override
     public @NonNull Vec3 getDismountLocationForPassenger(@NonNull LivingEntity passenger) {
-        if (passenger instanceof Player player) {
-            Vec3 resetPosition = SitUtil.getPreviousPlayerPosition(player, this);
+        BlockPos seatPos = this.blockPosition();
+        Vec3 location = findCardinalDismountLocation(seatPos,
+                candidate -> this.level().getBlockState(candidate).isAir());
+        discard();
+        return location != null ? location : Vec3.atBottomCenterOf(seatPos.above());
+    }
 
-            if (resetPosition != null) {
-                discard();
-                return resetPosition;
+    static @Nullable Vec3 findCardinalDismountLocation(BlockPos seatPos, Predicate<BlockPos> isAir) {
+        for (Direction direction : DISMOUNT_DIRECTIONS) {
+            BlockPos candidate = seatPos.relative(direction);
+            if (isAir.test(candidate)) {
+                return Vec3.atBottomCenterOf(candidate);
             }
         }
-
-        discard();
-        return super.getDismountLocationForPassenger(passenger);
+        return null;
     }
 
     @Override

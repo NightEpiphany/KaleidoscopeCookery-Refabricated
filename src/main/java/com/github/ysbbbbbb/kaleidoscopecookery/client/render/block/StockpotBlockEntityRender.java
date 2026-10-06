@@ -107,6 +107,9 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
         if (blockEntityRenderState.hasLid) {
             return;
         }
+        if (!SoupBaseManager.containsSoupBase(blockEntityRenderState.soupBaseID)) {
+            return;
+        }
         int status = blockEntityRenderState.status;
         ISoupBaseRender soupBase = this.soupBaseRender.apply(blockEntityRenderState.soupBaseID);
         if (status == StockpotBlockEntity.PUT_INGREDIENT) {

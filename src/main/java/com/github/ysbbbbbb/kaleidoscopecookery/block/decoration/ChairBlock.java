@@ -184,4 +184,9 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
         }
         return null;
     }
+
+    @Override
+    public float renderHeightOffset() {
+        return 0.592F;
+    }
 }

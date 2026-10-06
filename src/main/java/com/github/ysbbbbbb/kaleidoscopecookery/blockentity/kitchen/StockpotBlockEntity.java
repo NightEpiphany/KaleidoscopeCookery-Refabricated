@@ -22,6 +22,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.particle.StockpotParticleOptions;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.FluidUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
@@ -41,6 +42,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -51,6 +53,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
@@ -357,6 +360,13 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         this.finishedBubbleColor = recipe.value().finishedBubbleColor();
     }
 
+    private static boolean isFilledFluidContainer(ItemStack stack) {
+        if (stack.getItem() instanceof BucketItem bucketItem && bucketItem.content != Fluids.EMPTY) {
+            return true;
+        }
+        return FluidUtils.hasFluid(stack);
+    }
+
     private void applyFlexRecipe(ServerLevel level, StockpotInput container, RecipeHolder<FlexStockpotRecipe> recipe) {
         FlexStockpotRecipe value = recipe.value();
         this.recipeId = recipe.id().identifier();
@@ -435,6 +445,10 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             return false;
         }
         if (itemStack.is(TagMod.INGREDIENT_BLOCKLIST)) {
+            return false;
+        }
+        // 容器只有对应上已注册的汤底才被视为合法交互
+        if (isFilledFluidContainer(itemStack)) {
             return false;
         }
         // 检查是否有足够的空间放入食材
