@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_blue",
   "ingredients": [
     "minecraft:rotten_flesh",
     "minecraft:rotten_flesh",

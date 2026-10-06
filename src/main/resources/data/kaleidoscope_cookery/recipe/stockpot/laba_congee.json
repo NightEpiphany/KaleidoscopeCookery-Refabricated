@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "finished_texture": "kaleidoscope_cookery:stockpot/paella",
   "ingredients": [
     "#c:seeds",
     "#c:seeds",

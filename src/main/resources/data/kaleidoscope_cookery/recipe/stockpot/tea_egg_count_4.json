@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_bobo",
   "ingredients": [
     "kaleidoscope_cookery:dried_tea_leaves",
     "kaleidoscope_cookery:dried_tea_leaves",

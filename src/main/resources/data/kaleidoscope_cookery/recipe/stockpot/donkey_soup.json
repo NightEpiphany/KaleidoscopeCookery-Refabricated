@@ -1,8 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
-  "carrier": 
-    "minecraft:bowl"
-  ,
+  "carrier": "minecraft:bowl",
   "cooking_bubble_color": 16772291,
   "cooking_texture": "kaleidoscope_cookery:stockpot/default_cooking",
   "finished_bubble_color": 16777215,
