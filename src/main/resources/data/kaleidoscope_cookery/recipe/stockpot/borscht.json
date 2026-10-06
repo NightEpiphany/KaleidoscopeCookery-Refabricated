@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_rose",
   "ingredients": [
     "#c:foods/raw_beef",
     "#c:foods/raw_beef",

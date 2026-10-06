@@ -67,6 +67,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     private static final String RECIPE_ID = "RecipeId";
     private static final String SOUP_BASE_ID = "SoupBaseId";
+    private static final String SOUP_BASE_ITEM = "SoupBaseItem";
     private static final String RESULT = "Result";
     private static final String STATUS = "Status";
     private static final String CURRENT_TICK = "CurrentTick";
@@ -86,6 +87,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     private NonNullList<ItemStack> inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
     private Identifier recipeId = StockpotRecipeSerializer.EMPTY_ID;
     private Identifier soupBaseId = ModSoupBases.WATER;
+    private ItemStack soupBaseItem = ItemStack.EMPTY;
     private ItemStack result = ItemStack.EMPTY;
     private int status = PUT_SOUP_BASE;
     private int currentTick = -1;
@@ -394,6 +396,8 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             ISoupBase soupBase = entry.getValue();
             if (soupBase.isSoupBase(bucket)) {
                 this.soupBaseId = key;
+                this.soupBaseItem = bucket.copyWithCount(1);
+                this.renderEntity = null;
                 this.status = PUT_INGREDIENT;
                 this.refresh();
 
@@ -417,6 +421,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             }
             this.renderEntity = null;
             this.soupBaseId = ModSoupBases.WATER;
+            this.soupBaseItem = ItemStack.EMPTY;
             this.status = PUT_SOUP_BASE;
             this.refresh();
 
@@ -552,6 +557,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.inputs.clear();
             this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
             this.soupBaseId = ModSoupBases.WATER;
+            this.soupBaseItem = ItemStack.EMPTY;
             this.result = ItemStack.EMPTY;
             this.currentTick = -1;
             this.renderEntity = null;
@@ -580,6 +586,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         ContainerHelper.saveAllItems(valueOutput, this.inputs);
         valueOutput.putString(RECIPE_ID, this.recipeId.toString());
         valueOutput.putString(SOUP_BASE_ID, this.soupBaseId.toString());
+        valueOutput.storeNullable(SOUP_BASE_ITEM, ItemStack.CODEC, this.soupBaseItem.isEmpty() ? null : this.soupBaseItem);
         if (!this.result.isEmpty())
             valueOutput.storeNullable(RESULT, ItemStack.CODEC, this.result);
         valueOutput.putInt(STATUS, this.status);
@@ -603,6 +610,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     protected void loadAdditional(@NonNull ValueInput valueInput) {
         super.loadAdditional(valueInput);
         this.inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
+        this.soupBaseItem = ItemStack.EMPTY;
         ContainerHelper.loadAllItems(valueInput, this.inputs);
         if (valueInput.contains(RECIPE_ID)) {
             this.recipeId = Objects.requireNonNullElse(
@@ -620,6 +628,9 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
                 if (ModFluids.VANILLA_MILK_ID.equals(this.soupBaseId)) {
                     this.soupBaseId = ModFluids.MILK_ID;
                 }
+            }
+            if (valueInput.contains(SOUP_BASE_ITEM)) {
+                this.soupBaseItem = valueInput.read(SOUP_BASE_ITEM, ItemStack.CODEC).orElse(ItemStack.EMPTY);
             }
             if (valueInput.contains(RESULT)) this.result = valueInput.read(RESULT, ItemStack.CODEC).orElse(ItemStack.EMPTY);
             this.status = valueInput.getIntOr(STATUS, PUT_SOUP_BASE);
@@ -693,6 +704,10 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     public void setLidItem(ItemStack lidItem) {
         this.lidItem = lidItem;
+    }
+
+    public ItemStack getSoupBaseItem() {
+        return soupBaseItem;
     }
 
     public void setAutomationRecipeId(@Nullable Identifier automationRecipeId) {

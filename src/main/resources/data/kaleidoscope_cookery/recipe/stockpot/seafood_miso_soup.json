@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "finished_texture": "kaleidoscope_cookery:stockpot/rice_pitcher",
   "ingredients": [
     "#c:raw_fishes",
     "#c:raw_fishes",
