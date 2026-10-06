@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.crafting;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.RiceBowlRecipe;
 import com.google.common.collect.Lists;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;
@@ -27,15 +28,16 @@ public class RiceBowlRecipeMaker {
         level.recipeAccess()
                 .getSynchronizedRecipes().getAllOfType(RecipeType.CRAFTING)
                 .forEach(holder ->
-                        addRiceBowlRecipe(recipes, holder)
+                        addRiceBowlRecipe(recipes, holder, level.registryAccess())
                 );
 
         return recipes;
     }
 
-    private static void addRiceBowlRecipe(List<RecipeHolder<CraftingRecipe>> recipes, RecipeHolder<CraftingRecipe> recipe) {
+    private static void addRiceBowlRecipe(List<RecipeHolder<CraftingRecipe>> recipes, RecipeHolder<CraftingRecipe> recipe,
+                                          HolderLookup.Provider registries) {
         if (recipe.value() instanceof RiceBowlRecipe riceBowlRecipe) {
-            var ingredients = riceBowlRecipe.getIngredients();
+            var ingredients = riceBowlRecipe.getIngredients(registries);
             ItemStackTemplate result = riceBowlRecipe.getResult();
             ShapelessRecipe shapelessRecipe = new ShapelessRecipe(
                     new Recipe.CommonInfo(false),
