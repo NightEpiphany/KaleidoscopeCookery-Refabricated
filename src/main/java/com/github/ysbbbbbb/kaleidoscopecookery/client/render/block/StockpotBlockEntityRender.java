@@ -45,13 +45,11 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
     private final ItemModelResolver itemModelResolver;
     private final EntityRenderDispatcher entityRenderDispatcher;
 
+    @SuppressWarnings("all")
     public StockpotBlockEntityRender(BlockEntityRendererProvider.Context context) {
         this.soupBaseRender = Util.memoize(id -> {
             ISoupBase soupBase = SoupBaseManager.getSoupBase(id);
-            if (soupBase != null) {
-                return soupBase.getRender();
-            }
-            return new SimpleSoupBaseRender(id);
+            return soupBase == null ? null : soupBase.getRender();
         });
         this.itemModelResolver = context.itemModelResolver();
         this.entityRenderDispatcher = context.entityRenderer();
