@@ -29,6 +29,11 @@ public class ChoppingBoardDispenseBehavior extends OptionalDispenseItemBehavior 
             this.setSuccess(this.knife
                     ? board.onCutItem(source.level(), null, stack)
                     : board.onPutItem(source.level(), null, stack));
+            if (this.knife && board.hasItemOnBoard())
+                if (stack.getDamageValue() >= stack.getMaxDamage())
+                    stack.shrink(1);
+                else
+                    stack.setDamageValue(stack.getDamageValue() + 1);
         }
         return stack;
     }

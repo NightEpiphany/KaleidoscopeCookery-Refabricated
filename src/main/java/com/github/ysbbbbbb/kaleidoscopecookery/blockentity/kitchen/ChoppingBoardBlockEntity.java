@@ -163,6 +163,11 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
         }
     }
 
+    @Override
+    public boolean hasItemOnBoard() {
+        return !this.currentCutStack.isEmpty();
+    }
+
     private void resetBoardData() {
         this.modelId = null;
         this.results = List.of();
