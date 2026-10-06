@@ -14,7 +14,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Prediction;
 import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
@@ -31,6 +33,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -65,6 +68,18 @@ public class BowlFoodBlockItem extends BlockItem implements ICustomEatEffect {
                 .food(properties, consumable).setId(PortHelper.createItemId(name))
         );
         this.usingConvertsTo = Optional.ofNullable(usingConvertsTo);
+    }
+
+    @Override
+    public @NonNull InteractionResult place(@NonNull BlockPlaceContext context) {
+        InteractionResult result = super.place(context);
+        if (result instanceof InteractionResult.Success success) {
+            if (context.getPlayer() instanceof ServerPlayer player) {
+                player.awardStat(Stats.ITEM_USED.get(this));
+            }
+            return success.withoutItem();
+        }
+        return result;
     }
 
     @Override
