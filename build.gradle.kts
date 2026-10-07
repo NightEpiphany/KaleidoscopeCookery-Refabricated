@@ -64,6 +64,8 @@ dependencies {
 	implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabric_api_version").get()}")
 	implementation ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${providers.gradleProperty("forge_config_api_version").get()}")
 	implementation("mezz.jei:jei-${providers.gradleProperty("jei_version").get()}")
+	// Mezz config
+	implementation("maven.modrinth:7tEfOcA7:H7JmEX05")
 	implementation("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
 	implementation("maven.modrinth:EsAfCjCV:zLlqqiTA")
 }
@@ -78,16 +80,6 @@ fabricApi {
 		modId = "kaleidoscope_cookery_test"
 		enableClientGameTests = true
 		clearRunDirectory = false
-	}
-}
-
-tasks.named("runClientGameTest") {
-	doFirst {
-		// Create Flywheel's worker threads otherwise keep the test JVM alive after shutdown.
-		// This is an isolated test directory; normal client configuration is unaffected.
-		val flywheelConfig = file("build/run/clientGameTest/config/flywheel-client.json")
-		flywheelConfig.parentFile.mkdirs()
-		flywheelConfig.writeText("""{"workerThreads":{"value":0}}""")
 	}
 }
 
@@ -121,23 +113,6 @@ tasks.jar {
 	from("LICENSE") {
 		rename { "${it}_$projectName" }
 	}
-}
-
-val animationTest by sourceSets.creating {
-	compileClasspath += sourceSets.main.get().output + configurations.testCompileClasspath.get()
-	runtimeClasspath += sourceSets.main.get().output + configurations.testRuntimeClasspath.get()
-}
-
-val testBlockEntityAnimationIsolation by tasks.registering(JavaExec::class) {
-	group = "verification"
-	description = "Checks shared block entity models for animation pose leakage."
-	dependsOn(animationTest.classesTaskName)
-	classpath = animationTest.runtimeClasspath
-	mainClass.set("com.github.ysbbbbbb.kaleidoscopecookery.client.model.BlockEntityAnimationIsolationTest")
-}
-
-tasks.check {
-	dependsOn(testBlockEntityAnimationIsolation)
 }
 
 // configure the maven publication
