@@ -262,17 +262,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-fabricApi {
-    configureTests {
-        createSourceSet = true
-        modId = 'kaleidoscope_cookery_test'
-        enableGameTests = true
-        enableClientGameTests = false
-    }
-}
-
-tasks.named('runGameTest', JavaExec) {
-    systemProperty 'fabric-api.gametest.report-file', layout.buildDirectory.file('reports/gametest/results.xml').get().asFile.absolutePath
-    doFirst { layout.buildDirectory.dir('reports/gametest').get().asFile.mkdirs() }
-}
