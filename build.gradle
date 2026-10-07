@@ -101,6 +101,8 @@ dependencies {
 	modImplementation "curse.maven:ftb-ultimine-fabric-448231:7188393"
     modImplementation "curse.maven:ftb-library-fabric-438495:7260615"
     modImplementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
+    // Mezz config
+	modImplementation "maven.modrinth:7tEfOcA7:Q5Yns1Qe"
     modImplementation "maven.modrinth:jade:${project.jade_version}"
     modCompileOnly "curse.maven:roughly-enough-items-310111:6199139"
     modImplementation "curse.maven:cloth-config-348521:5729125"
@@ -116,7 +118,7 @@ dependencies {
     modCompileOnly("net.mehvahdjukaar:everycomp-fabric:1.21-2.11.52")
     modCompileOnly("net.mehvahdjukaar:moonlight-fabric:1.21.1-3.6.5")
 
-    // delight family compact
+    // Delight family compact
     modImplementation("vectorwing:FarmersDelight:${fdrf_version}") {
         exclude(group: "net.fabricmc")
     }
@@ -137,26 +139,6 @@ test {
     workingDir layout.buildDirectory.dir("test-run").get().asFile
     doFirst {
         workingDir.mkdirs()
-    }
-}
-
-fabricApi {
-    configureTests {
-        createSourceSet = true
-        modId = "kaleidoscope_cookery_gametest"
-        enableClientGameTests = false
-    }
-}
-
-loom {
-    runs {
-        teaClientSmoke {
-            client()
-            source sourceSets.gametest
-            runDir "build/run/tea-client-smoke"
-            vmArg "-Dcookery.teaClientSmoke=true"
-            programArgs "--width", "1200", "--height", "800"
-        }
     }
 }
 
