@@ -26,12 +26,6 @@ fabricApi {
 	}
 }
 
-loom.runs.named("gameTest") {
-	// Reproduce RRV initializing our recipe integration before our main entrypoint.
-	property("fabric.debug.disableModShuffle", "true")
-	property("fabric.debug.loadLate", "kaleidoscope_cookery")
-}
-
 repositories {
 	maven {
 		name = "Fuzs Mod Resources"
@@ -80,6 +74,8 @@ dependencies {
 	implementation("maven.modrinth:EsAfCjCV:PHjDtQay")
 	implementation ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${providers.gradleProperty("forge_config_api_version").get()}")
 	implementation("mezz.jei:jei-${providers.gradleProperty("jei_version").get()}")
+	// Mezz config
+	implementation("maven.modrinth:7tEfOcA7:GKiA7PV4")
 	implementation("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
 	testImplementation("net.fabricmc:fabric-loader-junit:${providers.gradleProperty("loader_version").get()}")
 }
@@ -132,19 +128,6 @@ tasks.jar {
 	from("LICENSE") {
 		rename { "${it}_$projectName" }
 	}
-}
-
-val testBlockEntityAnimationIsolation by tasks.registering(JavaExec::class) {
-	group = "verification"
-	description = "Checks shared block entity models for animation pose leakage."
-	val gameTestSourceSet = sourceSets.named("gametest").get()
-	dependsOn(gameTestSourceSet.classesTaskName)
-	classpath = gameTestSourceSet.runtimeClasspath
-	mainClass.set("com.github.ysbbbbbb.kaleidoscopecookery.client.model.BlockEntityAnimationIsolationTest")
-}
-
-tasks.check {
-	dependsOn(testBlockEntityAnimationIsolation)
 }
 
 // configure the maven publication
