@@ -154,19 +154,19 @@ dependencies {
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	modImplementation("vectorwing:FarmersDelight:${fdrf_version}") {
+    modImplementation("vectorwing:FarmersDelight:${fdrf_version}") {
         exclude(group: "net.fabricmc")
     }
     modImplementation "curse.maven:trail-tales-delight-1198527:6492800"
     modImplementation "curse.maven:brewin-and-chewin-fabric-807512:5467339"
     modImplementation "curse.maven:rustic-delight-1106612:6140476"
-    modImplementation "maven.modrinth:7tEfOcA7:7TITODlG"
     modImplementation(include("io.github.fabricators_of_create.Porting-Lib:loot:2.3.15+1.20.1"))
     modImplementation(include("io.github.fabricators_of_create.Porting-Lib:transfer:2.3.15+1.20.1"))
     modImplementation(include("io.github.fabricators_of_create.Porting-Lib:base:2.3.15+1.20.1"))
     modImplementation("maven.modrinth:forge-config-api-port:${project.forge_config_api_port_version}")
     modImplementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
-
+	// Mezz config
+	modImplementation "maven.modrinth:7tEfOcA7:SYfAcmwJ"
     //Create
     modImplementation "com.simibubi.create:create-fabric:6.0.8.1+build.1744-mc1.20.1"
     //FTB
@@ -191,7 +191,7 @@ dependencies {
     //modCompileOnly "dev.emi:emi-fabric:1.1.22+1.20.1"
     modCompileOnly "maven.modrinth:emi:${emi_version}"
 
-    modImplementation "maven.modrinth:jade:11.13.1+fabric"
+    modImplementation "maven.modrinth:jade:${jade_version}+fabric"
 
     // KubeJS
     modCompileOnly "dev.latvian.mods:kubejs-fabric:2001.6.5-build.26"
