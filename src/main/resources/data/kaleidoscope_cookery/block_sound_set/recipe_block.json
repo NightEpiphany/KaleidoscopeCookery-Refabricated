@@ -1,0 +1,7 @@
+{
+  "break_sound": "kaleidoscope_cookery:block.recipe_block",
+  "fall_sound": "kaleidoscope_cookery:block.recipe_block",
+  "hit_sound": "kaleidoscope_cookery:block.recipe_block",
+  "place_sound": "kaleidoscope_cookery:block.recipe_block",
+  "step_sound": "kaleidoscope_cookery:block.recipe_block"
+}

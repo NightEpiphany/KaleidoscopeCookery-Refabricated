@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
@@ -162,6 +161,6 @@ public class QualityEvaluator {
         double quantityFactor = 0.8 + 0.2 * (inputSize / (double) MAX_CAPACITY);
 
         // 复合得分
-        return Mth.clamp(similarityScore * quantityFactor, 0.0, 1.0);
+        return Math.clamp(similarityScore * quantityFactor, 0.0, 1.0);
     }
 }

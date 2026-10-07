@@ -99,7 +99,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
         if (!hasCarpet) {
             level.setBlockAndUpdate(pos, state.setValue(HAS_CARPET, true));
             if (level.getBlockEntity(pos) instanceof ChairBlockEntity chairBlockEntity) {
-                level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
+                level.playSound(null, pos, SoundEvents.WOOL_PLACE, player.getSoundSource(), 1.0F, 1.0F);
                 chairBlockEntity.setColor(dyeColor);
                 chairBlockEntity.refresh();
                 if (!player.isCreative())
@@ -114,7 +114,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
             DyeColor originalColor = chairBlockEntity.getColor();
             ItemStack carpetItem = getCarpetByColor(originalColor).getDefaultInstance();
             BlockDrop.popResource(level, pos, 0.25, carpetItem);
-            level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
+            level.playSound(null, pos, SoundEvents.WOOL_PLACE, player.getSoundSource(), 1.0F, 1.0F);
 
             chairBlockEntity.setColor(dyeColor);
             chairBlockEntity.refresh();

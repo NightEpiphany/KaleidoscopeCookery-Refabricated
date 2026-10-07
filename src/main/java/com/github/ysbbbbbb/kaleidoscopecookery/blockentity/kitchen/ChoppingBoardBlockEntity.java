@@ -19,7 +19,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -126,7 +125,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
                     .get(ModEnchantments.QUICK_KNIFE)
                     .map(enchantment -> EnchantmentHelper.getItemEnchantmentLevel(enchantment, cutterItem)).orElse(0);
             this.currentCutCount = (int) Math.min(this.maxCutCount,
-                    (long) this.currentCutCount + (1L << Mth.clamp(enchantmentLevel, 0, 2)));
+                    (long) this.currentCutCount + (1L << Math.clamp(enchantmentLevel, 0, 2)));
             this.playParticlesSound();
             this.refresh();
             return true;

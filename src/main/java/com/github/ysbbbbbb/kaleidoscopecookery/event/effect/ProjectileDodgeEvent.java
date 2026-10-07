@@ -5,11 +5,10 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEffects;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -86,7 +85,7 @@ public class ProjectileDodgeEvent {
 
         for (int i = 0; i < maxAttempts; ++i) {
             double targetX = x + (living.getRandom().nextDouble() - 0.5) * range;
-            double targetY = Mth.clamp(y + (living.getRandom().nextDouble() - 0.5) * range, minH, minH + maxH - 1);
+            double targetY = Math.clamp(y + (living.getRandom().nextDouble() - 0.5) * range, minH, minH + maxH - 1);
             double targetZ = z + (living.getRandom().nextDouble() - 0.5) * range;
 
             if (living.isPassenger()) {

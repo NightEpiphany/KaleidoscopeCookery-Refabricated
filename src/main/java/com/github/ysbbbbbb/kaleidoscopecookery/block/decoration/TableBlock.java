@@ -17,16 +17,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -134,7 +139,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         if (!hasCarpet) {
             level.setBlockAndUpdate(pos, state.setValue(HAS_CARPET, true));
             if (level.getBlockEntity(pos) instanceof TableBlockEntity tableBlockEntity) {
-                level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
+                level.playSound(null, pos, SoundEvents.WOOL_PLACE, player.getSoundSource(), 1.0F, 1.0F);
                 tableBlockEntity.setColor(dyeColor);
                 tableBlockEntity.refresh();
                 if (!player.isCreative())
@@ -149,7 +154,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
             DyeColor originalColor = tableBlockEntity.getColor();
             ItemStack carpetItem = getCarpetByColor(originalColor).getDefaultInstance();
             BlockDrop.popResource(level, pos, 0.75, carpetItem);
-            level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
+            level.playSound(null, pos, SoundEvents.WOOL_PLACE, player.getSoundSource(), 1.0F, 1.0F);
 
             tableBlockEntity.setColor(dyeColor);
             tableBlockEntity.refresh();

@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -30,7 +29,7 @@ public class OilPotItem extends WithTooltipsBlockItem {
     }
 
     public static void setOilCount(ItemStack stack, int count) {
-        count = Mth.clamp(count, 0, OilPotBlockEntity.MAX_OIL_COUNT);
+        count = Math.clamp(count, 0, OilPotBlockEntity.MAX_OIL_COUNT);
         stack.set(OIL_POT_OIL_COUNT, count);
     }
 

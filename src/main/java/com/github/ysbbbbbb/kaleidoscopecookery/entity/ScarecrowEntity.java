@@ -174,7 +174,7 @@ public class ScarecrowEntity extends LivingEntity {
         }
         if (itemInHand.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock) {
             if (swapHand(InteractionHand.OFF_HAND, player, itemInHand)) {
-                this.level().playSound(null, this.blockPosition(), SoundEvents.LANTERN_PLACE, this.getSoundSource());
+                this.level().playSound(null, this.blockPosition(), SoundEvents.LANTERN_PLACE.value(), this.getSoundSource());
                 return InteractionResult.SUCCESS;
             }
         }
@@ -208,6 +208,7 @@ public class ScarecrowEntity extends LivingEntity {
     private boolean isClickHand(Vec3 vector) {
         return 17 / 16.0 <= vector.y && vector.y <= 27 / 17.0;
     }
+
 
     private boolean isClickHead(Vec3 vector) {
         return 27 / 17.0 < vector.y;

@@ -27,9 +27,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StrawBedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.sounds.BlockSoundSet;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -42,7 +43,7 @@ public final class ModBlocks {
     // Kitchen blocks
     public static final Block STOVE = commonReg("stove", StoveBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.STONE)
-            .sound(SoundType.STONE)
+            .sound(BlockSoundSets.STONE)
             .requiresCorrectToolForDrops()
             .lightLevel(state -> state.getValue(StoveBlock.LIT) ? 13 : 0)
             .randomTicks()
@@ -50,32 +51,32 @@ public final class ModBlocks {
 
     public static final Block POT = commonReg("pot", PotBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.METAL)
-            .sound(ModSoundType.POT)
+            .sound(ModBlockSoundSets.POT)
             .noOcclusion()
             .strength(1.5F, 6.0F));
 
     public static final Block STOCKPOT = commonReg("stockpot", StockpotBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.METAL)
-            .sound(ModSoundType.POT)
+            .sound(ModBlockSoundSets.POT)
             .noOcclusion()
             .strength(1.5F, 6.0F));
 
     public static final Block FRUIT_BASKET = commonReg("fruit_basket", FruitBasketBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.WOOD)
             .instrument(NoteBlockInstrument.BASS)
-            .sound(SoundType.BAMBOO));
+            .sound(BlockSoundSets.BAMBOO));
 
     public static final Block CHOPPING_BOARD = commonReg("chopping_board", ChoppingBoardBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.WOOD)
             .instrument(NoteBlockInstrument.BASS)
             .strength(2.0F)
-            .sound(SoundType.WOOD)
+            .sound(BlockSoundSets.WOOD)
             .ignitedByLava());
 
     public static final Block OIL_BLOCK = commonReg("oil_block", OilBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.ICE)
             .friction(0.985f)
-            .sound(SoundType.SLIME_BLOCK)
+            .sound(BlockSoundSets.SLIME_BLOCK)
             .noOcclusion()
             .isValidSpawn(Blocks::never));
 
@@ -83,34 +84,34 @@ public final class ModBlocks {
             .mapColor(MapColor.STONE)
             .instrument(NoteBlockInstrument.BELL)
             .strength(1.0F, 1.5F)
-            .sound(SoundType.LANTERN));
+            .sound(BlockSoundSets.LANTERN));
 
     public static final Block KITCHENWARE_RACKS = commonReg("kitchenware_racks", KitchenwareRacksBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.WOOD)
             .instrument(NoteBlockInstrument.BASS)
             .strength(2.0F, 3.0F)
-            .sound(SoundType.WOOD)
+            .sound(BlockSoundSets.WOOD)
             .ignitedByLava());
 
     public static final Block CHILI_RISTRA = commonReg("chili_ristra", ChiliRistraBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_RED)
             .noCollision()
             .instabreak()
-            .sound(SoundType.GRASS)
+            .sound(BlockSoundSets.GRASS)
             .pushReaction(PushReaction.POPPED));
 
     public static final Block STRUNG_MUSHROOMS  = commonReg("strung_mushrooms", StrungMushroomsBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_BROWN)
             .noCollision()
             .instabreak()
-            .sound(SoundType.GRASS)
+            .sound(BlockSoundSets.GRASS)
             .pushReaction(PushReaction.POPPED));
 
     public static final Block STRAW_BLOCK = commonReg("straw_block", StrawBlocks::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_YELLOW)
             .instrument(NoteBlockInstrument.BANJO)
             .strength(0.5F)
-            .sound(SoundType.GRASS));
+            .sound(BlockSoundSets.GRASS));
 
     public static final Block SHAWARMA_SPIT = commonReg("shawarma_spit", ShawarmaSpitBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.METAL)
@@ -118,14 +119,14 @@ public final class ModBlocks {
             .instrument(NoteBlockInstrument.BASS)
             .strength(2.0F, 3.0F)
             .lightLevel(state -> state.getValue(ShawarmaSpitBlock.POWERED) ? 8 : 0)
-            .sound(SoundType.METAL));
+            .sound(BlockSoundSets.METAL));
 
     public static final Block MILLSTONE = commonReg("millstone", MillstoneBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.STONE)
             .instrument(NoteBlockInstrument.BASEDRUM)
             .requiresCorrectToolForDrops()
             .strength(1.5F, 6.0F)
-            .sound(SoundType.STONE)
+            .sound(BlockSoundSets.STONE)
             .forceSolidOn()
             .noOcclusion());
 
@@ -135,26 +136,26 @@ public final class ModBlocks {
             .instabreak()
             .noOcclusion()
             .pushReaction(PushReaction.POPPED)
-            .sound(SoundType.BAMBOO));
+            .sound(BlockSoundSets.BAMBOO));
 
     public static final Block RECIPE_BLOCK = commonReg("recipe_block", RecipeBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_YELLOW)
             .instabreak()
             .noOcclusion()
-            .sound(ModSoundType.RECIPE_BLOCK));
+            .sound(ModBlockSoundSets.RECIPE_BLOCK));
 
     public static final Block OIL_POT = commonReg("oil_pot", OilPotBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.METAL)
             .instrument(NoteBlockInstrument.BELL)
             .instabreak()
             .pushReaction(PushReaction.POPPED)
-            .sound(SoundType.LANTERN));
+            .sound(BlockSoundSets.LANTERN));
 
     public static final Block TRASH_CAN = commonReg("trash_can", TrashCanBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.METAL)
             .instrument(NoteBlockInstrument.BASS)
             .strength(1.5F, 6.0F)
-            .sound(SoundType.LANTERN)
+            .sound(BlockSoundSets.LANTERN)
             .noOcclusion());
 
     // Tea
@@ -180,14 +181,14 @@ public final class ModBlocks {
     public static final Block COOK_STOOL_PALE_OAK = stoolReg("cook_stool_pale_oak");
     public static final Block COOK_STOOL_SPRUCE = stoolReg("cook_stool_spruce");
     public static final Block COOK_STOOL_ACACIA = stoolReg("cook_stool_acacia");
-    public static final Block COOK_STOOL_BAMBOO = stoolReg("cook_stool_bamboo", SoundType.BAMBOO);
+    public static final Block COOK_STOOL_BAMBOO = stoolReg("cook_stool_bamboo", BlockSoundSets.BAMBOO);
     public static final Block COOK_STOOL_BIRCH = stoolReg("cook_stool_birch");
-    public static final Block COOK_STOOL_CHERRY = stoolReg("cook_stool_cherry", SoundType.CHERRY_WOOD);
-    public static final Block COOK_STOOL_CRIMSON = stoolReg("cook_stool_crimson", SoundType.NETHER_WOOD);
+    public static final Block COOK_STOOL_CHERRY = stoolReg("cook_stool_cherry", BlockSoundSets.CHERRY_WOOD);
+    public static final Block COOK_STOOL_CRIMSON = stoolReg("cook_stool_crimson", BlockSoundSets.NETHER_WOOD);
     public static final Block COOK_STOOL_DARK_OAK = stoolReg("cook_stool_dark_oak");
     public static final Block COOK_STOOL_JUNGLE = stoolReg("cook_stool_jungle");
     public static final Block COOK_STOOL_MANGROVE = stoolReg("cook_stool_mangrove");
-    public static final Block COOK_STOOL_WARPED = stoolReg("cook_stool_warped", SoundType.NETHER_WOOD);
+    public static final Block COOK_STOOL_WARPED = stoolReg("cook_stool_warped", BlockSoundSets.NETHER_WOOD);
 
     // Chairs
     public static final Block CHAIR_OAK = chairReg("chair_oak");
@@ -195,14 +196,14 @@ public final class ModBlocks {
     public static final Block CHAIR_PALE_OAK = chairReg("chair_pale_oak");
     public static final Block CHAIR_SPRUCE = chairReg("chair_spruce");
     public static final Block CHAIR_ACACIA = chairReg("chair_acacia");
-    public static final Block CHAIR_BAMBOO = chairReg("chair_bamboo", SoundType.BAMBOO);
+    public static final Block CHAIR_BAMBOO = chairReg("chair_bamboo", BlockSoundSets.BAMBOO);
     public static final Block CHAIR_BIRCH = chairReg("chair_birch");
-    public static final Block CHAIR_CHERRY = chairReg("chair_cherry", SoundType.CHERRY_WOOD);
-    public static final Block CHAIR_CRIMSON = chairReg("chair_crimson", SoundType.NETHER_WOOD);
+    public static final Block CHAIR_CHERRY = chairReg("chair_cherry", BlockSoundSets.CHERRY_WOOD);
+    public static final Block CHAIR_CRIMSON = chairReg("chair_crimson", BlockSoundSets.NETHER_WOOD);
     public static final Block CHAIR_DARK_OAK = chairReg("chair_dark_oak");
     public static final Block CHAIR_JUNGLE = chairReg("chair_jungle");
     public static final Block CHAIR_MANGROVE = chairReg("chair_mangrove");
-    public static final Block CHAIR_WARPED = chairReg("chair_warped", SoundType.NETHER_WOOD);
+    public static final Block CHAIR_WARPED = chairReg("chair_warped", BlockSoundSets.NETHER_WOOD);
 
     // Tables
     public static final Block TABLE_OAK = tableReg("table_oak");
@@ -210,21 +211,21 @@ public final class ModBlocks {
     public static final Block TABLE_PALE_OAK = tableReg("table_pale_oak");
     public static final Block TABLE_SPRUCE = tableReg("table_spruce");
     public static final Block TABLE_ACACIA = tableReg("table_acacia");
-    public static final Block TABLE_BAMBOO = tableReg("table_bamboo", SoundType.BAMBOO);
+    public static final Block TABLE_BAMBOO = tableReg("table_bamboo", BlockSoundSets.BAMBOO);
     public static final Block TABLE_BIRCH = tableReg("table_birch");
-    public static final Block TABLE_CHERRY = tableReg("table_cherry", SoundType.CHERRY_WOOD);
-    public static final Block TABLE_CRIMSON = tableReg("table_crimson", SoundType.NETHER_WOOD);
+    public static final Block TABLE_CHERRY = tableReg("table_cherry", BlockSoundSets.CHERRY_WOOD);
+    public static final Block TABLE_CRIMSON = tableReg("table_crimson", BlockSoundSets.NETHER_WOOD);
     public static final Block TABLE_DARK_OAK = tableReg("table_dark_oak");
     public static final Block TABLE_JUNGLE = tableReg("table_jungle");
     public static final Block TABLE_MANGROVE = tableReg("table_mangrove");
-    public static final Block TABLE_WARPED = tableReg("table_warped", SoundType.NETHER_WOOD);
+    public static final Block TABLE_WARPED = tableReg("table_warped", BlockSoundSets.NETHER_WOOD);
 
     //Feast
     public static final Block COLD_CUT_HAM_SLICES = commonReg("cold_cut_ham_slices", p -> new FoodBiteThreeByThreeBlock(p , ModFoods.COLD_CUT_HAM_SLICES_BLOCK, ModConsumables.COLD_CUT_HAM_SLICES_BLOCK, 8, null), BlockBehaviour.Properties.of()
             .forceSolidOn()
             .instabreak()
             .mapColor(MapColor.WOOD)
-            .sound(SoundType.WOOD)
+            .sound(BlockSoundSets.WOOD)
             .pushReaction(PushReaction.POPPED)
             .noOcclusion());
 
@@ -250,7 +251,7 @@ public final class ModBlocks {
             StrawBedBlock::new,
             BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_YELLOW)
-            .sound(SoundType.STRAW_BED)
+            .sound(BlockSoundSets.STRAW_BED)
             .strength(0.2F)
             .noOcclusion()
             .ignitedByLava()
@@ -316,18 +317,18 @@ public final class ModBlocks {
     }
 
     private static Block stoolReg(String string) {
-        return stoolReg(string, SoundType.WOOD);
+        return stoolReg(string, BlockSoundSets.WOOD);
     }
 
     private static Block chairReg(String string) {
-        return chairReg(string, SoundType.WOOD);
+        return chairReg(string, BlockSoundSets.WOOD);
     }
 
     private static Block tableReg(String string) {
-        return tableReg(string, SoundType.WOOD);
+        return tableReg(string, BlockSoundSets.WOOD);
     }
 
-    private static Block stoolReg(String string, SoundType soundType) {
+    private static Block stoolReg(String string, ResourceKey<BlockSoundSet> soundType) {
         return commonReg(string, CookStoolBlock::new, BlockBehaviour.Properties.of()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
@@ -336,7 +337,7 @@ public final class ModBlocks {
                 .ignitedByLava());
     }
 
-    private static Block chairReg(String string, SoundType soundType) {
+    private static Block chairReg(String string, ResourceKey<BlockSoundSet> soundType) {
         return commonReg(string, ChairBlock::new, BlockBehaviour.Properties.of()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
@@ -345,7 +346,7 @@ public final class ModBlocks {
                 .noOcclusion()
                 .ignitedByLava());
     }
-    private static Block tableReg(String string, SoundType soundType) {
+    private static Block tableReg(String string, ResourceKey<BlockSoundSet> soundType) {
         return commonReg(string, TableBlock::new, BlockBehaviour.Properties.of()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
@@ -361,7 +362,7 @@ public final class ModBlocks {
                 .noCollision()
                 .randomTicks()
                 .instabreak()
-                .sound(SoundType.CROP)
+                .sound(BlockSoundSets.CROP)
                 .pushReaction(PushReaction.POPPED));
     }
 }

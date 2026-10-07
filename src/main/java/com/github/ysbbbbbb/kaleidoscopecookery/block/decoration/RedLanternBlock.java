@@ -8,7 +8,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -30,7 +30,7 @@ public class RedLanternBlock extends Block implements SimpleWaterloggedBlock {
         super(properties
                 .mapColor(MapColor.COLOR_RED)
                 .strength(0.3F)
-                .sound(SoundType.WOOL)
+                .sound(BlockSoundSets.WOOL)
                 .lightLevel(_ -> 14)
                 .noOcclusion());
 

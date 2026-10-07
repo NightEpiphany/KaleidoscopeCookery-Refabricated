@@ -109,7 +109,7 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity,
                     // 焦糊程度，菜变黑
                     if (blockEntityRenderState.status == PotBlockEntity.BURNT) {
                         int tick = blockEntityRenderState.currentTick;
-                        int burntLevel = Mth.clamp(tick / 25, 0, 16);
+                        int burntLevel = Math.clamp(tick / 25, 0, 16);
                         blockEntityRenderState.lightCoords = OverlayTexture.u(burntLevel);
                     }
 
@@ -137,7 +137,7 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity,
             // 焦糊程度，菜变黑
             if (blockEntityRenderState.status == PotBlockEntity.BURNT) {
                 int tick = blockEntityRenderState.currentTick;
-                int burntLevel = Mth.clamp(tick / 25, 0, 16);
+                int burntLevel = Math.clamp(tick / 25, 0, 16);
                 blockEntityRenderState.lightCoords = OverlayTexture.u(burntLevel);
             }
 

@@ -20,6 +20,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -48,8 +49,8 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
         super(properties
                 .forceSolidOn()
                 .instabreak()
-                .mapColor(MapColor.WOOD)
-                .sound(SoundType.WOOD)
+                .mapColor(MapColor.CLAY)
+                .sound(BlockSoundSets.DECORATED_POT)
                 .pushReaction(PushReaction.POPPED)
                 .noOcclusion());
 
@@ -104,7 +105,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
                         .setValue(teacupBlock.getTeaCountProperty(), 1)
                         .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
                         .setValue(FACING, state.getValue(FACING)));
-                level.playSound(player, pos, this.soundType.getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 if (!player.isCreative())
                     itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
@@ -118,7 +119,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
             int count = state.getValue(CUP_COUNT);
             if (count < MAX_COUNT) {
                 level.setBlockAndUpdate(pos, state.setValue(CUP_COUNT, count + 1));
-                level.playSound(player, pos, this.soundType.getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 if (!player.isCreative())
                     itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
@@ -138,7 +139,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
                 } else {
                     level.setBlockAndUpdate(pos, state.setValue(CUP_COUNT, cupCountNum - 1));
                 }
-                level.playSound(player, pos, this.soundType.getBreakSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, pos, SoundEvents.DECORATED_POT_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
                 return InteractionResult.SUCCESS;
             }
         }

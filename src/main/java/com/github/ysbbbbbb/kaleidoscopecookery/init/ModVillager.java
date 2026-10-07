@@ -28,8 +28,8 @@ public final class ModVillager {
     private static final ResourceKey<TradeSet> CHEF_LEVEL_5 = ResourceKey.create(Registries.TRADE_SET, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "chef/level_5"));
 
     public static final VillagerProfession CHEF_VALUE = new VillagerProfession(Component.translatable("entity.minecraft.villager.chef"),
-            poi -> poi.value() == ModPoi.STOVE,
-            poi -> poi.value() == ModPoi.STOVE,
+            poi -> poi.is(ModPoi.STOVE_KEY),
+            poi -> poi.is(ModPoi.STOVE_KEY),
             ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_BUTCHER,
             Int2ObjectMap.ofEntries(
                     Int2ObjectMap.entry(1, CHEF_LEVEL_1),

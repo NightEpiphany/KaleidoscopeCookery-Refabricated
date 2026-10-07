@@ -8,7 +8,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
@@ -29,7 +28,7 @@ public record RandomOutput(ItemStackTemplate stack, float chance) {
             RandomOutput::new);
 
     public RandomOutput(Holder<Item> item, int count, DataComponentPatch components, float chance) {
-        this(new ItemStackTemplate(item, count, components), Mth.clamp(chance, 0.0F, 1.0F));
+        this(new ItemStackTemplate(item, count, components), Math.clamp(chance, 0.0F, 1.0F));
     }
 
     public boolean isEmpty() {

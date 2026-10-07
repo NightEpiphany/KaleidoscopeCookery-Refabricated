@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ISteamer;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.annotations.ServerThreadSafe;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ISteamer;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.SteamerBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.SteamerRecipe;
@@ -19,8 +19,8 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
@@ -272,7 +272,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         for (int i = 0; i < steamer.items.size(); i++) {
             if (steamer.cookingProgress[i] > 0) {
                 hasCooking = true;
-                steamer.cookingProgress[i] = Mth.clamp(steamer.cookingProgress[i] - 2, 0, steamer.cookingTime[i]);
+                steamer.cookingProgress[i] = Math.clamp(steamer.cookingProgress[i] - 2, 0, steamer.cookingTime[i]);
             }
         }
 
@@ -400,7 +400,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
                 this.cookingProgress[i] = 0;
             }
             // 释放粒子效果
-            level.playSound(null, this.getBlockPos(), blockState.getSoundType().getBreakSound(), SoundSource.BLOCKS);
+            level.playSound(null, this.getBlockPos(), SoundEvents.WOOD_BREAK.value(), SoundSource.BLOCKS);
             if (half) {
                 level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
             } else {

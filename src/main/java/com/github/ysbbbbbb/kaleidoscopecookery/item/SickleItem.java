@@ -55,7 +55,7 @@ public class SickleItem extends WithTooltipsItem {
 
         BlockPos pos = context.getClickedPos();
         ItemStack stack = context.getItemInHand();
-        int sweepLevel = Mth.clamp(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+        int sweepLevel = Math.clamp(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
                 .get(ModEnchantments.SWEEP)
                 .map(enchantment -> EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack)).orElse(0), 0, 3);
         int radius = 2 + sweepLevel;

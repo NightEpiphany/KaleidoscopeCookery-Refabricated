@@ -1,10 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -30,7 +32,7 @@ public class CookingParticle extends SingleQuadParticle {
 
     @Override
     public float getQuadSize(float scaleFactor) {
-        return this.quadSize * Mth.clamp((this.age + scaleFactor) / this.lifetime * 32.0F, 0, 1);
+        return this.quadSize * Math.clamp((this.age + scaleFactor) / this.lifetime * 32.0F, 0, 1);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class CookingParticle extends SingleQuadParticle {
         }
 
         @Override
-        public @Nullable Particle createParticle(SimpleParticleType particleOptions, @NonNull ClientLevel clientLevel, double d, double e, double f, double g, double h, double i, @NonNull RandomSource randomSource) {
+        public @Nullable Particle createParticle(@NonNull SimpleParticleType particleOptions, @NonNull ClientLevel clientLevel, double d, double e, double f, double g, double h, double i, @NonNull RandomSource randomSource) {
             var particle =  new CookingParticle(clientLevel, d, e, f, this.sprites, this.sprites.get(randomSource));
             particle.setAlpha(0.98865F);
             return particle;

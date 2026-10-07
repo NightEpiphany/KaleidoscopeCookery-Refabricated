@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -40,7 +40,7 @@ public class EightImmortalsTableBlock extends HorizontalDirectionalBlock impleme
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
                 .strength(2.0F, 3.0F)
-                .sound(SoundType.BAMBOO_WOOD)
+                .sound(BlockSoundSets.BAMBOO_WOOD)
                 .pushReaction(PushReaction.PUSH)
                 .noOcclusion()
                 .ignitedByLava());

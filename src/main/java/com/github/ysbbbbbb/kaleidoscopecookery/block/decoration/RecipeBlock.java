@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.decoration;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -11,7 +11,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,7 +77,7 @@ public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implemen
             }
             player.setItemInHand(hand, itemStack.copy());
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-            level.playSound(null, pos, ModSoundType.RECIPE_BLOCK.getBreakSound(), player.getSoundSource(), 1.0F, 1.0F);
+            level.playSound(null, pos, ModSounds.BLOCK_RECIPE_BLOCK, player.getSoundSource(), 1.0F, 1.0F);
             return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);

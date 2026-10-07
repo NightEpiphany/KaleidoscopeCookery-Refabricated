@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -65,7 +66,7 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
                 .instabreak()
                 .noOcclusion()
                 .pushReaction(PushReaction.POPPED)
-                .sound(SoundType.BAMBOO));
+                .sound(BlockSoundSets.BAMBOO));
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(HALF, true)
@@ -85,7 +86,7 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NonNull Level level, @NonNull BlockState state, @NonNull BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, ModBlocks.STEAMER_BE,
-                (levelIn, blockPos, blockState, steamer) -> steamer.tick(levelIn));
+                (levelIn, _, _, steamer) -> steamer.tick(levelIn));
     }
 
     @Override

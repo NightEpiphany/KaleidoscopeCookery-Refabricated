@@ -22,7 +22,10 @@ import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -57,7 +60,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
                 .forceSolidOn()
                 .instabreak()
                 .mapColor(MapColor.WOOD)
-                .sound(SoundType.WOOD)
+                .sound(BlockSoundSets.WOOD)
                 .pushReaction(PushReaction.POPPED)
                 .noOcclusion());
 
@@ -129,7 +132,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
             int count = state.getValue(cupCount);
             if (count < this.maxCount) {
                 level.setBlockAndUpdate(pos, state.setValue(cupCount, count + 1));
-                level.playSound(player, pos, this.soundType.getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 if (!player.isCreative())
                     itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
@@ -149,7 +152,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
                 level.setBlockAndUpdate(pos, state
                         .setValue(cupCount, cupCountNum + 1)
                         .setValue(teaCount, teaCountNum + 1));
-                level.playSound(player, pos, this.soundType.getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 if (!player.isCreative())
                     itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
@@ -179,7 +182,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
                             .setValue(teaCount, teaCountNum - 1)
                             .setValue(cupCount, cupCountNum - 1));
                 }
-                level.playSound(player, pos, this.soundType.getBreakSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, pos, SoundEvents.DECORATED_POT_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
                 return InteractionResult.SUCCESS;
             }
 
@@ -192,7 +195,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
                 } else {
                     level.setBlockAndUpdate(pos, state.setValue(cupCount, cupCountNum - 1));
                 }
-                level.playSound(player, pos, this.soundType.getBreakSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, pos, SoundEvents.DECORATED_POT_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
                 return InteractionResult.SUCCESS;
             }
         }
@@ -218,7 +221,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
     }
 
     @Override
-    public void animateTick(@NonNull BlockState state, @NonNull Level level, @NonNull BlockPos pos, RandomSource random) {
+    public void animateTick(@NonNull BlockState state, @NonNull Level level, @NonNull BlockPos pos, @NonNull RandomSource random) {
         if (this.animateTick != null) {
             this.animateTick.animateTick(state, level, pos, random);
             return;

@@ -16,8 +16,8 @@ import com.github.ysbbbbbb.kaleidoscopecookery.compat.trinkets.init.TrinketsComp
 import com.github.ysbbbbbb.kaleidoscopecookery.datamap.resources.MillstoneBindableDataReloadListener;
 import com.github.ysbbbbbb.kaleidoscopecookery.event.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.event.effect.*;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModVillager;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.PlateBlockItem;
@@ -34,7 +34,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -155,7 +155,7 @@ public final class CommonRegistry {
                 .forceSolidOn()
                 .instabreak()
                 .mapColor(MapColor.WOOD)
-                .sound(SoundType.WOOD)
+                .sound(BlockSoundSets.WOOD)
                 .pushReaction(PushReaction.POPPED)
                 .noOcclusion();
 

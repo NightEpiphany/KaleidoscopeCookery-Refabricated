@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -53,7 +53,7 @@ public class PlateBlock extends HorizontalDirectionalBlock implements SimpleWate
                 .forceSolidOn()
                 .instabreak()
                 .mapColor(MapColor.WOOD)
-                .sound(SoundType.WOOD)
+                .sound(BlockSoundSets.WOOD)
                 .pushReaction(PushReaction.POPPED)
                 .noOcclusion());
 

@@ -5,7 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.VoxelShapeUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,7 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSet;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -87,13 +88,12 @@ public class StackableFoodBlock extends HorizontalDirectionalBlock implements Si
             int count = state.getValue(this.countProperty);
             if (count < this.maxCount) {
                 level.setBlockAndUpdate(pos, state.cycle(this.countProperty));
-                SoundType soundType = state.getSoundType();
-                SoundEvent sound = soundType.getPlaceSound();
-                level.playSound(
+                BlockSoundSet soundType = state.getSounds(level);
+                soundType.placeSound().ifPresent(sound -> level.playSound(
                         player, pos, sound, SoundSource.BLOCKS,
-                        (soundType.getVolume() + 1) / 2f,
-                        soundType.getPitch() * 0.8f
-                );
+                        (soundType.volume() + 1) / 2f,
+                        soundType.pitch() * 0.8f
+                ));
                 if (!player.isCreative()) {
                     itemInHand.shrink(1);
                 }
@@ -171,7 +171,7 @@ public class StackableFoodBlock extends HorizontalDirectionalBlock implements Si
                     .forceSolidOn()
                     .instabreak()
                     .mapColor(MapColor.WOOD)
-                    .sound(SoundType.WOOD)
+                    .sound(BlockSoundSets.WOOD)
                     .pushReaction(PushReaction.POPPED)
                     .noOcclusion();
         }
@@ -191,8 +191,8 @@ public class StackableFoodBlock extends HorizontalDirectionalBlock implements Si
             return this;
         }
 
-        public Builder soundType(SoundType soundType) {
-            this.properties = this.properties.sound(soundType);
+        public Builder blockSoundSets(ResourceKey<BlockSoundSet> blockSoundSets) {
+            this.properties = this.properties.sound(blockSoundSets);
             return this;
         }
 

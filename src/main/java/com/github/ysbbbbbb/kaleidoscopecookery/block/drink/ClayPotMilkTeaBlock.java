@@ -2,7 +2,6 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.drink;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteAnimateTicks;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -17,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -41,7 +40,7 @@ public class ClayPotMilkTeaBlock extends HorizontalDirectionalBlock implements S
                 .forceSolidOn()
                 .instabreak()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
-                .sound(SoundType.DECORATED_POT)
+                .sound(BlockSoundSets.DECORATED_POT)
                 .pushReaction(PushReaction.POPPED)
                 .noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
@@ -52,7 +51,7 @@ public class ClayPotMilkTeaBlock extends HorizontalDirectionalBlock implements S
         if (!level.isClientSide()) {
             ItemUtils.getItemToLivingEntity(player, new ItemStack(this));
             level.removeBlock(pos, false);
-            level.playSound(null, pos, SoundEvents.DECORATED_POT_BREAK, SoundSource.BLOCKS);
+            level.playSound(null, pos, SoundEvents.DECORATED_POT_BREAK.value(), SoundSource.BLOCKS);
         }
         return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }

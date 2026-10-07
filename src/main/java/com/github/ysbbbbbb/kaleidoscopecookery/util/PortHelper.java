@@ -16,6 +16,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
@@ -46,6 +47,10 @@ public class PortHelper {
 
     public static ResourceKey<Item> createItemId(String name) {
         return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, name));
+    }
+
+    public static ResourceKey<PoiType> createPoiId(String name) {
+        return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, name));
     }
 
     public static CompoundTag saveAllItems(CompoundTag tag, NonNullList<ItemStack> items, boolean alwaysPutTag, HolderLookup.Provider levelRegistry) {
@@ -109,7 +114,7 @@ public class PortHelper {
             return ByteBufCodecs.TRUSTED_COMPOUND_TAG;
         }
 
-        public CompoundTag copy(CompoundTag compoundTag) {
+        public @NonNull CompoundTag copy(CompoundTag compoundTag) {
             return compoundTag.copy();
         }
     };

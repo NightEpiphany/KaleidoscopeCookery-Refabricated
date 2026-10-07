@@ -6,7 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -31,7 +30,7 @@ public class StrawBlocks extends RotatedPillarBlock {
             return;
         }
         // 完全免伤，但是稻草有几率会被破坏
-        float possibility = (float) Mth.clamp(fallDistance / 30F, 0F, 1F);
+        float possibility = (float) Math.clamp(fallDistance / 30F, 0F, 1F);
         if (level.getRandom().nextFloat() < possibility) {
             level.destroyBlock(pos, false);
             popResource(level, pos, new ItemStack(ModItems.RICE_PANICLE, 5));

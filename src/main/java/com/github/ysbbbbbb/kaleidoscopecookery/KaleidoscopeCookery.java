@@ -35,6 +35,7 @@ public final class KaleidoscopeCookery implements ModInitializer {
         ModVillager.registerVillagerProfessions();
         ModCreativeTabs.registerTabs();
         ModSounds.registerSounds();
+        ModBlockSoundSets.init();
         ModParticles.registerParticles();
         ModRecipes.registerRecipes();
         ModLootModifier.registerLootModifiers();
