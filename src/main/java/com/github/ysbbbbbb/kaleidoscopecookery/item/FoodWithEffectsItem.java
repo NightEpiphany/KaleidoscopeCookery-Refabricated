@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.item;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.item.ICustomEatEffect;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.ClientConfig;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityFoodComponents;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
@@ -27,34 +28,29 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class FoodWithEffectsItem extends Item implements ICustomEatEffect {
+
     protected final List<MobEffectInstance> effectInstances = Lists.newArrayList();
+
     private final Function<Quality, List<MobEffectInstance>> effectCache = Util.memoize(
             quality -> QualityUtils.modifyEffects(this.effectInstances, quality)
     );
-    private final BiFunction<Quality, FoodProperties, FoodProperties> foodPropertiesCache = Util.memoize(
-            (quality, raw) -> QualityUtils.modifyFoodProperties(raw, quality)
-    );
+    private final QualityFoodComponents qualityComponents;
 
-    public FoodWithEffectsItem(FoodProperties properties, Item craftingItem) {
+    public FoodWithEffectsItem(FoodProperties properties, @Nullable Item craftingItem) {
         super(new Item.Properties().food(properties).craftRemainder(craftingItem));
         properties.effects().forEach(effect -> {
             if (effect.probability() >= 1F) {
                 effectInstances.add(effect.effect());
             }
         });
+        this.qualityComponents = new QualityFoodComponents(properties);
     }
 
     public FoodWithEffectsItem(FoodProperties properties) {
-        super(new Properties().food(properties));
-        properties.effects().forEach(effect -> {
-            if (effect.probability() >= 1F) {
-                effectInstances.add(effect.effect());
-            }
-        });
+        this(properties, null);
     }
 
     @Override
@@ -76,13 +72,7 @@ public class FoodWithEffectsItem extends Item implements ICustomEatEffect {
 
     @Override
     public @Nullable FoodProperties modifyFoodProperties(ItemStack stack) {
-        FoodProperties raw = stack.get(DataComponents.FOOD);
-        if (!QualityUtils.hasQuality(stack) || raw == null) {
-            return raw;
-        }
-        // 如果有品质，那么依据品质
-        Quality quality = QualityUtils.getQuality(stack);
-        return this.foodPropertiesCache.apply(quality, raw);
+        return this.qualityComponents.food(stack);
     }
 
     @Override

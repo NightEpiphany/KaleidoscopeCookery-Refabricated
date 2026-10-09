@@ -63,6 +63,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     private static final String INPUTS = "Inputs";
     private static final String RECIPE_ID = "RecipeId";
     private static final String SOUP_BASE_ID = "SoupBaseId";
+    private static final String SOUP_BASE_ITEM = "SoupBaseItem";
     private static final String RESULT = "Result";
     private static final String STATUS = "Status";
     private static final String CURRENT_TICK = "CurrentTick";
@@ -81,6 +82,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     private NonNullList<ItemStack> inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
     private ResourceLocation recipeId = StockpotRecipeSerializer.EMPTY_ID;
     private ResourceLocation soupBaseId = ModSoupBases.WATER;
+    private ItemStack soupBaseItem = ItemStack.EMPTY;
     private ItemStack result = ItemStack.EMPTY;
     private int status = PUT_SOUP_BASE;
     private int currentTick = -1;
@@ -360,6 +362,8 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             ISoupBase soupBase = entry.getValue();
             if (soupBase.isSoupBase(bucket)) {
                 this.soupBaseId = key;
+                this.soupBaseItem = bucket.copyWithCount(1);
+                this.renderEntity = null;
                 this.status = PUT_INGREDIENT;
                 this.refresh();
 
@@ -384,6 +388,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.renderEntity = null;
             this.soupBaseId = ModSoupBases.WATER;
             this.status = PUT_SOUP_BASE;
+            this.soupBaseItem = ItemStack.EMPTY;
             this.refresh();
 
             ItemStack container = soupBase.getReturnSoupBase(level, user, bucket);
@@ -454,7 +459,6 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean removeIngredient(Level level, LivingEntity user) {
         if (hasLid()) {
@@ -544,6 +548,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.inputs.clear();
             this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
             this.soupBaseId = ModSoupBases.WATER;
+            this.soupBaseItem = ItemStack.EMPTY;
             this.result = ItemStack.EMPTY;
             this.currentTick = -1;
             this.renderEntity = null;
@@ -563,6 +568,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put(INPUTS, ContainerHelper.saveAllItems(new CompoundTag(), this.inputs, registries));
+        tag.put(SOUP_BASE_ITEM, soupBaseItem.saveOptional(registries));
         tag.putString(RECIPE_ID, this.recipeId.toString());
         tag.putString(SOUP_BASE_ID, this.soupBaseId.toString());
         tag.put(RESULT, this.result.saveOptional(registries));
@@ -575,6 +581,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        this.soupBaseItem = ItemStack.EMPTY;
         if (tag.contains(INPUTS)) {
             this.inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
             ContainerHelper.loadAllItems(tag.getCompound(INPUTS), this.inputs, registries);
@@ -594,6 +601,9 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (ModFluids.VANILLA_MILK_ID.equals(this.soupBaseId)) {
                 this.soupBaseId = ModFluids.MILK_ID;
             }
+        }
+        if (tag.contains(SOUP_BASE_ITEM)) {
+            this.soupBaseItem = ItemStack.parseOptional(registries, tag.getCompound(SOUP_BASE_ITEM));
         }
         if (tag.contains(RESULT)) {
             this.result = ItemStack.parseOptional(registries, tag.getCompound(RESULT));
@@ -642,6 +652,10 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     public ItemStack getResult() {
         return result;
+    }
+
+    public ItemStack getSoupBaseItem() {
+        return soupBaseItem;
     }
 
     public ResourceLocation getSoupBaseId() {

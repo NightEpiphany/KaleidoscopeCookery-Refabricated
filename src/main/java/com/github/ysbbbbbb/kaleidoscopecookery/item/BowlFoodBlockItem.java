@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.item.IHasContainer;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.ClientConfig;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityFoodComponents;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.google.common.collect.Lists;
@@ -43,17 +44,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class BowlFoodBlockItem extends BlockItem implements IHasContainer, ICustomEatEffect {
+
     private final List<MobEffectInstance> effectInstances = Lists.newArrayList();
+
     private final Function<Quality, List<MobEffectInstance>> effectCache = Util.memoize(
             quality -> QualityUtils.modifyEffects(this.effectInstances, quality)
     );
-    private final BiFunction<Quality, FoodProperties, FoodProperties> foodPropertiesCache = Util.memoize(
-            (quality, raw) -> QualityUtils.modifyFoodProperties(raw, quality)
-    );
+
+    private final QualityFoodComponents qualityComponents;
+
     @SuppressWarnings("all")
     private final Optional<ItemStack> usingConvertsTo;
 
@@ -73,6 +75,7 @@ public class BowlFoodBlockItem extends BlockItem implements IHasContainer, ICust
                 effectInstances.add(effect.effect());
             }
         });
+        this.qualityComponents = new QualityFoodComponents(properties);
     }
 
     @Override
@@ -94,13 +97,7 @@ public class BowlFoodBlockItem extends BlockItem implements IHasContainer, ICust
 
     @Override
     public @Nullable FoodProperties modifyFoodProperties(ItemStack stack) {
-        FoodProperties raw = stack.get(DataComponents.FOOD);
-        if (!QualityUtils.hasQuality(stack) || raw == null) {
-            return raw;
-        }
-        // 如果有品质，那么依据品质
-        Quality quality = QualityUtils.getQuality(stack);
-        return this.foodPropertiesCache.apply(quality, raw);
+        return this.qualityComponents.food(stack);
     }
 
     @Override
