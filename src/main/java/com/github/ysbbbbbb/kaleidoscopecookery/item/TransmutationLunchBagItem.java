@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTr
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.tooltip.ItemContainerTooltip;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.forge.ItemHandlerHelper;
@@ -97,7 +98,7 @@ public class TransmutationLunchBagItem extends WithTooltipsItem {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (stack.isEmpty()) continue;
-            FoodProperties food = stack.getItem().getFoodProperties();
+            FoodProperties food = QualityUtils.getFoodProperties(stack);
             if (food != null || stack.is(Items.POTION)) return food;
         }
         return null;
@@ -218,7 +219,7 @@ public class TransmutationLunchBagItem extends WithTooltipsItem {
                 continue;
             }
 
-            FoodProperties foodProperties = stackInSlot.getItem().getFoodProperties();
+            FoodProperties foodProperties = QualityUtils.getFoodProperties(stackInSlot);
             if (foodProperties != null) {
                 while (!items.getStackInSlot(i).isEmpty() && entity instanceof Player player
                         && (!consumedFood || player.getFoodData().getFoodLevel() < 20)) {

@@ -1,7 +1,9 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.appleskin;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.item.ICustomEatEffect;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.TransmutationLunchBagItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
@@ -26,8 +28,18 @@ public final class AppleSkinCompat implements AppleSkinApi {
     }
 
     void onFoodValues(FoodValuesEvent event) {
-        if (!(event.itemStack.getItem() instanceof TransmutationLunchBagItem)) return;
-        FoodValues food = getFoodValues(event.itemStack);
+        ItemStack stack = event.itemStack;
+        FoodValues food;
+        if (stack.getItem() instanceof TransmutationLunchBagItem) {
+            food = getFoodValues(stack);
+        } else if (stack.getItem() instanceof ICustomEatEffect) {
+            FoodProperties properties = QualityUtils.getFoodProperties(stack);
+            food = properties == null
+                    ? EMPTY
+                    : new FoodValues(properties.getNutrition(), properties.getSaturationModifier());
+        } else {
+            return;
+        }
         event.defaultFoodValues = food;
         event.modifiedFoodValues = food;
     }

@@ -1,9 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item.quality;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.item.ICustomEatEffect;
 import com.google.common.collect.Lists;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -24,6 +27,15 @@ public final class QualityUtils {
 
     public static boolean hasQuality(ItemStack food) {
         return food.hasTag() && food.getOrCreateTag().contains(CUISINE_QUALITY);
+    }
+
+    @Nullable
+    public static FoodProperties getFoodProperties(ItemStack stack) {
+        Item item = stack.getItem();
+        if (item instanceof ICustomEatEffect customEatEffect) {
+            return customEatEffect.modifyFoodProperties(stack);
+        }
+        return item.getFoodProperties();
     }
 
     public static List<MobEffectInstance> modifyEffects(List<MobEffectInstance> effectInstances, Quality quality) {

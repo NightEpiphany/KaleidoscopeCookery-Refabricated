@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.event.effect;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEffects;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -20,7 +21,7 @@ public class PreservationEvent {
     private static InteractionResultHolder<ItemStack> onUseItem(Player player, Level world, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.isEdible() && player.hasEffect(ModEffects.PRESERVATION.get())) {
-            FoodProperties foodProperties = stack.getItem().getFoodProperties();
+            FoodProperties foodProperties = QualityUtils.getFoodProperties(stack);
             if (foodProperties == null) {
                 return InteractionResultHolder.pass(stack);
             }

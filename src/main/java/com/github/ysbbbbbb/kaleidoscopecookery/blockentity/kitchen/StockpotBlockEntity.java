@@ -61,6 +61,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     private static final String INPUTS = "Inputs";
     private static final String RECIPE_ID = "RecipeId";
     private static final String SOUP_BASE_ID = "SoupBaseId";
+    private static final String SOUP_BASE_ITEM = "SoupBaseItem";
     private static final String RESULT = "Result";
     private static final String STATUS = "Status";
     private static final String CURRENT_TICK = "CurrentTick";
@@ -75,10 +76,12 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
      */
     public @Nullable StockpotVisuals visuals;
     public @Nullable Entity renderEntity = null;
+    public ItemStack renderEntitySoupBase = ItemStack.EMPTY;
 
     private NonNullList<ItemStack> inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
     private ResourceLocation recipeId = StockpotRecipeSerializer.EMPTY_ID;
     private ResourceLocation soupBaseId = ModSoupBases.WATER;
+    private ItemStack soupBaseItem = ItemStack.EMPTY;
     private ItemStack result = ItemStack.EMPTY;
     private int status = PUT_SOUP_BASE;
     private int currentTick = -1;
@@ -354,6 +357,9 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             ISoupBase soupBase = entry.getValue();
             if (soupBase.isSoupBase(bucket)) {
                 this.soupBaseId = key;
+                this.soupBaseItem = bucket.copyWithCount(1);
+                this.renderEntity = null;
+                this.renderEntitySoupBase = ItemStack.EMPTY;
                 this.status = PUT_INGREDIENT;
                 this.refresh();
 
@@ -376,7 +382,9 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
                 return false;
             }
             this.renderEntity = null;
+            this.renderEntitySoupBase = ItemStack.EMPTY;
             this.soupBaseId = ModSoupBases.WATER;
+            this.soupBaseItem = ItemStack.EMPTY;
             this.status = PUT_SOUP_BASE;
             this.refresh();
 
@@ -534,9 +542,11 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.inputs.clear();
             this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
             this.soupBaseId = ModSoupBases.WATER;
+            this.soupBaseItem = ItemStack.EMPTY;
             this.result = ItemStack.EMPTY;
             this.currentTick = -1;
             this.renderEntity = null;
+            this.renderEntitySoupBase = ItemStack.EMPTY;
         }
         this.refresh();
         return true;
@@ -555,6 +565,9 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         tag.put(INPUTS, ContainerHelper.saveAllItems(new CompoundTag(), this.inputs));
         tag.putString(RECIPE_ID, this.recipeId.toString());
         tag.putString(SOUP_BASE_ID, this.soupBaseId.toString());
+        if (!this.soupBaseItem.isEmpty()) {
+            tag.put(SOUP_BASE_ITEM, this.soupBaseItem.save(new CompoundTag()));
+        }
         tag.put(RESULT, this.result.save(new CompoundTag()));
         tag.putInt(STATUS, this.status);
         tag.putInt(CURRENT_TICK, this.currentTick);
@@ -567,6 +580,8 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
+        ItemStack previousSoupBaseItem = this.soupBaseItem;
+        this.soupBaseItem = ItemStack.EMPTY;
         if (tag.contains(INPUTS)) {
             this.inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
             ContainerHelper.loadAllItems(tag.getCompound(INPUTS), this.inputs);
@@ -586,6 +601,13 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (ModFluids.VANILLA_MILK_ID.equals(this.soupBaseId)) {
                 this.soupBaseId = ModFluids.MILK_ID;
             }
+        }
+        if (tag.contains(SOUP_BASE_ITEM)) {
+            this.soupBaseItem = ItemStack.of(tag.getCompound(SOUP_BASE_ITEM));
+        }
+        if (!ItemStack.matches(previousSoupBaseItem, this.soupBaseItem)) {
+            this.renderEntity = null;
+            this.renderEntitySoupBase = ItemStack.EMPTY;
         }
         if (tag.contains(RESULT)) {
             this.result = ItemStack.of(tag.getCompound(RESULT));
@@ -626,6 +648,10 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     public ItemStack getResult() {
         return result;
+    }
+
+    public ItemStack getSoupBaseItem() {
+        return soupBaseItem;
     }
 
     public ResourceLocation getSoupBaseId() {

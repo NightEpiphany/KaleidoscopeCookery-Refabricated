@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.item.ICustomEatEffect;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.ClientConfig;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class FoodWithEffectsItem extends Item {
+public class FoodWithEffectsItem extends Item implements ICustomEatEffect {
     protected final List<MobEffectInstance> effectInstances = Lists.newArrayList();
 
     private final Function<Quality, List<MobEffectInstance>> effectCache = Util.memoize(
@@ -54,13 +55,12 @@ public class FoodWithEffectsItem extends Item {
     }
 
     @Override
-    public @Nullable FoodProperties getFoodProperties() {
+    public @Nullable FoodProperties modifyFoodProperties(ItemStack stack) {
         FoodProperties raw = super.getFoodProperties();
-        if (!QualityUtils.hasQuality(this.getDefaultInstance()) || raw == null) {
+        if (!QualityUtils.hasQuality(stack) || raw == null) {
             return raw;
         }
-        // 如果有品质，那么依据品质
-        Quality quality = QualityUtils.getQuality(this.getDefaultInstance());
+        Quality quality = QualityUtils.getQuality(stack);
         return this.foodPropertiesCache.apply(quality, raw);
     }
 

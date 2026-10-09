@@ -8,6 +8,7 @@
   "mixins": [
     "BlockMixin",
     "CropBlockMixin",
+    "FoodDataMixin",
     "FallingBlockEntityMixin",
     "FarmBlockMixin",
     "ItemEntityMixin",
