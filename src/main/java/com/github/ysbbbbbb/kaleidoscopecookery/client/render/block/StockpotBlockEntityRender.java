@@ -30,6 +30,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.fish.TropicalFish;
 import net.minecraft.world.entity.animal.fish.Pufferfish;
 import net.minecraft.world.level.Level;
@@ -110,6 +111,14 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
                 applyRandomTropicalFishVariant(tropicalFish, level);
             }
             entity.setId(nextRenderEntityId++);
+            // 展示朝向由汤锅的矩阵控制，实体不执行常规 tick，需要同步新旧角度，避免反复插值抖动。
+            entity.setYRot(0.0F);
+            entity.setXRot(0.0F);
+            entity.setOldPosAndRot();
+            if (entity instanceof LivingEntity livingEntity) {
+                livingEntity.yBodyRot = livingEntity.yBodyRotO = 0.0F;
+                livingEntity.yHeadRot = livingEntity.yHeadRotO = 0.0F;
+            }
         }
         // 河豚随机膨胀形态
         if (entity instanceof Pufferfish pufferfish)
