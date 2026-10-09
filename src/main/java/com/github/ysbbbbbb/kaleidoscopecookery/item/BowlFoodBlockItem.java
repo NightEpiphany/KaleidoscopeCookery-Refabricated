@@ -4,10 +4,10 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.item.ICustomEatEffect;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.ConfigGetter;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityFoodComponents;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -18,8 +18,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Prediction;
-import net.minecraft.util.Util;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,16 +48,10 @@ import org.jspecify.annotations.NonNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class BowlFoodBlockItem extends BlockItem implements ICustomEatEffect {
-    private final BiFunction<Quality, FoodProperties, FoodProperties> foodPropertiesCache = Util.memoize(
-            (quality, raw) -> QualityUtils.modifyFoodProperties(raw, quality)
-    );
-    private final BiFunction<Quality, Consumable, Consumable> foodConsumableCache = Util.memoize(
-            (quality, raw) -> QualityUtils.modifyFoodConsumables(raw, quality)
-    );
+    private final QualityFoodComponents qualityComponents;
     @SuppressWarnings("all")
     private final Optional<ItemLike> usingConvertsTo;
 
@@ -67,6 +59,7 @@ public class BowlFoodBlockItem extends BlockItem implements ICustomEatEffect {
         super(block, new Properties().stacksTo(16).useBlockDescriptionPrefix().usingConvertsTo(usingConvertsTo == null ? Items.BOWL : usingConvertsTo.asItem())
                 .food(properties, consumable).setId(PortHelper.createItemId(name))
         );
+        this.qualityComponents = new QualityFoodComponents(properties, consumable);
         this.usingConvertsTo = Optional.of(usingConvertsTo == null ? Items.BOWL : usingConvertsTo.asItem());
     }
 
@@ -83,43 +76,13 @@ public class BowlFoodBlockItem extends BlockItem implements ICustomEatEffect {
     }
 
     @Override
-    public @NonNull InteractionResult use(@NonNull Level level, @NonNull Player player, @NonNull InteractionHand interactionHand) {
-        ItemStack itemStack = player.getItemInHand(interactionHand);
-        FoodProperties foodProperties = itemStack.get(DataComponents.FOOD);
-        if (foodProperties != null) {
-            if (player.canEat(foodProperties.canAlwaysEat())) {
-                itemStack.set(DataComponents.FOOD, modifyFoodProperties(itemStack));
-                itemStack.set(DataComponents.CONSUMABLE, modifyConsumables(itemStack));
-                player.startUsingItem(interactionHand);
-                return InteractionResult.CONSUME;
-            } else {
-                return InteractionResult.FAIL;
-            }
-        } else {
-            return InteractionResult.PASS;
-        }
-    }
-
-    @Override
     public @Nullable FoodProperties modifyFoodProperties(ItemStack stack) {
-        FoodProperties raw = stack.get(DataComponents.FOOD);
-        if (!QualityUtils.hasQuality(stack) || raw == null) {
-            return raw;
-        }
-        // 如果有品质，那么依据品质
-        Quality quality = QualityUtils.getQuality(stack);
-        return this.foodPropertiesCache.apply(quality, raw);
+        return this.qualityComponents.food(stack);
     }
 
     @Override
     public Consumable modifyConsumables(ItemStack stack) {
-        Consumable raw = stack.get(DataComponents.CONSUMABLE);
-        if (!QualityUtils.hasQuality(stack) || raw == null) {
-            return raw;
-        }
-        // 需要剔除 usingConvertsTo，因为已经给过了
-        Quality quality = QualityUtils.getQuality(stack);
-        return this.foodConsumableCache.apply(quality, raw);
+        return this.qualityComponents.consumable(stack);
     }
 
     @Override
