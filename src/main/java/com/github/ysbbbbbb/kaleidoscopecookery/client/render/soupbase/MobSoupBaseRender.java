@@ -45,14 +45,14 @@ public class MobSoupBaseRender extends FluidSoupBaseRender {
         }
 
         int random = stockpot.seed;
-        float entityY = (float) (Math.sin(random + System.currentTimeMillis() * 0.0005) * 0.15);
+        float entityY = (float) (Math.sin(random + System.currentTimeMillis() * 0.0005) * 0.125f);
 
         poseStack.pushPose();
-        poseStack.translate(0.5, 0, 0.5);
+        poseStack.translate(0.5f, -0.05f, 0.5f);
         poseStack.rotateDegrees(Axis.YP, random % 360);
-        poseStack.scale(0.65f, 0.65f, 0.65f);
+        poseStack.scale(0.565f, 0.565f, 0.565f);
         renderEntity.lightCoords = packedLight;
-        Minecraft.getInstance().getEntityRenderDispatcher().submit(renderEntity, cameraRenderState, 0, 0.475f + entityY, 0, poseStack, submitNodeCollector);
+        Minecraft.getInstance().getEntityRenderDispatcher().submit(renderEntity, cameraRenderState, 0, 0.525f + entityY, 0, poseStack, submitNodeCollector);
         poseStack.popPose();
     }
 }
