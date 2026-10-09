@@ -48,11 +48,11 @@ public class MobSoupBaseRender extends FluidSoupBaseRender {
         float entityY = (float) (Math.sin(random + System.currentTimeMillis() * 0.0005) * 0.15);
 
         poseStack.pushPose();
-        poseStack.translate(0.5, 0, 0.5);
+        poseStack.translate(0.5f, -0.05f, 0.5f);
         poseStack.mulPose(Axis.YP.rotationDegrees(random % 360));
-        poseStack.scale(0.65f, 0.65f, 0.65f);
+        poseStack.scale(0.565f, 0.565f, 0.565f);
         renderEntity.lightCoords = packedLight;
-        Minecraft.getInstance().getEntityRenderDispatcher().submit(renderEntity, cameraRenderState, 0, 0.475f + entityY, 0, poseStack, submitNodeCollector);
+        Minecraft.getInstance().getEntityRenderDispatcher().submit(renderEntity, cameraRenderState, 0, 0.525f + entityY, 0, poseStack, submitNodeCollector);
         poseStack.popPose();
     }
 }
