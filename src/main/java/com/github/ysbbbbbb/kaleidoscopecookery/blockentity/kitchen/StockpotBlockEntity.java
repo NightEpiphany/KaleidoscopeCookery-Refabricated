@@ -381,6 +381,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (soupBase == null || !soupBase.isContainer(bucket)) {
                 return false;
             }
+            ItemStack sourceSoupBase = this.soupBaseItem.copy();
             this.renderEntity = null;
             this.renderEntitySoupBase = ItemStack.EMPTY;
             this.soupBaseId = ModSoupBases.WATER;
@@ -389,12 +390,21 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.refresh();
 
             ItemStack container = soupBase.getReturnSoupBase(level, user, bucket);
+            restoreSoupBaseComponents(sourceSoupBase, container);
             if (user instanceof Player player && !player.isCreative())
                 bucket.shrink(1);
             ItemUtils.getItemToLivingEntity(user, container);
             return true;
         }
         return false;
+    }
+
+    static void restoreSoupBaseComponents(ItemStack sourceSoupBase, ItemStack returnedSoupBase) {
+        if (!sourceSoupBase.isEmpty()
+                && !returnedSoupBase.isEmpty()
+                && sourceSoupBase.is(returnedSoupBase.getItem())) {
+            returnedSoupBase.setTag(sourceSoupBase.getTag());
+        }
     }
 
     public void addAllIngredients(List<ItemStack> ingredients, LivingEntity user) {
