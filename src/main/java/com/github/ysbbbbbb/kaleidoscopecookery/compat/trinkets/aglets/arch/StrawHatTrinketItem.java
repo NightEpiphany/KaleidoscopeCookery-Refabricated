@@ -3,7 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.compat.trinkets.aglets.arch;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModArmorMaterials;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.StrawHatItem;
 import eu.pb4.trinkets.api.*;
-import eu.pb4.trinkets.impl.TrinketSlot;
+import eu.pb4.trinkets.impl.slots.TrinketSlot;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -16,9 +16,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Map;
 import java.util.Optional;
 
+@SuppressWarnings("UnstableApiUsage")
 public final class StrawHatTrinketItem extends StrawHatItem implements Trinket {
     public StrawHatTrinketItem(boolean hasFlower, Properties properties) {
         super(hasFlower, properties.stacksTo(1).humanoidArmor(ModArmorMaterials.FARMER, ArmorType.HELMET));
