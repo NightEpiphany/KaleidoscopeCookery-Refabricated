@@ -51,7 +51,7 @@ public class ClayPotMilkTeaBlock extends HorizontalDirectionalBlock implements S
         if (!level.isClientSide()) {
             ItemUtils.getItemToLivingEntity(player, new ItemStack(this));
             level.removeBlock(pos, false);
-            level.playSound(null, pos, SoundEvents.DECORATED_POT_BREAK.value(), SoundSource.BLOCKS);
+            SoundEvents.DECORATED_POT.breakSound().ifPresent(sound -> level.playSound(null, pos, sound.value(), SoundSource.BLOCKS));
         }
         return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
@@ -98,7 +98,7 @@ public class ClayPotMilkTeaBlock extends HorizontalDirectionalBlock implements S
 
     @Override
     public @NotNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Override

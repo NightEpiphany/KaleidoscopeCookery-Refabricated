@@ -76,7 +76,7 @@ public class ThrowableBaoziEntity extends ThrowableItemProjectile {
         super.onHitEntity(entityHitResult);
         Entity hitEntity = entityHitResult.getEntity();
         hitEntity.hurt(this.damageSources().thrown(this, this.getOwner()), 0);
-        this.playSound(SoundEvents.SNOW_HIT, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+        SoundEvents.SNOW.hitSound().ifPresent(sound -> this.playSound(sound, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F));
 
         // 如果是狗，那么直接回满狗的血
         if (hitEntity instanceof Wolf wolf) {
@@ -95,7 +95,7 @@ public class ThrowableBaoziEntity extends ThrowableItemProjectile {
         super.onHit(hitResult);
         if (!this.level().isClientSide()) {
             this.level().broadcastEntityEvent(this, EntityEvent.DEATH);
-            this.playSound(SoundEvents.SNOW_HIT, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            SoundEvents.SNOW.hitSound().ifPresent(sound -> this.playSound(sound, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F));
             this.discard();
         }
     }

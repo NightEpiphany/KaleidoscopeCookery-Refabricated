@@ -74,19 +74,19 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
         // 先判断棍子敲
         if (mainHandItem.is(Items.STICK)) {
             float pitch = 0.6F + (float) Math.random() * 0.2F;
-            level.playSound(player, pos, SoundEvents.LANTERN_BREAK, SoundSource.BLOCKS, 2, pitch);
+            SoundEvents.LANTERN.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 2, pitch));
             return InteractionResult.SUCCESS;
         }
         // 再判断开盖
         boolean hasLid = state.getValue(HAS_LID);
         if (hasLid) {
-            level.playSound(player, pos, SoundEvents.LANTERN_BREAK, SoundSource.BLOCKS, 0.8f, 0.8f);
+            SoundEvents.LANTERN.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 0.8f, 0.8f));
             level.setBlockAndUpdate(pos, state.setValue(HAS_LID, false));
             return InteractionResult.SUCCESS;
         }
         // 没有盖子，并且是空手，那么盖上盖子
         if (mainHandItem.isEmpty()) {
-            level.playSound(player, pos, SoundEvents.LANTERN_BREAK, SoundSource.BLOCKS, 0.8f, 0.4f);
+            SoundEvents.LANTERN.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 0.8f, 0.4f));
             level.setBlockAndUpdate(pos, state.setValue(HAS_LID, true));
             return InteractionResult.SUCCESS;
         }
@@ -100,7 +100,7 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
             // 尝试直接放满
             int needCount = MAX_OIL_COUNT - value;
             int consumeCount = Math.min(needCount, mainHandItem.getCount());
-            level.playSound(player, pos, SoundEvents.HONEY_BLOCK_BREAK, SoundSource.BLOCKS, 0.8f, 0.8f);
+            SoundEvents.HONEY_BLOCK.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 0.8f, 0.8f));
             if (!player.isCreative())
                 mainHandItem.shrink(consumeCount);
             level.setBlockAndUpdate(pos, state.setValue(OIL_COUNT, value + consumeCount));
@@ -124,7 +124,7 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
             if (value >= MAX_OIL_COUNT) {
                 return InteractionResult.FAIL;
             }
-            level.playSound(player, pos, SoundEvents.HONEY_BLOCK_BREAK, SoundSource.BLOCKS, 0.8f, 0.8f);
+            SoundEvents.HONEY_BLOCK.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 0.8f, 0.8f));
             KitchenShovelItem.setHasOil(mainHandItem, false);
             level.setBlockAndUpdate(pos, state.setValue(OIL_COUNT, value + 1));
             return InteractionResult.SUCCESS;
@@ -136,7 +136,7 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
         }
 
         // 取油
-        level.playSound(player, pos, SoundEvents.HONEY_BLOCK_BREAK, SoundSource.BLOCKS, 0.8f, 1.2F);
+        SoundEvents.HONEY_BLOCK.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 0.8f, 1.2f));
         KitchenShovelItem.setHasOil(mainHandItem, true);
         level.setBlockAndUpdate(pos, state.setValue(OIL_COUNT, value - 1));
         return InteractionResult.SUCCESS;
@@ -151,7 +151,7 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
 
     @Override
     public @NotNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Override

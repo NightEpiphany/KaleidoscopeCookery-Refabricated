@@ -219,7 +219,7 @@ public class MillstoneBlock extends HorizontalDirectionalBlock implements Entity
 
     @Override
     public @NonNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Nullable

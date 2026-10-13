@@ -408,9 +408,8 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         for (ItemStack drop : drops) {
             ItemUtils.getItemToLivingEntity(user, drop);
         }
-
-        level.playSound(null, worldPosition, SoundEvents.LANTERN_BREAK, SoundSource.BLOCKS, 0.6f,
-                0.8f + level.getRandom().nextFloat() * 0.2F);
+        SoundEvents.LANTERN.breakSound().ifPresent(sound -> level.playSound(null, worldPosition, sound, SoundSource.BLOCKS, 0.6f,
+                0.8f + level.getRandom().nextFloat() * 0.2F));
 
         return true;
     }

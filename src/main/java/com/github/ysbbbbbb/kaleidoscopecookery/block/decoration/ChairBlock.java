@@ -99,7 +99,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
         if (!hasCarpet) {
             level.setBlockAndUpdate(pos, state.setValue(HAS_CARPET, true));
             if (level.getBlockEntity(pos) instanceof ChairBlockEntity chairBlockEntity) {
-                level.playSound(null, pos, SoundEvents.WOOL_PLACE, player.getSoundSource(), 1.0F, 1.0F);
+                SoundEvents.WOOL.placeSound().ifPresent(sound -> level.playSound(null, pos, sound, player.getSoundSource(), 1.0F, 1.0F));
                 chairBlockEntity.setColor(dyeColor);
                 chairBlockEntity.refresh();
                 if (!player.isCreative())
@@ -114,7 +114,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
             DyeColor originalColor = chairBlockEntity.getColor();
             ItemStack carpetItem = getCarpetByColor(originalColor).getDefaultInstance();
             BlockDrop.popResource(level, pos, 0.25, carpetItem);
-            level.playSound(null, pos, SoundEvents.WOOL_PLACE, player.getSoundSource(), 1.0F, 1.0F);
+            SoundEvents.WOOL.placeSound().ifPresent(sound -> level.playSound(null, pos, sound, player.getSoundSource(), 1.0F, 1.0F));
 
             chairBlockEntity.setColor(dyeColor);
             chairBlockEntity.refresh();
@@ -156,7 +156,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
 
     @Override
     public @NonNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Override

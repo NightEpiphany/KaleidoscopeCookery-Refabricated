@@ -96,7 +96,7 @@ public class TeaBannerBlock extends FaceAttachedHorizontalDirectionalBlock imple
                 if (!previousPattern.isEmpty()) {
                     popResource(level, pos, previousPattern);
                 }
-                level.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.WOOL.placeSound().ifPresent(sound -> level.playSound(null, pos, sound, player.getSoundSource(), 1.0F, 1.0F));
             }
             return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
         }
@@ -179,7 +179,7 @@ public class TeaBannerBlock extends FaceAttachedHorizontalDirectionalBlock imple
 
     @Override
     public @NotNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Override

@@ -432,7 +432,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             if (item.isEmpty()) {
                 this.inputs.set(i, itemStack.copyWithCount(1));
                 itemStack.shrink(1);
-                level.playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
+                SoundEvents.LANTERN.placeSound().ifPresent(sound -> level.playSound(null, this.worldPosition, sound, SoundSource.BLOCKS, 1.0F, 0.5F));
                 return true;
             }
         }
@@ -548,7 +548,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             }
             this.inputs.set(i, stack.copyWithCount(1));
         }
-        level.playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
+        SoundEvents.LANTERN.placeSound().ifPresent(sound -> level.playSound(null, this.worldPosition, sound, SoundSource.BLOCKS, 1.0F, 0.5F));
         this.refresh();
     }
 

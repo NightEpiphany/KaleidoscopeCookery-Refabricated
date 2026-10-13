@@ -88,7 +88,7 @@ public final class ModFluids {
 
     public static boolean matchesFluidTag(Identifier actual, TagKey<Fluid> tag) {
         return actual != null && BuiltInRegistries.FLUID.getOptional(actual)
-                .map(fluid -> fluid.is(tag))
+                .map(fluid -> fluid.builtInRegistryHolder().is(tag))
                 .orElse(false);
     }
 

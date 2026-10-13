@@ -105,7 +105,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
                         .setValue(teacupBlock.getTeaCountProperty(), 1)
                         .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
                         .setValue(FACING, state.getValue(FACING)));
-                level.playSound(player, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.DECORATED_POT.placeSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
                 if (!player.isCreative())
                     itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
@@ -119,7 +119,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
             int count = state.getValue(CUP_COUNT);
             if (count < MAX_COUNT) {
                 level.setBlockAndUpdate(pos, state.setValue(CUP_COUNT, count + 1));
-                level.playSound(player, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.DECORATED_POT.placeSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
                 if (!player.isCreative())
                     itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
@@ -139,7 +139,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
                 } else {
                     level.setBlockAndUpdate(pos, state.setValue(CUP_COUNT, cupCountNum - 1));
                 }
-                level.playSound(player, pos, SoundEvents.DECORATED_POT_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.DECORATED_POT.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
                 return InteractionResult.SUCCESS;
             }
         }
@@ -171,7 +171,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
 
     @Override
     public @NonNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class MillstoneScenes {
                 .withItem(new ItemStack(Items.FLINT));
         scene.idle(7);
         scene.world().modifyBlockEntity(millstonePos, MillstoneBlockEntity.class, (e) ->
-                e.onPutItemForPonder(level, new ItemStack(Items.FLINT, 4)));
+                e.onPutItemForPonder(new ItemStack(Items.FLINT, 4)));
         scene.idle(48);
 
         scene.addKeyframe();
@@ -66,7 +66,7 @@ public class MillstoneScenes {
         scene.world().modifyEntity(itemDrop, Entity::discard);
         scene.world().modifyBlockEntity(millstonePos, MillstoneBlockEntity.class, (e) -> {
             e.resetWhenTakeout();
-            e.onPutItemForPonder(level, new ItemStack(Items.FLINT, 8));
+            e.onPutItemForPonder(new ItemStack(Items.FLINT, 8));
         });
         scene.idle(48);
 

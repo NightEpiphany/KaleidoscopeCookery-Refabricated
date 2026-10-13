@@ -139,7 +139,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         if (!hasCarpet) {
             level.setBlockAndUpdate(pos, state.setValue(HAS_CARPET, true));
             if (level.getBlockEntity(pos) instanceof TableBlockEntity tableBlockEntity) {
-                level.playSound(null, pos, SoundEvents.WOOL_PLACE, player.getSoundSource(), 1.0F, 1.0F);
+                SoundEvents.WOOL.placeSound().ifPresent(sound -> level.playSound(null, pos, sound, player.getSoundSource(), 1.0F, 1.0F));
                 tableBlockEntity.setColor(dyeColor);
                 tableBlockEntity.refresh();
                 if (!player.isCreative())
@@ -154,7 +154,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
             DyeColor originalColor = tableBlockEntity.getColor();
             ItemStack carpetItem = getCarpetByColor(originalColor).getDefaultInstance();
             BlockDrop.popResource(level, pos, 0.75, carpetItem);
-            level.playSound(null, pos, SoundEvents.WOOL_PLACE, player.getSoundSource(), 1.0F, 1.0F);
+            SoundEvents.WOOL.placeSound().ifPresent(sound -> level.playSound(null, pos, sound, player.getSoundSource(), 1.0F, 1.0F));
 
             tableBlockEntity.setColor(dyeColor);
             tableBlockEntity.refresh();
@@ -261,7 +261,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
 
     @Override
     public @NonNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Override

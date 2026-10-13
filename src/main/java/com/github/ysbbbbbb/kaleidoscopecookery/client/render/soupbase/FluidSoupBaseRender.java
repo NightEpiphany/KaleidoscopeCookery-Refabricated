@@ -59,10 +59,10 @@ public class FluidSoupBaseRender implements ISoupBaseRender {
             Identifier sprite = unbaked.stillMaterial().sprite();
             return Minecraft.getInstance().getModelManager().atlasManager.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, sprite));
         }
-        if (fluid == Fluids.WATER || fluid == Fluids.FLOWING_WATER) {
+        if (fluid == Fluids.WATER) {
             return Minecraft.getInstance().getModelManager().atlasManager.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.withDefaultNamespace("block/water_still")));
         }
-        if (fluid == Fluids.LAVA || fluid == Fluids.FLOWING_LAVA) {
+        if (fluid == Fluids.LAVA) {
             return Minecraft.getInstance().getModelManager().atlasManager.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.withDefaultNamespace("block/lava_still")));
         }
         if (fluid == BuiltInRegistries.FLUID.getValue(ModFluids.MILK_ID)) {

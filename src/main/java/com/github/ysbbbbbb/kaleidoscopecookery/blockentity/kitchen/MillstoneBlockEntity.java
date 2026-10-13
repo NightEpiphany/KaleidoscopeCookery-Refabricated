@@ -19,7 +19,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.IItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.ItemStackHandler;
 import net.fabricmc.fabric.impl.serialization.SpecialCodecs;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -276,20 +275,20 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         }
         if (level instanceof ServerLevel serverLevel) {
             SimpleInput container = new SimpleInput(List.of(putOnItem));
-            return this.matchRecipe(container, serverLevel).map(recipe -> {
+            return this.matchRecipe(container, serverLevel).map(_ -> {
                 this.input = putOnItem.split(MAX_INPUT_COUNT);
                 this.progress = Math.max(Math.round(this.rotSpeedTick), 1);
                 this.refresh();
-                level.playSound(null, this.worldPosition,
-                        SoundEvents.STONE_HIT, SoundSource.BLOCKS, 0.8f,
-                        level.getRandom().nextFloat() * 0.2f + 0.9f);
+                SoundEvents.STONE.hitSound().ifPresent(sound -> level.playSound(null, this.worldPosition,
+                        sound, SoundSource.BLOCKS, 0.8f,
+                        level.getRandom().nextFloat() * 0.2f + 0.9f));
                 return true;
             }).orElse(false);
         }
         return false;
     }
 
-    public void onPutItemForPonder(ClientLevel level, ItemStack putOnItem) {
+    public void onPutItemForPonder(ItemStack putOnItem) {
         this.input = putOnItem.split(MAX_INPUT_COUNT);
         this.progress = Math.max(Math.round(this.rotSpeedTick), 1);
         this.refresh();
@@ -376,7 +375,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     }
 
     @Override
-    public void fillCrashReportCategory(net.minecraft.CrashReportCategory category) {
+    public void fillCrashReportCategory(net.minecraft.@NonNull CrashReportCategory category) {
         super.fillCrashReportCategory(category);
         category.setDetail("Cookery millstone bound entity", () -> entityId.toString());
         category.setDetail("Cookery millstone rotation", () -> "period=" + rotSpeedTick + ", offset=" + cacheRot);

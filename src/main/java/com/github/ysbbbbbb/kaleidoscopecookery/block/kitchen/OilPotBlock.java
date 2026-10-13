@@ -88,7 +88,7 @@ public class OilPotBlock extends HorizontalDirectionalBlock implements SimpleWat
             ItemStack oilStack = new ItemStack(ModItems.OIL, needOilCount);
             player.setItemInHand(hand, oilStack);
             oilPot.setOilCount(currentOilCount - needOilCount);
-            player.playSound(SoundEvents.LANTERN_HIT, 1.0F, player.getRandom().nextFloat() * 0.2F + 0.8F);
+            SoundEvents.LANTERN.hitSound().ifPresent(sound -> player.playSound(sound, 1.0F, player.getRandom().nextFloat() * 0.2F + 0.8F));
             return InteractionResult.SUCCESS;
         }
 
@@ -104,7 +104,7 @@ public class OilPotBlock extends HorizontalDirectionalBlock implements SimpleWat
             if (!player.isCreative()) {
                 mainHandItem.shrink(addOilCount);
             }
-            player.playSound(SoundEvents.LANTERN_HIT, 1.0F, player.getRandom().nextFloat() * 0.2F + 0.4F);
+            SoundEvents.LANTERN.hitSound().ifPresent(sound -> player.playSound(sound, 1.0F, player.getRandom().nextFloat() * 0.2F + 0.4F));
             return InteractionResult.SUCCESS;
         }
 
@@ -122,7 +122,7 @@ public class OilPotBlock extends HorizontalDirectionalBlock implements SimpleWat
 
     @Override
     public @NotNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Override
@@ -253,7 +253,7 @@ public class OilPotBlock extends HorizontalDirectionalBlock implements SimpleWat
                 oilPot.setOilCount(oilPot.getOilCount() + itemStack.getCount());
                 oilPot.refresh();
                 if (this.level.getBlockState(pos) == this.state)
-                    this.level.playSound(null, this.pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 0.56f, 0.985f);
+                    SoundEvents.HONEY_BLOCK.placeSound().ifPresent(sound -> this.level.playSound(null, this.pos, sound, SoundSource.BLOCKS, 0.56f, 0.985f));
             }
         }
     }

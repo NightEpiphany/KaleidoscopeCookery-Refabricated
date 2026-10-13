@@ -47,12 +47,13 @@ public record TeapotRecipe(Identifier teaFluid,
                 && stack.getCount() >= ingredientCount;
     }
 
+    @SuppressWarnings("deprecation")
     public Identifier displayTeaFluid() {
         if (teaFluidTag.isEmpty()) {
             return teaFluid;
         }
         return BuiltInRegistries.FLUID.entrySet().stream()
-                .filter(entry -> entry.getValue() != Fluids.EMPTY && entry.getValue().is(teaFluidTag.get()))
+                .filter(entry -> entry.getValue() != Fluids.EMPTY && entry.getValue().builtInRegistryHolder().is(teaFluidTag.get()))
                 .map(entry -> BuiltInRegistries.FLUID.getKey(entry.getValue()))
                 .findFirst()
                 .orElse(teaFluid);

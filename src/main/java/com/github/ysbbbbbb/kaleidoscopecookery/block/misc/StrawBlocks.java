@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,7 +25,7 @@ public class StrawBlocks extends RotatedPillarBlock {
         if (level.isClientSide()) {
             return;
         }
-        level.playSound(null, pos, SoundEvents.GRASS_FALL, entity.getSoundSource(), 1.0F, 1.0F);
+        SoundEvents.GRASS.fallSound().ifPresent(sound -> level.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, 0.5F));
         // 三格高不损失稻草
         if (fallDistance < 3) {
             return;

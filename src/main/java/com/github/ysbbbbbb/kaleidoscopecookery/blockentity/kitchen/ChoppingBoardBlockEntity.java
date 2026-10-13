@@ -93,10 +93,10 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
                 this.currentCutStack = putOnItem.split(1);
                 this.results = recipe.getResults().stream().map(ItemStackTemplate::create).toList();
                 this.refresh();
-                level.playSound(null, this.worldPosition,
-                        SoundEvents.WOOD_PLACE,
+                SoundEvents.WOOD.placeSound().ifPresent(sound -> level.playSound(null, this.worldPosition,
+                        sound,
                         SoundSource.BLOCKS,
-                        1, 1.2F);
+                        1, 1.2F));
                 return true;
             }
         }
@@ -114,10 +114,10 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
                 popResource(level, worldPosition, result.copy());
             }
             this.resetBoardData();
-            level.playSound(null, this.worldPosition,
-                    SoundEvents.WOOD_PLACE,
+            SoundEvents.WOOD.placeSound().ifPresent(sound -> level.playSound(null, this.worldPosition,
+                    sound,
                     SoundSource.BLOCKS,
-                    1, 2 + level.getRandom().nextFloat() * 0.2f);
+                    1, 2 + level.getRandom().nextFloat() * 0.2f));
             return true;
         } else if (cutterItem.is(TagMod.KITCHEN_KNIFE)) {
             // 否则，检测是否是刀具，进行切菜逻辑
@@ -161,10 +161,10 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
                     this.worldPosition.getY() + 0.25,
                     this.worldPosition.getZ() + 0.25 + random.nextDouble() / 2,
                     2, 0, 0, 0, 0.1);
-            serverLevel.playSound(null, this.worldPosition,
-                    SoundEvents.WOOD_PLACE,
+            SoundEvents.WOOD.placeSound().ifPresent(sound -> serverLevel.playSound(null, this.worldPosition,
+                    sound,
                     SoundSource.BLOCKS,
-                    1, 1.5f + level.getRandom().nextFloat() * 0.4f);
+                    1, 1.5f + level.getRandom().nextFloat() * 0.4f));
         }
     }
 

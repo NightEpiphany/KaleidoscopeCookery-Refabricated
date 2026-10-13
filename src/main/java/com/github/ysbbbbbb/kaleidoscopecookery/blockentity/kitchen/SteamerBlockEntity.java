@@ -400,7 +400,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
                 this.cookingProgress[i] = 0;
             }
             // 释放粒子效果
-            level.playSound(null, this.getBlockPos(), SoundEvents.WOOD_BREAK.value(), SoundSource.BLOCKS);
+            SoundEvents.WOOD.breakSound().ifPresent(sound -> level.playSound(null, this.getBlockPos(), sound.value(), SoundSource.BLOCKS));
             if (half) {
                 level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
             } else {

@@ -174,7 +174,7 @@ public class ScarecrowEntity extends LivingEntity {
         }
         if (itemInHand.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock) {
             if (swapHand(InteractionHand.OFF_HAND, player, itemInHand)) {
-                this.level().playSound(null, this.blockPosition(), SoundEvents.LANTERN_PLACE.value(), this.getSoundSource());
+                SoundEvents.LANTERN.placeSound().ifPresent(sound -> this.level().playSound(null, this.blockPosition(), sound.value(), this.getSoundSource()));
                 return InteractionResult.SUCCESS;
             }
         }

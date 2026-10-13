@@ -132,7 +132,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
             int count = state.getValue(cupCount);
             if (count < this.maxCount) {
                 level.setBlockAndUpdate(pos, state.setValue(cupCount, count + 1));
-                level.playSound(player, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.DECORATED_POT.placeSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
                 if (!player.isCreative())
                     itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
@@ -152,7 +152,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
                 level.setBlockAndUpdate(pos, state
                         .setValue(cupCount, cupCountNum + 1)
                         .setValue(teaCount, teaCountNum + 1));
-                level.playSound(player, pos, SoundEvents.DECORATED_POT_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.DECORATED_POT.placeSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
                 if (!player.isCreative())
                     itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
@@ -182,7 +182,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
                             .setValue(teaCount, teaCountNum - 1)
                             .setValue(cupCount, cupCountNum - 1));
                 }
-                level.playSound(player, pos, SoundEvents.DECORATED_POT_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.DECORATED_POT.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
                 return InteractionResult.SUCCESS;
             }
 
@@ -195,7 +195,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
                 } else {
                     level.setBlockAndUpdate(pos, state.setValue(cupCount, cupCountNum - 1));
                 }
-                level.playSound(player, pos, SoundEvents.DECORATED_POT_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.DECORATED_POT.breakSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
                 return InteractionResult.SUCCESS;
             }
         }
@@ -251,7 +251,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock implements SimpleWat
 
     @Override
     public @NonNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
     @Override

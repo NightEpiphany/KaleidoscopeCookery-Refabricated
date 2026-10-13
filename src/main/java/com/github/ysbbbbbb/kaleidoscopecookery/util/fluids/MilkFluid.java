@@ -22,7 +22,7 @@ public final class MilkFluid extends Fluid {
     }
 
     @Override
-    protected boolean canBeReplacedWith(@NonNull FluidState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull Fluid fluid, @NonNull Direction direction) {
+    protected boolean canBeReplacedWith(@NonNull FluidState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull FluidState other, @NonNull Direction direction) {
         return false;
     }
 
@@ -59,6 +59,11 @@ public final class MilkFluid extends Fluid {
     @Override
     public boolean isSource(@NonNull FluidState state) {
         return true;
+    }
+
+    @Override
+    public boolean isFalling(@NonNull FluidState fluidState) {
+        return false;
     }
 
     @Override
