@@ -12,6 +12,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotVisuals;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.FluidSoupBase;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.MobSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
@@ -21,6 +22,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.particle.StockpotParticleOptions;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.TropicalFishBucketUtils;
 import com.mojang.datafixers.util.Either;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
@@ -361,8 +363,12 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             ResourceLocation key = entry.getKey();
             ISoupBase soupBase = entry.getValue();
             if (soupBase.isSoupBase(bucket)) {
+                if (level.isClientSide && soupBase instanceof MobSoupBase) {
+                    return true;
+                }
                 this.soupBaseId = key;
                 this.soupBaseItem = bucket.copyWithCount(1);
+                TropicalFishBucketUtils.initializeVariant(this.soupBaseItem, level.random);
                 this.renderEntity = null;
                 this.status = PUT_INGREDIENT;
                 this.refresh();

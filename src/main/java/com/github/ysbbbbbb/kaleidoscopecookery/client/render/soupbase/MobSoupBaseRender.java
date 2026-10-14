@@ -11,15 +11,11 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Pufferfish;
-import net.minecraft.world.entity.animal.TropicalFish;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.material.Fluid;
 
@@ -66,10 +62,6 @@ public class MobSoupBaseRender extends FluidSoupBaseRender {
                 if (renderEntity instanceof Bucketable bucketable) {
                     CustomData customData = soupInputBase.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
                     CompoundTag bucketData = customData.copyTag();
-                    if (renderEntity instanceof TropicalFish
-                            && !bucketData.contains(TropicalFish.BUCKET_VARIANT_TAG, Tag.TAG_INT)) {
-                        bucketData.merge(setRandomTropicalFishVariant(stockpot).copyTag());
-                    }
                     bucketable.loadFromBucketTag(bucketData);
                     bucketable.setFromBucket(true);
                 }
@@ -92,18 +84,4 @@ public class MobSoupBaseRender extends FluidSoupBaseRender {
         }
     }
 
-    private CustomData setRandomTropicalFishVariant(StockpotBlockEntity stockpot) {
-        if (stockpot.getLevel() == null) return CustomData.EMPTY;
-        RandomSource randomSource = stockpot.getLevel().random;
-        TropicalFish.Pattern[] patterns = TropicalFish.Pattern.values();
-        DyeColor[] dyeColors = DyeColor.values();
-        TropicalFish.Pattern pattern = Util.getRandom(patterns, randomSource);
-        DyeColor dyeColor = Util.getRandom(dyeColors, randomSource);
-        DyeColor dyeColor2 = Util.getRandom(dyeColors, randomSource);
-        var variant = new TropicalFish.Variant(pattern, dyeColor, dyeColor2);
-
-        CompoundTag bucketData = new CompoundTag();
-        bucketData.putInt(TropicalFish.BUCKET_VARIANT_TAG, variant.getPackedId());
-        return CustomData.of(bucketData);
-    }
 }
