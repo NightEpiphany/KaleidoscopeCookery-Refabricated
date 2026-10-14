@@ -20,6 +20,10 @@ public class MobSoupBase extends FluidSoupBase {
         }
     }
 
+    public EntityType<?> getType() {
+        return type;
+    }
+
     public MobSoupBase(ResourceLocation name, Item bucket) {
         this(name, bucket, 0x3F76E4);
     }

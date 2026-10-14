@@ -1,8 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.MobSoupBase;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
@@ -12,14 +15,22 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -81,6 +92,48 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
             BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
         return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
+    }
+
+    @Override
+    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+        if (!(level.getBlockEntity(blockPos) instanceof StockpotBlockEntity stockpot)) return;
+        var soupBaseId = stockpot.getSoupBaseId();
+        var soupBaseItem = stockpot.getSoupBaseItem();
+        if (!(level instanceof ServerLevel serverLevel)
+                || !shouldReleaseMob(soupBaseId, soupBaseItem)) {
+            return;
+        }
+        MobSoupBase soupBase = (MobSoupBase) stockpot.getSoupBase();
+        if (soupBase == null) {
+            KaleidoscopeCookery.LOGGER.warn("Could not load soup data {} at {}", soupBaseId, blockPos);
+            return;
+        }
+        Entity entity = soupBase.getType().create(
+                serverLevel,
+                EntityType.createDefaultStackConfig(serverLevel, soupBaseItem, null),
+                blockPos, MobSpawnType.BUCKET, true, false
+        );
+        if (entity == null) {
+            KaleidoscopeCookery.LOGGER.warn("Could not release stockpot mob {} at {}", soupBaseId, blockPos);
+            return;
+        }
+        if (entity instanceof Bucketable bucketable) {
+            CustomData data = soupBaseItem.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
+            bucketable.loadFromBucketTag(data.copyTag());
+            bucketable.setFromBucket(true);
+        }
+        if (serverLevel.addFreshEntity(entity)) {
+            KaleidoscopeCookery.LOGGER.debug("Released stockpot mob {} at {}", soupBaseId, blockPos);
+        } else {
+            KaleidoscopeCookery.LOGGER.warn("Could not add stockpot mob {} to level at {}", soupBaseId, blockPos);
+        }
+        super.onRemove(blockState, level, blockPos, blockState2, bl);
+    }
+
+    static boolean shouldReleaseMob(ResourceLocation soupBaseId, ItemStack soupBaseItem) {
+        return !soupBaseItem.isEmpty()
+                && SoupBaseManager.getSoupBase(soupBaseId) instanceof MobSoupBase soupBase
+                && soupBase.isSoupBase(soupBaseItem);
     }
 
     @Override
