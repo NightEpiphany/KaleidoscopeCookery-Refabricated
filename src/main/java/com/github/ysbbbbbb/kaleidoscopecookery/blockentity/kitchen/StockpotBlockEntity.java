@@ -24,6 +24,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.particle.StockpotParticleOptions;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.TropicalFishBucketUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.FluidUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -444,8 +445,17 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             Identifier key = entry.getKey();
             ISoupBase soupBase = entry.getValue();
             if (soupBase.isSoupBase(bucket)) {
+                // 桶装生物等待服务端同步组件后再显示，避免客户端先缓存默认花色。
+                if (level.isClientSide() && soupBase instanceof MobSoupBase) {
+                    return true;
+                }
                 this.soupBaseId = key;
                 this.soupBaseItem = bucket.copyWithCount(1);
+                // 花色必须在服务端保存并同步，不能只随机设置客户端的渲染实体。
+                if (!level.isClientSide() && TropicalFishBucketUtils.initializeVariant(this.soupBaseItem, level.getRandom())) {
+                    KaleidoscopeCookery.LOGGER.debug("Initialized stockpot tropical fish variant {} at {}",
+                            this.soupBaseItem.getComponentsPatch(), this.worldPosition);
+                }
                 this.renderEntity = null;
                 this.status = PUT_INGREDIENT;
                 this.refresh();
@@ -668,6 +678,8 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     @Override
     protected void loadAdditional(@NonNull ValueInput valueInput) {
         super.loadAdditional(valueInput);
+        Identifier previousSoupBaseId = this.soupBaseId;
+        ItemStack previousSoupBaseItem = this.soupBaseItem;
         this.inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
         this.soupBaseItem = ItemStack.EMPTY;
         ContainerHelper.loadAllItems(valueInput, this.inputs);
@@ -712,6 +724,11 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         this.automationRecipeId = valueInput.contains(AUTOMATION_RECIPE_ID)
                 ? Identifier.tryParse(valueInput.getString(AUTOMATION_RECIPE_ID).orElse(""))
                 : null;
+        // 同步后的汤底或组件变化时重建渲染实体，食材等无关更新继续复用缓存。
+        if (!Objects.equals(previousSoupBaseId, this.soupBaseId)
+                || !ItemStack.isSameItemSameComponents(previousSoupBaseItem, this.soupBaseItem)) {
+            this.renderEntity = null;
+        }
     }
 
     public boolean liquidMerged() {
