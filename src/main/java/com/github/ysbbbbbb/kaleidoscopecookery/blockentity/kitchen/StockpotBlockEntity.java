@@ -60,8 +60,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
+    /**
+     * 最大数量限制
+     */
     public static final int MAX_TAKEOUT_COUNT = 9;
-
     private static final String INPUTS = "Inputs";
     private static final String RECIPE_ID = "RecipeId";
     private static final String SOUP_BASE_ID = "SoupBaseId";

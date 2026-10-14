@@ -11,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.item.component.CustomData;
 
-/** Utilities for preserving the random variant of tropical fish buckets. */
 public final class TropicalFishBucketUtils {
     private static final TropicalFish.Pattern[] PATTERNS = TropicalFish.Pattern.values();
     private static final DyeColor[] COLORS = DyeColor.values();
