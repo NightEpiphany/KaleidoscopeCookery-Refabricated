@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.annotations.ServerThreadSafe;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
@@ -12,6 +13,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.FlexStockpotRecip
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.FluidSoupBase;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.MobSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
@@ -25,6 +27,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.FluidUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -38,13 +41,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -62,8 +65,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
+    /**
+     * 最大数量限制
+     */
     public static final int MAX_TAKEOUT_COUNT = 9;
-
     private static final String RECIPE_ID = "RecipeId";
     private static final String SOUP_BASE_ID = "SoupBaseId";
     private static final String SOUP_BASE_ITEM = "SoupBaseItem";
@@ -114,6 +119,50 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     public StockpotBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlocks.STOCKPOT_BE, pPos, pBlockState);
+    }
+
+    /**
+     * 如果有实体存在汤锅内部，打破还可以把实体放出来
+     */
+    @Override
+    public void preRemoveSideEffects(@NonNull BlockPos pos, @NonNull BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (!(level instanceof ServerLevel serverLevel)
+                || !shouldReleaseMob(soupBaseId, soupBaseItem)) {
+            return;
+        }
+
+        MobSoupBase soupBase = (MobSoupBase) getSoupBase();
+        if (soupBase == null) {
+            KaleidoscopeCookery.LOGGER.warn("Could not load soup data {} at {}", soupBaseId, pos);
+            return;
+        }
+        ItemStack sourceStack = soupBaseItem;
+        Entity entity = soupBase.getType().create(
+                serverLevel,
+                EntityType.createDefaultStackConfig(serverLevel, sourceStack, null),
+                pos, EntitySpawnReason.BUCKET, true, false
+        );
+        if (entity == null) {
+            KaleidoscopeCookery.LOGGER.warn("Could not release stockpot mob {} at {}", soupBaseId, pos);
+            return;
+        }
+        if (entity instanceof Bucketable bucketable) {
+            CustomData data = sourceStack.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
+            bucketable.loadFromBucketTag(data.copyTag());
+            bucketable.setFromBucket(true);
+        }
+        if (serverLevel.addFreshEntity(entity)) {
+            KaleidoscopeCookery.LOGGER.debug("Released stockpot mob {} at {}", soupBaseId, pos);
+        } else {
+            KaleidoscopeCookery.LOGGER.warn("Could not add stockpot mob {} to level at {}", soupBaseId, pos);
+        }
+    }
+
+    static boolean shouldReleaseMob(Identifier soupBaseId, ItemStack soupBaseItem) {
+        return !soupBaseItem.isEmpty()
+                && SoupBaseManager.getSoupBase(soupBaseId) instanceof MobSoupBase soupBase
+                && soupBase.isSoupBase(soupBaseItem);
     }
 
     public void clientTick() {
