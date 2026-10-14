@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.entity;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEntities;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
@@ -123,10 +124,15 @@ public class SitEntity extends Entity {
     }
 
     @Override
-    public void readAdditionalSaveData(@NonNull ValueInput nbt) {}
+    public void readAdditionalSaveData(@NonNull ValueInput nbt) {
+        int fallback = level().getBlockState(blockPosition()).is(ModBlocks.TRASH_CAN) ? TRASH_CAN : DEFAULT;
+        setSitType(SitTypePersistence.read(nbt, fallback));
+    }
 
     @Override
-    public void addAdditionalSaveData(@NonNull ValueOutput nbt) {}
+    public void addAdditionalSaveData(@NonNull ValueOutput nbt) {
+        SitTypePersistence.write(nbt, getSitType());
+    }
 
     @Override
     public @NonNull Packet<ClientGamePacketListener> getAddEntityPacket(@NonNull ServerEntity serverEntity) {
@@ -149,5 +155,19 @@ public class SitEntity extends Entity {
 
     public void setSitType(int sitType) {
         this.entityData.set(SIT_TYPE, sitType);
+    }
+
+    static final class SitTypePersistence {
+        private static final String KEY = "SitType";
+
+        private SitTypePersistence() {}
+
+        static int read(ValueInput input, int fallback) {
+            return input.getIntOr(KEY, fallback);
+        }
+
+        static void write(ValueOutput output, int sitType) {
+            output.putInt(KEY, sitType);
+        }
     }
 }

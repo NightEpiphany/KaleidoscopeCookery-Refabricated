@@ -28,7 +28,7 @@
     "client.CameraMixin",
     "client.HumanoidModelMixin",
     "client.LeftClickMixin",
-    "client.PlayerRendererMixin"
+    "client.LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
