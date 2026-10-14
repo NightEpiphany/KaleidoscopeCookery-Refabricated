@@ -60,7 +60,7 @@ public class TrashCanModel extends Model<TrashCanModel.State> {
                 .texOffs(0, 20).addBox(-1.0F, -0.5F, -3.0F, 2.0F, 0.0F, 6.0F, new CubeDeformation(0.0F))
                 .texOffs(6, 26).addBox(-1.0F, -0.5F, 3.0F, 2.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -1.75F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-        PartDefinition eye = root.addOrReplaceChild("eye", CubeListBuilder.create().texOffs(24, 22).addBox(-5.0F, -1.5F, -5.0F, 10.0F, 3.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.68F, 0.0F));
+        PartDefinition eye = root.addOrReplaceChild("eye", CubeListBuilder.create().texOffs(24, 22).addBox(-5.0F, -1.5F, -5.0F, 10.0F, 3.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -8.5F, 0.0F));
 
         PartDefinition bone3 = eye.addOrReplaceChild("bone3", CubeListBuilder.create().texOffs(34, 36).addBox(-5.0F, -3.0F, -5.0F, 10.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.5F, -0.1F));
 
