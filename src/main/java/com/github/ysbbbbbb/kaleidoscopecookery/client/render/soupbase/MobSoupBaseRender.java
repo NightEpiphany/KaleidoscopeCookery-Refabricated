@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +16,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.entity.animal.TropicalFish;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 
@@ -51,31 +49,29 @@ public class MobSoupBaseRender extends FluidSoupBaseRender {
         if (world == null) {
             return;
         }
-        ItemStack soupBaseItem = stockpot.getSoupBaseItem();
+        ItemStack soupInputBase = stockpot.getSoupBaseItem();
         Entity renderEntity = stockpot.renderEntity;
         boolean shouldRefreshCache = renderEntity == null
                 || renderEntity.getType() != mobType
-                || !ItemStack.matches(stockpot.renderEntitySoupBase, soupBaseItem);
+                || !ItemStack.matches(stockpot.renderEntitySoupBase, soupInputBase);
         if (shouldRefreshCache) {
             renderEntity = mobType.create(world);
             stockpot.renderEntity = renderEntity;
-            stockpot.renderEntitySoupBase = soupBaseItem.copy();
+            stockpot.renderEntitySoupBase = soupInputBase.copy();
             if (renderEntity != null) {
-                CompoundTag bucketData = soupBaseItem.getTag() == null
+                if (renderEntity instanceof Pufferfish pufferfish) {
+                    pufferfish.setPuffState(world.random.nextInt(3));
+                }
+                CompoundTag bucketData = soupInputBase.getTag() == null
                         ? new CompoundTag()
-                        : soupBaseItem.getTag().copy();
+                        : soupInputBase.getTag().copy();
                 if (renderEntity instanceof Bucketable bucketable) {
                     bucketable.loadFromBucketTag(bucketData);
                     bucketable.setFromBucket(true);
                 }
-                if (renderEntity instanceof TropicalFish tropicalFish) {
-                    if (!bucketData.contains(TropicalFish.BUCKET_VARIANT_TAG, Tag.TAG_INT)) {
-                        addRandomTropicalFishVariant(bucketData, world);
-                    }
+                if (renderEntity instanceof TropicalFish tropicalFish
+                        && bucketData.contains(TropicalFish.BUCKET_VARIANT_TAG, Tag.TAG_INT)) {
                     tropicalFish.setPackedVariant(bucketData.getInt(TropicalFish.BUCKET_VARIANT_TAG));
-                }
-                if (renderEntity instanceof Pufferfish pufferfish) {
-                    pufferfish.setPuffState(world.random.nextInt(3));
                 }
                 renderEntity.setOnGround(true);
             }
@@ -94,13 +90,5 @@ public class MobSoupBaseRender extends FluidSoupBaseRender {
                     0, 0, poseStack, buffer, packedLight);
             poseStack.popPose();
         }
-    }
-
-    private static void addRandomTropicalFishVariant(CompoundTag bucketData, ClientLevel world) {
-        TropicalFish.Pattern pattern = Util.getRandom(TropicalFish.Pattern.values(), world.random);
-        DyeColor baseColor = Util.getRandom(DyeColor.values(), world.random);
-        DyeColor patternColor = Util.getRandom(DyeColor.values(), world.random);
-        TropicalFish.Variant variant = new TropicalFish.Variant(pattern, baseColor, patternColor);
-        bucketData.putInt(TropicalFish.BUCKET_VARIANT_TAG, variant.getPackedId());
     }
 }

@@ -1,8 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.MobSoupBase;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
@@ -12,9 +15,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -78,6 +86,41 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
             BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
         return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
+    }
+
+    @Override
+    public void onRemove(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState2, boolean bl) {
+        try {
+            if (!bl
+                    && blockState.getBlock() != blockState2.getBlock()
+                    && level instanceof ServerLevel serverLevel
+                    && level.getBlockEntity(blockPos) instanceof StockpotBlockEntity stockpot) {
+                ResourceLocation soupBaseId = stockpot.getSoupBaseId();
+                ItemStack soupBaseItem = stockpot.getSoupBaseItem();
+                if (shouldReleaseMob(soupBaseId, soupBaseItem)
+                        && stockpot.getSoupBase() instanceof MobSoupBase soupBase) {
+                    Entity entity = soupBase.getType().spawn(
+                            serverLevel, soupBaseItem, null, blockPos, MobSpawnType.BUCKET, true, false);
+                    if (entity == null) {
+                        KaleidoscopeCookery.LOGGER.warn("Could not release stockpot mob {} at {}", soupBaseId, blockPos);
+                    } else {
+                        if (entity instanceof Bucketable bucketable) {
+                            bucketable.loadFromBucketTag(soupBaseItem.getOrCreateTag());
+                            bucketable.setFromBucket(true);
+                        }
+                        KaleidoscopeCookery.LOGGER.debug("Released stockpot mob {} at {}", soupBaseId, blockPos);
+                    }
+                }
+            }
+        } finally {
+            super.onRemove(blockState, level, blockPos, blockState2, bl);
+        }
+    }
+
+    static boolean shouldReleaseMob(ResourceLocation soupBaseId, ItemStack soupBaseItem) {
+        return !soupBaseItem.isEmpty()
+                && SoupBaseManager.getSoupBase(soupBaseId) instanceof MobSoupBase soupBase
+                && soupBase.isSoupBase(soupBaseItem);
     }
 
     @Override
