@@ -1,7 +1,7 @@
 {
-  "given_item_modifiers": [
+  "given_item_modifier": [
     {
-      "function": "kaleidoscope_cookery:trade_custom_recipe",
+      "type": "kaleidoscope_cookery:trade_custom_recipe",
       "recipe": {
         "input": [
           "minecraft:bamboo",
