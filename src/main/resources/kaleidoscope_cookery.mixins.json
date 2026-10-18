@@ -24,7 +24,8 @@
     "ShulkerBulletMixin",
     "ThrowableProjectileMixin",
     "VillagerMixin",
-    "accessor.LootTableAccessor"
+    "accessor.LootTableAccessor",
+    "accessor.PoiTypesAccessor"
   ],
   "client": [
     "client.CameraMixin",
