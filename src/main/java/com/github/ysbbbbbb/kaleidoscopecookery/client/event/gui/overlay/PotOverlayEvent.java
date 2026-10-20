@@ -9,7 +9,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -32,7 +31,7 @@ public class PotOverlayEvent {
         HudElementRegistry.attachElementBefore(VanillaHudElements.MISC_OVERLAYS, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "pot_overlay"), PotOverlayEvent::render);
     }
 
-    private static void render(GuiGraphicsExtractor guiGraphics, DeltaTracker tickCounter) {
+    private static void render(GuiGraphicsExtractor guiGraphics) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.gameMode == null || minecraft.gameMode.getPlayerMode() == GameType.SPECTATOR) {
             return;

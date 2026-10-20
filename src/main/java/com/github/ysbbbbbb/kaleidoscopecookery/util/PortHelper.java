@@ -41,14 +41,17 @@ public class PortHelper {
 
     public static final int DEFAULT_COLOR = -8355712;
 
+    @Deprecated(forRemoval = true, since = "26.4")
     public static ResourceKey<Block> createBlockId(String name) {
        return ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, name));
     }
 
+    @Deprecated(forRemoval = true, since = "26.4")
     public static ResourceKey<Item> createItemId(String name) {
         return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, name));
     }
 
+    @Deprecated(forRemoval = true, since = "26.4")
     public static ResourceKey<PoiType> createPoiId(String name) {
         return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, name));
     }

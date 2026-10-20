@@ -2,8 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.util.fluids;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.references.ItemIds;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
@@ -16,9 +15,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.NonNull;
 
 public final class MilkFluid extends Fluid {
-    @Override
-    public @NonNull Item getBucket() {
-        return Items.MILK_BUCKET;
+    public MilkFluid() {
+        super(Properties.of().bucketItem(ItemIds.MILK_BUCKET));
     }
 
     @Override

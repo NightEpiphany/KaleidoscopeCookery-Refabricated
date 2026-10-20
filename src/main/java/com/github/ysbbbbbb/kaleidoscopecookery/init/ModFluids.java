@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModFluidIds;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.MilkFluid;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,6 +24,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.references.ItemIds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
@@ -37,15 +39,15 @@ import java.util.Optional;
 public final class ModFluids {
 
     /** 模组默认牛奶液体注册键 */
-    public static final Identifier MILK_ID = Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "milk");
+    public static final Identifier MILK_ID = ModFluidIds.MILK.identifier();
     /** 兼容性键位，不可注册 */
     public static final Identifier VANILLA_MILK_ID = Identifier.withDefaultNamespace("milk");
 
     public static void registerFluids() {
-        Fluid milk = BuiltInRegistries.FLUID.getOptional(MILK_ID)
+        Fluid milk = BuiltInRegistries.FLUID.getOptional(ModFluidIds.MILK)
                 .orElseGet(() ->
                         Registry.register(
-                                BuiltInRegistries.FLUID, MILK_ID, new MilkFluid()));
+                                BuiltInRegistries.FLUID, ModFluidIds.MILK, new MilkFluid()));
         FluidVariantAttributes.register(milk, new FluidVariantAttributeHandler() {
             @Override
             public @NonNull Component getName(@NonNull FluidVariant variant) {
@@ -79,7 +81,7 @@ public final class ModFluids {
             return false;
         }
         Fluid fluid = BuiltInRegistries.FLUID.getOptional(actual).orElse(Fluids.EMPTY);
-        return fluid != Fluids.EMPTY && fluid.getBucket() == Items.MILK_BUCKET;
+        return fluid != Fluids.EMPTY && ItemIds.MILK_BUCKET.equals(fluid.getBucket());
     }
 
     public static boolean isMilkId(Identifier id) {
@@ -94,7 +96,7 @@ public final class ModFluids {
 
     @Environment(EnvType.CLIENT)
     public static void registerFluidRenderers() {
-        Fluid milk = BuiltInRegistries.FLUID.getOptional(MILK_ID)
+        Fluid milk = BuiltInRegistries.FLUID.getOptional(ModFluidIds.MILK)
                 .or(/*基本上不可能，但是以防万一*/() -> BuiltInRegistries.FLUID.getOptional(VANILLA_MILK_ID))
                 .orElseThrow(() ->
                         new IllegalStateException("Milk fluid was not initialized"));

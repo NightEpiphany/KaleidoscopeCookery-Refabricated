@@ -24,6 +24,7 @@
     "ShulkerBulletMixin",
     "ThrowableProjectileMixin",
     "VillagerMixin",
+    "accessor.GiveGiftToHeroAccessor",
     "accessor.LootTableAccessor"
   ],
   "client": [

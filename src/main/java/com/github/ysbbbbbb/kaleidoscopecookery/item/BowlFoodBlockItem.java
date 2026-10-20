@@ -6,7 +6,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.config.ConfigGetter;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityFoodComponents;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
@@ -35,6 +34,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -55,9 +55,9 @@ public class BowlFoodBlockItem extends BlockItem implements ICustomEatEffect {
     @SuppressWarnings("all")
     private final Optional<ItemLike> usingConvertsTo;
 
-    public BowlFoodBlockItem(Block block, FoodProperties properties, Consumable consumable, @Nullable ItemLike usingConvertsTo, String name) {
+    public BowlFoodBlockItem(Block block, FoodProperties properties, Consumable consumable, @Nullable ItemLike usingConvertsTo, ResourceKey<Item> itemKey) {
         super(block, new Properties().stacksTo(16).useBlockDescriptionPrefix().usingConvertsTo(usingConvertsTo == null ? Items.BOWL : usingConvertsTo.asItem())
-                .food(properties, consumable).setId(PortHelper.createItemId(name))
+                .food(properties, consumable).setId(itemKey)
         );
         this.qualityComponents = new QualityFoodComponents(properties, consumable);
         this.usingConvertsTo = Optional.of(usingConvertsTo == null ? Items.BOWL : usingConvertsTo.asItem());

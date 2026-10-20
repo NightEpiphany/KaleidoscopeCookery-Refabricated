@@ -1,0 +1,116 @@
+package com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids;
+
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
+
+@SuppressWarnings("unused")
+public final class ModItemIds {
+
+    public static final ResourceKey<Item> STOCKPOT_LID = key("stockpot_lid");
+    public static final ResourceKey<Item> COPPER_KITCHEN_KNIFE = key("copper_kitchen_knife");
+    public static final ResourceKey<Item> IRON_KITCHEN_KNIFE = key("iron_kitchen_knife");
+    public static final ResourceKey<Item> GOLD_KITCHEN_KNIFE = key("gold_kitchen_knife");
+    public static final ResourceKey<Item> DIAMOND_KITCHEN_KNIFE = key("diamond_kitchen_knife");
+    public static final ResourceKey<Item> NETHERITE_KITCHEN_KNIFE = key("netherite_kitchen_knife");
+    public static final ResourceKey<Item> SICKLE = key("sickle");
+    public static final ResourceKey<Item> OIL = key("oil");
+    public static final ResourceKey<Item> KITCHEN_SHOVEL = key("kitchen_shovel");
+    public static final ResourceKey<Item> SCARECROW = key("scarecrow");
+    public static final ResourceKey<Item> FARMER_CHEST_PLATE = key("farmer_chest_plate");
+    public static final ResourceKey<Item> FARMER_LEGGINGS = key("farmer_leggings");
+    public static final ResourceKey<Item> FARMER_BOOTS = key("farmer_boots");
+    public static final ResourceKey<Item> TRANSMUTATION_LUNCH_BAG = key("transmutation_lunch_bag");
+    public static final ResourceKey<Item> FRESH_TEA_LEAVES = key("fresh_tea_leaves");
+    public static final ResourceKey<Item> DRIED_TEA_LEAVES = key("dried_tea_leaves");
+    public static final ResourceKey<Item> TIEGUANYIN_TEA_BAG = key("tieguanyin_tea_bag");
+    public static final ResourceKey<Item> BILUOCHUN_TEA_BAG = key("biluochun_tea_bag");
+    public static final ResourceKey<Item> OOLONG_TEA_BAG = key("oolong_tea_bag");
+    public static final ResourceKey<Item> SAKURA_FUBUKI_TEA_BAG = key("sakura_fubuki_tea_bag");
+    public static final ResourceKey<Item> BARLEY_TEA_BAG = key("barley_tea_bag");
+    public static final ResourceKey<Item> BUTTER_TEA_BAG = key("butter_tea_bag");
+    public static final ResourceKey<Item> TOMATO = key("tomato");
+    public static final ResourceKey<Item> RED_CHILI = key("red_chili");
+    public static final ResourceKey<Item> GREEN_CHILI = key("green_chili");
+    public static final ResourceKey<Item> LETTUCE = key("lettuce");
+    public static final ResourceKey<Item> RICE_PANICLE = key("rice_panicle");
+    public static final ResourceKey<Item> CATERPILLAR = key("caterpillar");
+    public static final ResourceKey<Item> FRIED_EGG = key("fried_egg");
+    public static final ResourceKey<Item> TEA_EGG = key("tea_egg");
+    public static final ResourceKey<Item> DONKEY_BURGER = key("donkey_burger");
+    public static final ResourceKey<Item> MANTOU = key("mantou");
+    public static final ResourceKey<Item> BAOZI = key("baozi");
+    public static final ResourceKey<Item> SHENGJIAN_MANTOU = key("shengjian_mantou");
+    public static final ResourceKey<Item> QINGTUAN = key("qingtuan");
+    public static final ResourceKey<Item> STICKY_CANDY = key("sticky_candy");
+    public static final ResourceKey<Item> STICKY_RICE_CAKE = key("sticky_rice_cake");
+    public static final ResourceKey<Item> ZONGZI = key("zongzi");
+    public static final ResourceKey<Item> SAMSA = key("samsa");
+    public static final ResourceKey<Item> MEAT_PIE = key("meat_pie");
+    public static final ResourceKey<Item> DUMPLING = key("dumpling");
+    public static final ResourceKey<Item> RAW_DOUGH = key("raw_dough");
+    public static final ResourceKey<Item> FLOUR = key("flour");
+    public static final ResourceKey<Item> RAW_NOODLES = key("raw_noodles");
+    public static final ResourceKey<Item> STUFFED_DOUGH_FOOD = key("stuffed_dough_food");
+    public static final ResourceKey<Item> RAW_ZONGZI = key("raw_zongzi");
+    public static final ResourceKey<Item> RAW_BAMBOO_TUBE_RICE = key("raw_bamboo_tube_rice");
+    public static final ResourceKey<Item> COOKED_RICE = key("cooked_rice");
+    public static final ResourceKey<Item> SCRAMBLE_EGG_WITH_TOMATOES = key("scramble_egg_with_tomatoes");
+    public static final ResourceKey<Item> SCRAMBLE_EGG_WITH_TOMATOES_RICE_BOWL = key("scramble_egg_with_tomatoes_rice_bowl");
+    public static final ResourceKey<Item> STIR_FRIED_BEEF_OFFAL = key("stir_fried_beef_offal");
+    public static final ResourceKey<Item> STIR_FRIED_BEEF_OFFAL_RICE_BOWL = key("stir_fried_beef_offal_rice_bowl");
+    public static final ResourceKey<Item> BRAISED_BEEF = key("braised_beef");
+    public static final ResourceKey<Item> BRAISED_BEEF_RICE_BOWL = key("braised_beef_rice_bowl");
+    public static final ResourceKey<Item> STIR_FRIED_PORK_WITH_PEPPERS = key("stir_fried_pork_with_peppers");
+    public static final ResourceKey<Item> STIR_FRIED_PORK_WITH_PEPPERS_RICE_BOWL = key("stir_fried_pork_with_peppers_rice_bowl");
+    public static final ResourceKey<Item> SWEET_AND_SOUR_PORK = key("sweet_and_sour_pork");
+    public static final ResourceKey<Item> SWEET_AND_SOUR_PORK_RICE_BOWL = key("sweet_and_sour_pork_rice_bowl");
+    public static final ResourceKey<Item> COUNTRY_STYLE_MIXED_VEGETABLES = key("country_style_mixed_vegetables");
+    public static final ResourceKey<Item> FISH_FLAVORED_SHREDDED_PORK = key("fish_flavored_shredded_pork");
+    public static final ResourceKey<Item> FISH_FLAVORED_SHREDDED_PORK_RICE_BOWL = key("fish_flavored_shredded_pork_rice_bowl");
+    public static final ResourceKey<Item> BRAISED_FISH_RICE_BOWL = key("braised_fish_rice_bowl");
+    public static final ResourceKey<Item> SPICY_CHICKEN_RICE_BOWL = key("spicy_chicken_rice_bowl");
+    public static final ResourceKey<Item> SUSPICIOUS_STIR_FRY_RICE_BOWL = key("suspicious_stir_fry_rice_bowl");
+    public static final ResourceKey<Item> EGG_FRIED_RICE = key("egg_fried_rice");
+    public static final ResourceKey<Item> DELICIOUS_EGG_FRIED_RICE = key("delicious_egg_fried_rice");
+    public static final ResourceKey<Item> PORK_BONE_SOUP = key("pork_bone_soup");
+    public static final ResourceKey<Item> SEAFOOD_MISO_SOUP = key("seafood_miso_soup");
+    public static final ResourceKey<Item> FEARSOME_THICK_SOUP = key("fearsome_thick_soup");
+    public static final ResourceKey<Item> LAMB_AND_RADISH_SOUP = key("lamb_and_radish_soup");
+    public static final ResourceKey<Item> BRAISED_BEEF_WITH_POTATOES = key("braised_beef_with_potatoes");
+    public static final ResourceKey<Item> WILD_MUSHROOM_RABBIT_SOUP = key("wild_mushroom_rabbit_soup");
+    public static final ResourceKey<Item> TOMATO_BEEF_BRISKET_SOUP = key("tomato_beef_brisket_soup");
+    public static final ResourceKey<Item> PUFFERFISH_SOUP = key("pufferfish_soup");
+    public static final ResourceKey<Item> BORSCHT = key("borscht");
+    public static final ResourceKey<Item> BEEF_MEATBALL_SOUP = key("beef_meatball_soup");
+    public static final ResourceKey<Item> CHICKEN_AND_MUSHROOM_STEW = key("chicken_and_mushroom_stew");
+    public static final ResourceKey<Item> DONKEY_SOUP = key("donkey_soup");
+    public static final ResourceKey<Item> LABA_CONGEE = key("laba_congee");
+    public static final ResourceKey<Item> BEEF_NOODLE = key("beef_noodle");
+    public static final ResourceKey<Item> HUI_NOODLE = key("hui_noodle");
+    public static final ResourceKey<Item> UDON_NOODLE = key("udon_noodle");
+    public static final ResourceKey<Item> HOT_DRY_NOODLES = key("hot_dry_noodles");
+    public static final ResourceKey<Item> SASHIMI = key("sashimi");
+    public static final ResourceKey<Item> RAW_LAMB_CHOPS = key("raw_lamb_chops");
+    public static final ResourceKey<Item> RAW_COW_OFFAL = key("raw_cow_offal");
+    public static final ResourceKey<Item> RAW_PORK_BELLY = key("raw_pork_belly");
+    public static final ResourceKey<Item> RAW_DONKEY_MEAT = key("raw_donkey_meat");
+    public static final ResourceKey<Item> RAW_CUT_SMALL_MEATS = key("raw_cut_small_meats");
+    public static final ResourceKey<Item> RAW_MEATBALL = key("raw_meatball");
+    public static final ResourceKey<Item> COOKED_LAMB_CHOPS = key("cooked_lamb_chops");
+    public static final ResourceKey<Item> COOKED_COW_OFFAL = key("cooked_cow_offal");
+    public static final ResourceKey<Item> COOKED_PORK_BELLY = key("cooked_pork_belly");
+    public static final ResourceKey<Item> COOKED_DONKEY_MEAT = key("cooked_donkey_meat");
+    public static final ResourceKey<Item> COOKED_CUT_SMALL_MEATS = key("cooked_cut_small_meats");
+    public static final ResourceKey<Item> COOKED_MEATBALL = key("cooked_meatball");
+    public static final ResourceKey<Item> MODEL_DISPLAY = key("model_display");
+    public static final ResourceKey<Item> STRAW_HAT = key("straw_hat");
+    public static final ResourceKey<Item> STRAW_HAT_FLOWER = key("straw_hat_flower");
+
+    private static ResourceKey<Item> key(String path) {
+        return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, path));
+    }
+
+}

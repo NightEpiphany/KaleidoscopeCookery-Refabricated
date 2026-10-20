@@ -10,7 +10,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -49,7 +48,7 @@ public final class TeapotOverlayEvent {
         );
     }
 
-    private static void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
+    private static void render(GuiGraphicsExtractor guiGraphics) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.gameMode == null || minecraft.gameMode.getPlayerMode() == GameType.SPECTATOR) {
             return;

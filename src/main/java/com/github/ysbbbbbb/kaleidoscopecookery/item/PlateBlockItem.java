@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsBlockItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -9,21 +8,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
 import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 
 public class PlateBlockItem extends WithTooltipsBlockItem {
     @SuppressWarnings("unused")
-    public PlateBlockItem(Block block, Properties properties, String name) {
-        properties.setId(PortHelper.createItemId(name)).useBlockDescriptionPrefix();
-        super(block, properties, name);
+    public PlateBlockItem(Block block, Properties properties, String name, ResourceKey<Item> itemKey) {
+        super(block, properties.setId(itemKey).useBlockDescriptionPrefix(), name);
     }
 
-    public PlateBlockItem(Block block, String name) {
-        Properties properties = new Properties();
-        properties.setId(PortHelper.createItemId(name)).useBlockDescriptionPrefix();
-        super(block, properties, name);
+    public PlateBlockItem(Block block, String name, ResourceKey<Item> itemKey) {
+        this(block, new Properties(), name, itemKey);
     }
 
     @Override

@@ -187,7 +187,9 @@ public final class TeaFluidHelper {
         }
         if (isPhysicalFluid(id)) {
             Fluid fluid = BuiltInRegistries.FLUID.getValue(id);
-            return fluid.getBucket().getDefaultInstance();
+            return BuiltInRegistries.ITEM.getOptional(fluid.getBucket())
+                    .map(Item::getDefaultInstance)
+                    .orElse(ItemStack.EMPTY);
         }
 
         Identifier itemId = Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_bucket");

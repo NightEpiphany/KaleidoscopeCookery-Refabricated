@@ -1,6 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -11,11 +10,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Set;
 
+import static com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModPoiTypeIds.*;
+
 public final class ModPoi {
-    public static final ResourceKey<PoiType> STOVE_KEY = PortHelper.createPoiId("stove");
-    public static final ResourceKey<PoiType> POT_KEY = PortHelper.createPoiId("pot");
-    public static final ResourceKey<PoiType> STOCKPOT_KEY = PortHelper.createPoiId("stockpot");
-    public static final ResourceKey<PoiType> CHOPPING_BOARD_KEY = PortHelper.createPoiId("chopping_board");
 
     public static final Holder<PoiType> STOVE = registerPoiType(STOVE_KEY, ModBlocks.STOVE);
     public static final Holder<PoiType> POT = registerPoiType(POT_KEY, ModBlocks.POT);

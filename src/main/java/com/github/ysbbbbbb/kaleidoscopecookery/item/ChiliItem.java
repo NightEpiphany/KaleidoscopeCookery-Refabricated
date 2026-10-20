@@ -2,7 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModConsumables;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFoods;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModItemIds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,13 +27,13 @@ public abstract class ChiliItem extends Item {
 
     public static class GreenChiliItem extends ChiliItem {
         public GreenChiliItem(Properties p) {
-            super(p.setId(PortHelper.createItemId("green_chili")).compostable(ContextIntProviders.COMPOSTABLE_LOW_MEDIUM), 1);
+            super(p.setId(ModItemIds.GREEN_CHILI).compostable(ContextIntProviders.COMPOSTABLE_LOW_MEDIUM), 1);
         }
     }
 
     public static class RedChiliItem extends ChiliItem {
         public RedChiliItem(Properties p) {
-            super(p.setId(PortHelper.createItemId("red_chili")).compostable(ContextIntProviders.COMPOSTABLE_LOW_MEDIUM), 2);
+            super(p.setId(ModItemIds.RED_CHILI).compostable(ContextIntProviders.COMPOSTABLE_LOW_MEDIUM), 2);
         }
     }
 }

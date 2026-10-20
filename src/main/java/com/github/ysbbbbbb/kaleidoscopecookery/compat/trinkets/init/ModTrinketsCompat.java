@@ -5,7 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.compat.trinkets.aglets.arch.Straw
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.trinkets.aglets.StrawHatTrinketsLootCondition;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModItemIds;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.core.HolderLookup;
@@ -32,8 +32,8 @@ public class ModTrinketsCompat {
 
     @Contract(pure = true)
     static void init() {
-            STRAW_HAT = registerStrawHatsTrinket("straw_hat", new StrawHatTrinketItem(false, new Item.Properties().setId(PortHelper.createItemId("straw_hat"))));
-            STRAW_HAT_FLOWER = registerStrawHatsTrinket("straw_hat_flower", new StrawHatTrinketItem(true, new Item.Properties().setId(PortHelper.createItemId("straw_hat_flower"))));
+            STRAW_HAT = registerStrawHatsTrinket("straw_hat", new StrawHatTrinketItem(false, new Item.Properties().setId(ModItemIds.STRAW_HAT)));
+            STRAW_HAT_FLOWER = registerStrawHatsTrinket("straw_hat_flower", new StrawHatTrinketItem(true, new Item.Properties().setId(ModItemIds.STRAW_HAT_FLOWER)));
                 Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, StrawHatTrinketsLootCondition.ID, StrawHatTrinketsLootCondition.CODEC);
                 LootTableEvents.MODIFY.register((key, tableBuilder, _, wrapperLookup) -> {
                     Identifier id = key.identifier();

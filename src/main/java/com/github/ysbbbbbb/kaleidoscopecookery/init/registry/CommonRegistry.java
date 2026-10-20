@@ -22,14 +22,17 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModVillager;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.PlateBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.TeacupItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
+import com.github.ysbbbbbb.kaleidoscopecookery.mixin.accessor.GiveGiftToHeroAccessor;
+import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.entity.ai.behavior.GiveGiftToHero;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -38,8 +41,12 @@ import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class CommonRegistry {
 
@@ -65,7 +72,13 @@ public final class CommonRegistry {
     }
 
     private static void addVillagerGift() {
-        GiveGiftToHero.GIFTS.put(ModVillager.CHEF, ModVillager.CHEF_GIFT_LOOT_KEY);
+        Map<ResourceKey<VillagerProfession>, ResourceKey<LootTable>> existingGifts =
+                GiveGiftToHeroAccessor.kaleidoscopeCookery$getGifts();
+        Map<ResourceKey<VillagerProfession>, ResourceKey<LootTable>> gifts =
+                HashMap.newHashMap(existingGifts.size() + 1);
+        gifts.putAll(existingGifts);
+        gifts.put(ModVillager.CHEF, ModVillager.CHEF_GIFT_LOOT_KEY);
+        GiveGiftToHeroAccessor.kaleidoscopeCookery$setGifts(ImmutableMap.copyOf(gifts));
     }
 
     @Deprecated(forRemoval = true)
@@ -101,7 +114,7 @@ public final class CommonRegistry {
             PlateBlock plateBlock = new PlateBlock(data.getMaxCount(), data.getServingItems(),
                     BlockBehaviour.Properties
                             .of()
-                            .setId(PortHelper.createBlockId(resourceLocation.getPath())));
+                            .setId(blockKey(resourceLocation)));
             VoxelShape aabb = data.getAABB();
             if (aabb != null) {
                 plateBlock.setAABB(aabb);
@@ -109,7 +122,7 @@ public final class CommonRegistry {
             Registry.register(BuiltInRegistries.BLOCK, resourceLocation, plateBlock);
 
             Block block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
-            Registry.register(BuiltInRegistries.ITEM, resourceLocation, new PlateBlockItem(block, resourceLocation.getPath()));
+            Registry.register(BuiltInRegistries.ITEM, resourceLocation, new PlateBlockItem(block, resourceLocation.getPath(), itemKey(resourceLocation)));
         });
     }
 
@@ -120,7 +133,7 @@ public final class CommonRegistry {
             TeacupBlock teacupBlock = new TeacupBlock(
                     BlockBehaviour.Properties
                             .of()
-                            .setId(PortHelper.createBlockId(resourceLocation.getPath())),
+                            .setId(blockKey(resourceLocation)),
                     data.getMaxCount(),
                     data.getAnimateTick());
             VoxelShape aabb = data.getAABB();
@@ -130,7 +143,7 @@ public final class CommonRegistry {
             Registry.register(BuiltInRegistries.BLOCK, resourceLocation, teacupBlock);
 
             Block block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
-            Registry.register(BuiltInRegistries.ITEM, resourceLocation, new TeacupItem(block, data.getEffects(), new Item.Properties().setId(PortHelper.createItemId(resourceLocation.getPath()))));
+            Registry.register(BuiltInRegistries.ITEM, resourceLocation, new TeacupItem(block, data.getEffects(), new Item.Properties().setId(itemKey(resourceLocation))));
         });
     }
 
@@ -138,18 +151,18 @@ public final class CommonRegistry {
         FoodBiteRegistry.init();
 
         FoodBiteRegistry.FOOD_DATA_MAP.forEach((resourceLocation, data) -> {
-                FoodBiteBlock biteBlock = getFoodBiteBlock(data, resourceLocation.getPath());
+                FoodBiteBlock biteBlock = getFoodBiteBlock(data, resourceLocation);
                 Registry.register(BuiltInRegistries.BLOCK, resourceLocation, biteBlock);
 
                 Block block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
                 // 选取第一个掉落物作为 usingConvertsTo
                 ItemLike first = data.getLootItems().getFirst();
-            BowlFoodBlockItem register = Registry.register(BuiltInRegistries.ITEM, resourceLocation, new BowlFoodBlockItem(block, data.itemFood(), data.itemConsumable(), first, resourceLocation.getPath()));
+            BowlFoodBlockItem register = Registry.register(BuiltInRegistries.ITEM, resourceLocation, new BowlFoodBlockItem(block, data.itemFood(), data.itemConsumable(), first, itemKey(resourceLocation)));
             FoodBiteRegistry.FOOD_ITEM_MAP.put(resourceLocation, register);
         });
     }
 
-    private static @NotNull FoodBiteBlock getFoodBiteBlock(FoodBiteRegistry.FoodData data, String name) {
+    private static @NotNull FoodBiteBlock getFoodBiteBlock(FoodBiteRegistry.FoodData data, Identifier id) {
         FoodBiteBlock biteBlock;
         BlockBehaviour.Properties properties = BlockBehaviour.Properties.of()
                 .forceSolidOn()
@@ -160,9 +173,9 @@ public final class CommonRegistry {
                 .noOcclusion();
 
         if (data.blockType() == FoodBiteRegistry.BlockType.ONE_BY_TWO) {
-            biteBlock = new FoodBiteOneByTwoBlock(properties.setId(PortHelper.createBlockId(name)), data.blockFood(), data.blockConsumable(), data.maxBites(), data.animateTick());
+            biteBlock = new FoodBiteOneByTwoBlock(properties.setId(blockKey(id)), data.blockFood(), data.blockConsumable(), data.maxBites(), data.animateTick());
         } else {
-            biteBlock = new FoodBiteBlock(properties.setId(PortHelper.createBlockId(name)), data.blockFood(), data.blockConsumable(), data.maxBites(), data.animateTick());
+            biteBlock = new FoodBiteBlock(properties.setId(blockKey(id)), data.blockFood(), data.blockConsumable(), data.maxBites(), data.animateTick());
         }
 
         VoxelShape aabb = data.getAABB();
@@ -170,6 +183,14 @@ public final class CommonRegistry {
             biteBlock.setAABB(aabb);
         }
         return biteBlock;
+    }
+
+    private static ResourceKey<Block> blockKey(Identifier id) {
+        return ResourceKey.create(Registries.BLOCK, id);
+    }
+
+    private static ResourceKey<Item> itemKey(Identifier id) {
+        return ResourceKey.create(Registries.ITEM, id);
     }
 
 

@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModPoiTypeIds;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Registry;
@@ -28,8 +29,8 @@ public final class ModVillager {
     private static final ResourceKey<TradeSet> CHEF_LEVEL_5 = ResourceKey.create(Registries.TRADE_SET, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "chef/level_5"));
 
     public static final VillagerProfession CHEF_VALUE = new VillagerProfession(Component.translatable("entity.minecraft.villager.chef"),
-            poi -> poi.is(ModPoi.STOVE_KEY),
-            poi -> poi.is(ModPoi.STOVE_KEY),
+            poi -> poi.is(ModPoiTypeIds.STOVE_KEY),
+            poi -> poi.is(ModPoiTypeIds.STOVE_KEY),
             ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_BUTCHER,
             Int2ObjectMap.ofEntries(
                     Int2ObjectMap.entry(1, CHEF_LEVEL_1),
