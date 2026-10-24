@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 
 /** Keeps processing metadata intact during simulated or aborted inventory transfers. */
-public final class BambooTraySlotStorage extends SingleStackStorage {
+public class BambooTraySlotStorage extends SingleStackStorage {
     private final BambooTrayBlockEntity tray;
     private final int slot;
 

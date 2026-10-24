@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@SuppressWarnings({"unused" ,"deprecation"})
+@SuppressWarnings("unused")
 public final class ModItems {
     // Block items
     public static final Item STOVE = registerItemViaBlockWithDesc(ModBlockItemIds.STOVE, ModBlocks.STOVE, "stove");

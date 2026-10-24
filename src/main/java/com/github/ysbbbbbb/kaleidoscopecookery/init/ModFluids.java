@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.rrv.ModRRVFluidItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModFluidIds;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.MilkFluid;
 import net.fabricmc.api.EnvType;
@@ -16,6 +17,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
@@ -71,6 +73,8 @@ public final class ModFluids {
                 : null);
         FluidStorage.combinedItemApiProvider(Items.BUCKET).register(context ->
                 new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(Items.MILK_BUCKET), milk, FluidConstants.BUCKET));
+        if (FabricLoader.getInstance().isModLoaded("rrv"))
+            ModRRVFluidItems.register();
     }
 
     public static boolean matchesTeaFluid(Identifier expected, Identifier actual) {

@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 
-public final class TeapotIngredientStorage extends SingleStackStorage {
+public class TeapotIngredientStorage extends SingleStackStorage {
     private final TeapotBlockEntity teapot;
 
     public TeapotIngredientStorage(TeapotBlockEntity teapot) {

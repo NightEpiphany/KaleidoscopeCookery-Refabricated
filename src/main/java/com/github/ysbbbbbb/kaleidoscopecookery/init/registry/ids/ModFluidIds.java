@@ -13,6 +13,7 @@ public final class ModFluidIds {
     private ModFluidIds() {
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static ResourceKey<Fluid> key(String path) {
         return ResourceKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, path));
     }
