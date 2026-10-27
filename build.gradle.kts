@@ -59,7 +59,7 @@ dependencies {
 	compileOnly("maven.modrinth:farmers-delight-refabricated:${providers.gradleProperty("fdrf_version").get()}") {
 		exclude(group = "net.fabricmc")
 	}
-	compileOnly("maven.modrinth:rrv:${providers.gradleProperty("rrv_version").get()}") {
+	implementation("maven.modrinth:rrv:${providers.gradleProperty("rrv_version").get()}") {
 		exclude(group = "net.fabricmc.fabric-api")
 		exclude(group = "eu.pb4")
 	}
