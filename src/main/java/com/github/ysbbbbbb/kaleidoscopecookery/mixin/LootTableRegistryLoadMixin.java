@@ -17,11 +17,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(targets = "net.minecraft.resources.RegistryLoadTask$PendingRegistration")
 public abstract class LootTableRegistryLoadMixin {
     @Inject(method = "loadFromResource", at = @At("RETURN"))
-    private static <T> void kaleidoscopeCookery$modifyLootTable(
+    private static <T> void kaleidoscopeCookery$kaleidoscopeCookery$modifyLootTable(
             Decoder<T> elementDecoder,
             RegistryOps<JsonElement> ops,
             ResourceKey<T> elementKey,
-            Resource resource,
+            Resource thunk,
             CallbackInfoReturnable<Either<T, Exception>> cir
     ) {
         elementKey.cast(Registries.LOOT_TABLE).ifPresent(lootTableKey ->

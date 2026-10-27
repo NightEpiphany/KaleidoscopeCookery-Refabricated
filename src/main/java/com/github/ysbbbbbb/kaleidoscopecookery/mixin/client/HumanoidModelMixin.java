@@ -32,7 +32,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> extends 
     }
 
     @Inject(method = "poseRightArm", at = @At("HEAD"), cancellable = true)
-    public void poseRightArm(T state, CallbackInfo ci) {
+    public void kaleidoscopeCookery$poseRightArm(T state, CallbackInfo ci) {
         if (state.rightHandItemStack.getItem() instanceof LiftBlockItem) {
             rightArm.xRot = -Mth.PI;
             rightArm.zRot = -Mth.PI * 0.025f;
@@ -41,7 +41,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> extends 
     }
 
     @Inject(method = "poseLeftArm", at = @At("HEAD"), cancellable = true)
-    public void poseLeftArm(T state, CallbackInfo ci) {
+    public void kaleidoscopeCookery$poseLeftArm(T state, CallbackInfo ci) {
         if (state.leftHandItemStack.getItem() instanceof LiftBlockItem) {
                 leftArm.xRot = -Mth.PI * 0.5f;
                 leftArm.zRot = Mth.PI * 0.025f;

@@ -14,13 +14,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FarmlandBlock.class)
 public class FarmBlockMixin {
+    @SuppressWarnings("DiscouragedShift")
     @Inject(
             method = "fallOn",
             at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/block/FarmlandBlock;turnToBaseBlock(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V",
                     shift = At.Shift.BEFORE),
             cancellable = true)
-    private void onFallOn(Level level, BlockState state, BlockPos pos, Entity entity, double d, CallbackInfo ci) {
+    private void kaleidoscopeCookery$onFallOn(Level level, BlockState state, BlockPos pos, Entity entity, double d, CallbackInfo ci) {
         FarmlandTrampleEvent farmlandTrampleEvent = new FarmlandTrampleEvent(level, pos, state, (float) d, entity);
         ModEvents.FARMLAND_TRAMPLE.invoker().onFarmlandTrample(farmlandTrampleEvent);
         if (farmlandTrampleEvent.isCanceled()) ci.cancel();

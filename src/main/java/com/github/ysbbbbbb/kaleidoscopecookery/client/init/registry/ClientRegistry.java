@@ -1,9 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.init.registry;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.client.conditions.*;
-import com.github.ysbbbbbb.kaleidoscopecookery.client.conditions.model.ExtraLoadingItemModel;
-import com.github.ysbbbbbb.kaleidoscopecookery.client.conditions.registry.ExtraModelLoadingProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.FlatulenceEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.PotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TeapotOverlayEvent;
@@ -37,8 +33,6 @@ import net.minecraft.client.core.registries.BuiltInClientRegistries;
 import net.minecraft.client.core.registries.ClientRegistries;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.item.ItemModels;
-import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -60,7 +54,6 @@ public final class ClientRegistry {
         // 注册盔甲渲染器
         ArmorRenderer.register(new StrawHatArmorRenderer(), ModItems.STRAW_HAT.get(), ModItems.STRAW_HAT_FLOWER.get());
 
-        registerItemProperties();
         registerClientEvents();
         registerBlockEntityRenderers();
         modCompatClient();
@@ -88,18 +81,6 @@ public final class ClientRegistry {
                             );
                         }
                 );
-    }
-
-    private static void registerItemProperties() {
-        ConditionalItemModelProperties.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "kitchen_shovel/has_oil"), KitchenShovelCondition.MAP_CODEC);
-        ConditionalItemModelProperties.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "stockpot_lid/using"), StockpotLidCondition.MAP_CODEC);
-        ConditionalItemModelProperties.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "steamer/has_item"), SteamerCondition.MAP_CODEC);
-        ConditionalItemModelProperties.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "recipe_item/has_recipe"), RecipeItemCondition.MAP_CODEC);
-        ConditionalItemModelProperties.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "oil_pot/has_oil"), OilPotBlockCondition.MAP_CODEC);
-        ConditionalItemModelProperties.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "transmutation_lunch_bag/has_food"), TransmutationLunchBagItemCondition.MAP_CODEC);
-        ConditionalItemModelProperties.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "ingredient/special_render"), SpecialRenderCondition.MAP_CODEC);
-        ItemModels.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "model_arguments"), ExtraLoadingItemModel.Unbaked.MAP_CODEC);
-        ExtraModelLoadingProperties.ID_MAPPER.put(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "model_display/model"), ModelDisplayCondition.MAP_CODEC);
     }
 
     private static void registerClientEvents() {

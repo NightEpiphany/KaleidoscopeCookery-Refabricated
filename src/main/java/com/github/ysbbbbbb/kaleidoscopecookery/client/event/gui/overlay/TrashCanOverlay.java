@@ -11,8 +11,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -92,6 +92,6 @@ public final class TrashCanOverlay {
 
     private static void renderTextureOverlay(GuiGraphicsExtractor guiGraphics) {
         int i = ARGB.white((float) 1.0);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TrashCanOverlay.TRASH_CAN_OVERLAY, 0, 0, 0.0F, 0.0F, guiGraphics.guiWidth(), guiGraphics.guiHeight(), guiGraphics.guiWidth(), guiGraphics.guiHeight(), i);
+        guiGraphics.blit(GuiPipeline.TEXTURED, TrashCanOverlay.TRASH_CAN_OVERLAY, 0, 0, 0.0F, 0.0F, guiGraphics.guiWidth(), guiGraphics.guiHeight(), guiGraphics.guiWidth(), guiGraphics.guiHeight(), i);
     }
 }
