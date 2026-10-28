@@ -102,7 +102,7 @@ dependencies {
     modImplementation "curse.maven:ftb-library-fabric-438495:7260615"
     modImplementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
     // Mezz config
-	modImplementation "maven.modrinth:7tEfOcA7:Q5Yns1Qe"
+	modImplementation "maven.modrinth:7tEfOcA7:YDOPBdPJ"
     modImplementation "maven.modrinth:jade:${project.jade_version}"
     modCompileOnly "curse.maven:roughly-enough-items-310111:6199139"
     modImplementation "curse.maven:cloth-config-348521:5729125"

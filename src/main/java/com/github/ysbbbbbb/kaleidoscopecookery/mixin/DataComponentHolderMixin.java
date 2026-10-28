@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(DataComponentHolder.class)
 public interface DataComponentHolderMixin {
     @WrapOperation(method = "get", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/component/DataComponentMap;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
-    private <T> T getQualityComponent(DataComponentMap components, DataComponentType<? extends T> type, Operation<T> original) {
+    private <T> T kaleidoscopeCookery$getQualityComponent(DataComponentMap components, DataComponentType<? extends T> type, Operation<T> original) {
         return applyQuality(type, original.call(components, type));
     }
 
     @WrapOperation(method = "getOrDefault", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/component/DataComponentMap;getOrDefault(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;"))
-    private <T> T getQualityComponentOrDefault(DataComponentMap components, DataComponentType<? extends T> type, T fallback, Operation<T> original) {
+    private <T> T kaleidoscopeCookery$getQualityComponentOrDefault(DataComponentMap components, DataComponentType<? extends T> type, T fallback, Operation<T> original) {
         T raw = original.call(components, type, fallback);
         return components.has(type) ? applyQuality(type, raw) : raw;
     }

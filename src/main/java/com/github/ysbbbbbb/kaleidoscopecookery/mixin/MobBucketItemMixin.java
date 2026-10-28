@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = MobBucketItem.class)
 public class MobBucketItemMixin {
     @Inject(method = "checkExtraContent", at = @At("RETURN"))
-    private void onCheckExtraContent(Player player, Level level, ItemStack containerStack, BlockPos pos, CallbackInfo ci) {
+    private void kaleidoscopeCookery$onCheckExtraContent(Player player, Level level, ItemStack containerStack, BlockPos pos, CallbackInfo ci) {
         if (level.isClientSide) {
             return;
         }

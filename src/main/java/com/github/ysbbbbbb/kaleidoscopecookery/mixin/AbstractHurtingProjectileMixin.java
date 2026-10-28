@@ -13,7 +13,7 @@ import net.minecraft.world.phys.HitResult;
 @Mixin(AbstractHurtingProjectile.class)
 public class AbstractHurtingProjectileMixin {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractHurtingProjectile;hitTargetOrDeflectSelf(Lnet/minecraft/world/phys/HitResult;)Lnet/minecraft/world/entity/projectile/ProjectileDeflection;"))
-    private ProjectileDeflection onImpact(AbstractHurtingProjectile projectile, HitResult result, Operation<ProjectileDeflection> original) {
+    private ProjectileDeflection kaleidoscopeCookery$onImpact(AbstractHurtingProjectile projectile, HitResult result, Operation<ProjectileDeflection> original) {
         ProjectileImpactEvent event = new ProjectileImpactEvent(projectile, result);
         ModEvents.PROJECTILE_IMPACT.invoker().onProjectileImpact(event);
         if (!event.isCanceled()) {

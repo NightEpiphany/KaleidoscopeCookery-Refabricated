@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ShulkerBullet.class)
 public class ShulkerBulletMixin {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/ShulkerBullet;hitTargetOrDeflectSelf(Lnet/minecraft/world/phys/HitResult;)Lnet/minecraft/world/entity/projectile/ProjectileDeflection;"))
-    private ProjectileDeflection onImpact(ShulkerBullet projectile, HitResult result, Operation<ProjectileDeflection> original) {
+    private ProjectileDeflection kaleidoscopeCookery$onImpact(ShulkerBullet projectile, HitResult result, Operation<ProjectileDeflection> original) {
         ProjectileImpactEvent event = new ProjectileImpactEvent(projectile, result);
         ModEvents.PROJECTILE_IMPACT.invoker().onProjectileImpact(event);
         if (!event.isCanceled()) {

@@ -20,7 +20,7 @@ public class FarmBlockMixin {
             target = "Lnet/minecraft/world/level/block/FarmBlock;turnToDirt(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V",
                     shift = At.Shift.BEFORE),
             cancellable = true)
-    private void onFallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
+    private void kaleidoscopeCookery$onFallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
         FarmlandTrampleEvent farmlandTrampleEvent = new FarmlandTrampleEvent(level, pos, state, fallDistance, entity);
         ModEvents.FARMLAND_TRAMPLE.invoker().onFarmlandTrample(farmlandTrampleEvent);
         if (farmlandTrampleEvent.isCanceled()) ci.cancel();

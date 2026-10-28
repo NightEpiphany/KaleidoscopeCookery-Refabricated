@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 public class PlayerRendererMixin {
     @Inject(method = "getArmPose", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), cancellable = true)
-    private static void getArmPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> cir) {
+    private static void kaleidoscopeCookery$getArmPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> cir) {
         final HumanoidModel.ArmPose liftPose = HumanoidModel.ArmPose.SPYGLASS; // fallback
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.isEmpty()) cir.setReturnValue(HumanoidModel.ArmPose.EMPTY);
@@ -34,7 +34,7 @@ public class PlayerRendererMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void hideTrashCanPassenger(AbstractClientPlayer player, float entityYaw, float partialTicks,
+    private void kaleidoscopeCookery$hideTrashCanPassenger(AbstractClientPlayer player, float entityYaw, float partialTicks,
                                                            PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
                                                            CallbackInfo ci) {
         if (PlayerRenderEvent.shouldCancel(player)) {

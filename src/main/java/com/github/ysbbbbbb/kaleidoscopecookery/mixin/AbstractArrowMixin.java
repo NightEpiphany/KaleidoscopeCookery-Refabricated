@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractArrow.class)
 public abstract class AbstractArrowMixin {
     @Inject(method = "onHitEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;damageSources()Lnet/minecraft/world/damagesource/DamageSources;"), cancellable = true)
-    private void onHitEntity(EntityHitResult result, CallbackInfo ci) {
+    private void kaleidoscopeCookery$onHitEntity(EntityHitResult result, CallbackInfo ci) {
         ProjectileImpactEvent projectileImpactEvent = new ProjectileImpactEvent((AbstractArrow) (Object) this, result);
         ModEvents.PROJECTILE_IMPACT.invoker().onProjectileImpact(projectileImpactEvent);
         if (projectileImpactEvent.isCanceled()) ci.cancel();

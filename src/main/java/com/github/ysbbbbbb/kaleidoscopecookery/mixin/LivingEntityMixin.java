@@ -19,7 +19,7 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "getBlockSpeedFactor", at = @At("HEAD"), cancellable = true)
-    private void onGetBlockSpeedFactor(CallbackInfoReturnable<Float> cir) {
+    private void kaleidoscopeCookery$onGetBlockSpeedFactor(CallbackInfoReturnable<Float> cir) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity.hasEffect(ModEffects.TUNDRA_STRIDER)) {
             BlockState blockState = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement());
@@ -31,7 +31,7 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "getDamageAfterMagicAbsorb", at = @At("RETURN"), cancellable = true)
-    private void onGetDamageAfterMagicAbsorb(CallbackInfoReturnable<Float> cir) {
+    private void kaleidoscopeCookery$onGetDamageAfterMagicAbsorb(CallbackInfoReturnable<Float> cir) {
 
     }
 }
