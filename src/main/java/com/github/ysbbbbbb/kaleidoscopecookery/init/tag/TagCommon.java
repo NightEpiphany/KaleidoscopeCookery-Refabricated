@@ -12,6 +12,7 @@ import net.minecraft.world.level.material.Fluid;
  * <p>
  * 蔬菜类的有两种，本模组遵循农夫乐事规范，采用 crops/前缀
  */
+@SuppressWarnings("unused")
 public interface TagCommon {
     TagKey<Item> CROPS = itemTag("crops");
     TagKey<Item> CROPS_CHILI_PEPPER = itemTag("crops/chilipepper");
