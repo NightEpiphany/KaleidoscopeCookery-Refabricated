@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 
 import java.util.concurrent.CompletableFuture;
 
+@Deprecated
 public class TagEntityType extends EntityTypeTagsProvider {
 
 

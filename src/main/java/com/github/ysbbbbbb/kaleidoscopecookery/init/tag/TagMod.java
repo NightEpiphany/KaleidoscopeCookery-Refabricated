@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
+@SuppressWarnings("unused")
 public interface TagMod {
     /**
      * 本模组使用特殊渲染的物品
@@ -122,6 +123,10 @@ public interface TagMod {
      * 椅子
      */
     TagKey<Block> CHAIR = blockTag("chair");
+    /**
+     * 矿石
+     */
+    TagKey<Block> ORES = blockTag("ores");
     /**
      * 餐桌
      */
