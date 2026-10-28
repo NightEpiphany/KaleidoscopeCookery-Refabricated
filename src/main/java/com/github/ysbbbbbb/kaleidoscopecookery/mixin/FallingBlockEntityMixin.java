@@ -47,7 +47,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
             ),
             cancellable = true
     )
-    private void onSpawnAtLocation(CallbackInfo ci, @Local(ordinal = 0) BlockPos pos, @Local ServerLevel serverLevel) {
+    private void kaleidoscopeCookery$onSpawnAtLocation(CallbackInfo ci, @Local(ordinal = 0) BlockPos pos, @Local ServerLevel serverLevel) {
         FallingBlockEntity self = (FallingBlockEntity) (Object) this;
         BlockState blockState = self.getBlockState();
         // 如果是蒸笼

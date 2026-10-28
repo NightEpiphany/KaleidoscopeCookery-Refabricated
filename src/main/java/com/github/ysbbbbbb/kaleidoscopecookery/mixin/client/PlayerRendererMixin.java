@@ -24,7 +24,7 @@ public abstract class PlayerRendererMixin<T extends LivingEntity, S extends Livi
     boolean inBin = false;
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("HEAD"))
-    private void extractRenderState(T livingEntity, S livingEntityRenderState, float f, CallbackInfo ci) {
+    private void kaleidoscopeCookery$extractRenderState(T livingEntity, S livingEntityRenderState, float f, CallbackInfo ci) {
        this.inBin = livingEntity.getVehicle() instanceof SitEntity sitEntity && livingEntity instanceof Player
                 && sitEntity.getSitType() == SitEntity.TRASH_CAN;
     }
@@ -34,7 +34,7 @@ public abstract class PlayerRendererMixin<T extends LivingEntity, S extends Livi
             at = @At("HEAD"),
             cancellable = true
     )
-    private void hideTrashCanPassenger(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
+    private void kaleidoscopeCookery$hideTrashCanPassenger(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (inBin) {
             ci.cancel();
         }
