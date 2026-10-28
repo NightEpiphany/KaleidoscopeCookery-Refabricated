@@ -5,6 +5,20 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public interface ActionEventCallback {
+    @FunctionalInterface
+    interface ChoppingBoardModify {
+        void onChoppingBoardModify(ChoppingBoardEvent.Modify event);
+    }
+
+    @FunctionalInterface
+    interface ChoppingBoardPost {
+        void onChoppingBoardPost(ChoppingBoardEvent.Post event);
+    }
+
+    @FunctionalInterface
+    interface ChoppingBoardReset {
+        void onChoppingBoardReset(ChoppingBoardEvent.Reset event);
+    }
 
     @FunctionalInterface
     interface MillstoneMatchRecipePre {

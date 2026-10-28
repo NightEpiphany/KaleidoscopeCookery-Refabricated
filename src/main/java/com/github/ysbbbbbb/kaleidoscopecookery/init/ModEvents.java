@@ -8,6 +8,27 @@ import net.fabricmc.fabric.api.event.EventFactory;
 // 所有的自定义事件
 public final class ModEvents {
 
+    public static final Event<ActionEventCallback.ChoppingBoardModify> CHOPPING_BOARD_MODIFY =
+            EventFactory.createArrayBacked(ActionEventCallback.ChoppingBoardModify.class, call -> event -> {
+                for (ActionEventCallback.ChoppingBoardModify listener : call) {
+                    listener.onChoppingBoardModify(event);
+                }
+            });
+
+    public static final Event<ActionEventCallback.ChoppingBoardPost> CHOPPING_BOARD_POST =
+            EventFactory.createArrayBacked(ActionEventCallback.ChoppingBoardPost.class, call -> event -> {
+                for (ActionEventCallback.ChoppingBoardPost listener : call) {
+                    listener.onChoppingBoardPost(event);
+                }
+            });
+
+    public static final Event<ActionEventCallback.ChoppingBoardReset> CHOPPING_BOARD_RESET =
+            EventFactory.createArrayBacked(ActionEventCallback.ChoppingBoardReset.class, call -> event -> {
+                for (ActionEventCallback.ChoppingBoardReset listener : call) {
+                    listener.onChoppingBoardReset(event);
+                }
+            });
+
     public static final Event<ActionEventCallback.MillstoneMatchRecipePre> MILLSTONE_RECIPE_PRE =
             EventFactory.createArrayBacked(ActionEventCallback.MillstoneMatchRecipePre.class, call -> (event) -> {
                 for (ActionEventCallback.MillstoneMatchRecipePre listener : call) {
