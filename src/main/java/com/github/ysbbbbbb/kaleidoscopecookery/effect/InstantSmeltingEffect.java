@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.effect;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEffects;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.google.common.collect.Lists;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,7 +18,7 @@ import java.util.List;
 public class InstantSmeltingEffect {
     public static void onGetDrops(BlockState state, ServerLevel level, Entity entity, CallbackInfoReturnable<List<ItemStack>> cir) {
         // 只允许冶炼矿物
-        if (!state.is(TagCommon.ORES) || !(entity instanceof LivingEntity living)) {
+        if (!state.is(TagMod.ORES) || !(entity instanceof LivingEntity living)) {
             return;
         }
 
