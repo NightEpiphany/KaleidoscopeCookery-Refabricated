@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CropBlockMixin {
 
     @WrapOperation(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;nextInt(I)I"))
-    public int randomTick(RandomSource instance, int i, Operation<Integer> original,
+    public int kaleidoscopeCookery$randomTick(RandomSource instance, int i, Operation<Integer> original,
                           BlockState state, ServerLevel level, BlockPos pos, @Local(name = "growthSpeed") float growthSpeed) {
         return Hooks.onCropsGrowPre(
                 level,
@@ -29,7 +29,7 @@ public class CropBlockMixin {
     }
 
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
-    public void injectRandomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+    public void kaleidoscopeCookery$injectRandomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
         Hooks.onCropsGrowPost(level, pos, state);
     }
 

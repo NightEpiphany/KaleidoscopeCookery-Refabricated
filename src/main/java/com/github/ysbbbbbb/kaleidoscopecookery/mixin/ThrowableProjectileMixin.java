@@ -19,7 +19,7 @@ public class ThrowableProjectileMixin {
                     target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;hitTargetOrDeflectSelf(Lnet/minecraft/world/phys/HitResult;)Lnet/minecraft/world/entity/projectile/ProjectileDeflection;"
             )
     )
-    private ProjectileDeflection onImpact(ThrowableProjectile projectile, HitResult result, Operation<ProjectileDeflection> original) {
+    private ProjectileDeflection kaleidoscopeCookery$onImpact(ThrowableProjectile projectile, HitResult result, Operation<ProjectileDeflection> original) {
         ProjectileImpactEvent event = new ProjectileImpactEvent(projectile, result);
         ModEvents.PROJECTILE_IMPACT.invoker().onProjectileImpact(event);
         if (!event.isCanceled()) {

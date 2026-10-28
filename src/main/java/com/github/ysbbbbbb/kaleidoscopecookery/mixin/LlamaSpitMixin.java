@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LlamaSpit.class)
 public class LlamaSpitMixin {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/LlamaSpit;hitTargetOrDeflectSelf(Lnet/minecraft/world/phys/HitResult;)Lnet/minecraft/world/entity/projectile/ProjectileDeflection;"))
-    private ProjectileDeflection onImpact(LlamaSpit projectile, HitResult result, Operation<ProjectileDeflection> original) {
+    private ProjectileDeflection kaleidoscopeCookery$onImpact(LlamaSpit projectile, HitResult result, Operation<ProjectileDeflection> original) {
         if (result.getType() == HitResult.Type.MISS)
             return original.call(projectile, result);
         ProjectileImpactEvent event = new ProjectileImpactEvent(projectile, result);

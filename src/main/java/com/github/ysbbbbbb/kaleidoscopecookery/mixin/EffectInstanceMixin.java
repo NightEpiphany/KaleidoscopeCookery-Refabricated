@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ApplyStatusEffectsConsumeEffect.class)
 public class EffectInstanceMixin {
     @WrapOperation(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z"))
-    private boolean kaleidoscope_cookery$addEffect(LivingEntity instance, MobEffectInstance newEffect, Operation<Boolean> original) {
+    private boolean kaleidoscopeCookery$addEffect(LivingEntity instance, MobEffectInstance newEffect, Operation<Boolean> original) {
         if (newEffect == null || newEffect.getEffect() == null || newEffect.getEffect().value() == null) {
             return false;
         } else return original.call(instance, newEffect);
