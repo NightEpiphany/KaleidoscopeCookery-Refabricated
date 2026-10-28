@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IChoppingBoard;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.ChoppingBoardEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.ChoppingBoardRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
@@ -108,7 +109,17 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
             enchantmentLevel = Mth.clamp(enchantmentLevel, 0, quickKnife.getMaxLevel());
             this.currentCutCount = Math.min(this.maxCutCount, this.currentCutCount + (1 << enchantmentLevel));
             this.playParticlesSound();
+            if (level instanceof ServerLevel) {
+                ChoppingBoardEvent.Modify event = new ChoppingBoardEvent.Modify(this, cutterItem, this.results, this.modelId);
+                event.post();
+                this.results = event.getResults();
+                this.modelId = event.getModelId();
+            }
             this.refresh();
+            if (level instanceof ServerLevel) {
+                ChoppingBoardEvent.Post event = new ChoppingBoardEvent.Post(this, user, cutterItem, this.results);
+                event.post();
+            }
             return true;
         } else {
             return false;
@@ -160,6 +171,10 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
         this.currentCutStack = ItemStack.EMPTY;
         this.currentCutCount = 0;
         this.maxCutCount = 0;
+        if (this.level instanceof ServerLevel) {
+            ChoppingBoardEvent.Reset event = new ChoppingBoardEvent.Reset(this);
+            event.post();
+        }
         this.refresh();
     }
 

@@ -29,6 +29,7 @@ public abstract class RecipeItemEvent implements IEvent {
         });
     }
 
+    @Override
     public void post() {
         CALLBACK.invoker().post(this);
     }
