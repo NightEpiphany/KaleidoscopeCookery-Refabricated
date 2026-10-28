@@ -4,14 +4,12 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ITeapot;
-import com.github.ysbbbbbb.kaleidoscopecookery.api.event.RecipeItemEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.container.TeapotInput;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
@@ -20,13 +18,11 @@ import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityEvaluator;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsBlockItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.IItemHandler;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.PlayerMainInvWrapper;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.recipes.RecipeIngredientStorage;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -238,42 +234,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
 
     @NotNull
     private InteractionResult handlePutRecipe(Player player, RecipeRecord record, Runnable success) {
-        // 先对配方进行数量归纳
-        Reference2IntMap<Item> need = new Reference2IntOpenHashMap<>();
-        for (ItemStack s : record.input()) {
-            if (s.isEmpty()) {
-                continue;
-            }
-            Item item = s.getItem();
-            // 按实际堆叠数量统计，兼容茶壶这类单格多数量的配方
-            need.put(item, need.getInt(item) + s.getCount());
-        }
-        // 开始检查身上的物品
-        IItemHandler inventory = new PlayerMainInvWrapper(player.getInventory());
-        Reference2IntMap<Item> supply = new Reference2IntOpenHashMap<>();
-        for (int slot = 0; slot < inventory.getSlots(); slot++) {
-            ItemStack s = inventory.getStackInSlot(slot);
-            if (s.isEmpty()) {
-                continue;
-            }
-
-            // 触发特殊计数
-            var event = new RecipeItemEvent.CheckItem(s, supply);
-            ModEvents.CHECK_SPECIAL_ITEM.invoker().onCheckItemEvent(event);
-
-            // 正常计数
-            Item item = s.getItem();
-            supply.put(item, supply.getInt(item) + s.getCount());
-        }
-
-        // 两者做对比，检查物品是否足够
-        Reference2IntMap<Item> missing = new Reference2IntOpenHashMap<>();
-        for (Item item : need.keySet()) {
-            if (supply.getInt(item) < need.getInt(item)) {
-                missing.put(item, need.getInt(item) - supply.getInt(item));
-            }
-        }
-
+        Reference2IntMap<Item> missing = RecipeIngredientStorage.extract(player, record.input());
         if (!missing.isEmpty()) {
             // 物品不足，提示缺少的物品
             MutableComponent component = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.missing");
@@ -291,35 +252,6 @@ public class RecipeItem extends WithTooltipsBlockItem {
                 player.sendOverlayMessage(component);
             }
             return InteractionResult.FAIL;
-        }
-
-        // 物品足够，开始扣除物品
-        for (Item item : need.keySet()) {
-            int needCount = need.getInt(item);
-            for (int i = 0; i < inventory.getSlots(); i++) {
-                ItemStack inSlot = inventory.getStackInSlot(i);
-                if (inSlot.isEmpty()) {
-                    continue;
-                }
-
-                // 触发特殊扣除
-                var event = new RecipeItemEvent.DeductItem(inSlot, item, new int[]{needCount});
-                ModEvents.DEDUCT_SPECIAL_ITEM.invoker().onDeductItemEvent(event);
-                needCount = event.getNeedCount();
-                if (needCount <= 0) {
-                    break;
-                }
-
-                // 正常扣除
-                if (inSlot.is(item)) {
-                    int extracted = Math.min(needCount, inSlot.getCount());
-                    inventory.extractItem(i, extracted, false);
-                    needCount -= extracted;
-                    if (needCount <= 0) {
-                        break;
-                    }
-                }
-            }
         }
 
         // 扣除完毕，放入锅中

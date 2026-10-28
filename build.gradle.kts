@@ -78,6 +78,8 @@ dependencies {
 	compileOnly("maven.modrinth:7tEfOcA7:7KlSXRjC")
 	compileOnly("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
 	testImplementation("net.fabricmc:fabric-loader-junit:${providers.gradleProperty("loader_version").get()}")
+	// Yyz backpack
+	compileOnly("maven.modrinth:zO7tsTJN:9yivy8jG")
 }
 
 tasks.test {
