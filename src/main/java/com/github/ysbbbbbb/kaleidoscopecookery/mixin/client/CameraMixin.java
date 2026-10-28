@@ -16,7 +16,7 @@ public class CameraMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V"),
             index = 1
     )
-    private float lockTrashCanPitch(float pitch) {
+    private float kaleidoscopeCookery$lockTrashCanPitch(float pitch) {
         return CameraEvent.lockPitch(pitch);
     }
 }

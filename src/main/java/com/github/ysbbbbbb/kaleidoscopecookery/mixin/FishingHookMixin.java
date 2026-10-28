@@ -16,7 +16,7 @@ public class FishingHookMixin {
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/projectile/FishingHook;hitTargetOrDeflectSelf(Lnet/minecraft/world/phys/HitResult;)Lnet/minecraft/world/entity/projectile/ProjectileDeflection;"
     ))
-    private ProjectileDeflection onImpact(FishingHook projectile, HitResult result, Operation<ProjectileDeflection> original) {
+    private ProjectileDeflection kaleidoscopeCookery$onImpact(FishingHook projectile, HitResult result, Operation<ProjectileDeflection> original) {
         if (result.getType() == HitResult.Type.MISS)
             return original.call(projectile, result);
         ProjectileImpactEvent event = new ProjectileImpactEvent(projectile, result);
