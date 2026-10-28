@@ -26,7 +26,7 @@ public abstract class ItemEntityMixin extends Entity {
     }
 
     @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;updateInWaterStateAndDoFluidPushing()Z", shift = At.Shift.AFTER))
-    private void onTick(CallbackInfo ci) {
+    private void kaleidoscopeCookery$onTick(CallbackInfo ci) {
         if (this.tickCount % 10 == 0) {
             if (this.getItem().getItem() instanceof FlourItem && this.isInWater()) {
                 this.setItem(new ItemStack(ModItems.RAW_DOUGH, this.getItem().getCount()));

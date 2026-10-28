@@ -30,7 +30,7 @@ public class GameRendererMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private void renderLevel(float f, long l, PoseStack poseStack, CallbackInfo ci) {
+    private void kaleidoscopeCookery$renderLevel(float f, long l, PoseStack poseStack, CallbackInfo ci) {
         var event = new ViewportEvent.ComputeCameraAngles(((GameRenderer) (Object) this), this.mainCamera, f, this.mainCamera.getYRot(), this.mainCamera.getXRot(), 0);
         event.post();
         // setup() 会覆盖相机旋转，所以要在其执行后再应用事件修改。

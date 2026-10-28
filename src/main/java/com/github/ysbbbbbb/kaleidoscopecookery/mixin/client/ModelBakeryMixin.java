@@ -40,7 +40,7 @@ public abstract class ModelBakeryMixin {
     protected abstract void loadTopLevel(ModelResourceLocation modelLocation);
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/ModelBakery;loadTopLevel(Lnet/minecraft/client/resources/model/ModelResourceLocation;)V", shift = At.Shift.AFTER, ordinal = 3))
-    private void loadSpecialItemModelAndDependencies(BlockColors blockColors, ProfilerFiller profilerFiller, Map<ResourceLocation, BlockModel> modelResources, Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStateResources, CallbackInfo ci) {
+    private void kaleidoscopeCookery$loadSpecialItemModelAndDependencies(BlockColors blockColors, ProfilerFiller profilerFiller, Map<ResourceLocation, BlockModel> modelResources, Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStateResources, CallbackInfo ci) {
         this.loadTopLevel(COLD_CUT_HAM_SLICES_GUI);
         this.loadTopLevel(TEAPOT_GUI);
         this.loadTopLevel(FRUIT_BASKET_GUI);

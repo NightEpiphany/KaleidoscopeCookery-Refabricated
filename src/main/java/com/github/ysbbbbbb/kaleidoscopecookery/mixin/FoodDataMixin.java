@@ -20,7 +20,7 @@ public abstract class FoodDataMixin {
                     target = "Lnet/minecraft/world/item/Item;getFoodProperties()Lnet/minecraft/world/food/FoodProperties;"
             )
     )
-    private FoodProperties useStackFoodProperties(
+    private FoodProperties kaleidoscopeCookery$useStackFoodProperties(
             Item item,
             Operation<FoodProperties> original,
             @Local(argsOnly = true) ItemStack stack

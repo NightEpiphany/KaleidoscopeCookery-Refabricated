@@ -166,7 +166,7 @@ dependencies {
     modImplementation("maven.modrinth:forge-config-api-port:${project.forge_config_api_port_version}")
     modImplementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
 	// Mezz config
-	modImplementation "maven.modrinth:7tEfOcA7:SYfAcmwJ"
+	modImplementation "maven.modrinth:7tEfOcA7:U079rhyK"
     //Create
     modImplementation "com.simibubi.create:create-fabric:6.0.8.1+build.1744-mc1.20.1"
     //FTB

@@ -22,7 +22,7 @@ public class BlockMixin {
             at = @At("RETURN"),
             cancellable = true
     )
-    private static void onGetDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity,
+    private static void kaleidoscopeCookery$onGetDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity,
                                    Entity entity, ItemStack tool, CallbackInfoReturnable<List<ItemStack>> cir) {
         InstantSmeltingEffect.onGetDrops(state, level, entity, cir);
     }

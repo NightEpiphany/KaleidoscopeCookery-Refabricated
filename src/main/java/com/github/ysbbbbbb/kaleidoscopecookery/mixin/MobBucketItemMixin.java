@@ -17,12 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = MobBucketItem.class)
 public class MobBucketItemMixin {
     @Inject(method = "checkExtraContent(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/BlockPos;)V", at = @At("RETURN"))
-    private void onCheckExtraContent(Player player, Level level, ItemStack containerStack, BlockPos pos, CallbackInfo ci) {
+    private void kaleidoscopeCookery$onCheckExtraContent(Player player, Level level, ItemStack containerStack, BlockPos pos, CallbackInfo ci) {
         if (level.isClientSide) {
             return;
         }
 //        // 检查桶内鱼类是否是所需的
-//        if (!(this instanceof MobBucketItemAccessor accessor) || !accessor.kaleidoscope$GetFishType().is(TagMod.RICE_GROWTH_BOOSTER)) {
+//        if (!(this instanceof MobBucketItemAccessor accessor) || !accessor.kaleidoscopeCookery$GetFishType().is(TagMod.RICE_GROWTH_BOOSTER)) {
 //            return;
 //        }
         // 搜索周围 3x3x1 范围，看有没有水稻

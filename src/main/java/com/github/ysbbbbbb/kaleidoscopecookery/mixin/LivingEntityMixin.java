@@ -32,7 +32,7 @@ public abstract class LivingEntityMixin extends Entity {
                     target = "Lnet/minecraft/world/item/Item;getFoodProperties()Lnet/minecraft/world/food/FoodProperties;"
             )
     )
-    private FoodProperties kaleidoscope$useStackFoodProperties(
+    private FoodProperties kaleidoscopeCookery$useStackFoodProperties(
             Item item,
             Operation<FoodProperties> original,
             @Local(argsOnly = true) ItemStack stack
@@ -44,7 +44,7 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "getBlockSpeedFactor()F", at = @At("HEAD"), cancellable = true)
-    private void onGetBlockSpeedFactor(CallbackInfoReturnable<Float> cir) {
+    private void kaleidoscopeCookery$onGetBlockSpeedFactor(CallbackInfoReturnable<Float> cir) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity.hasEffect(ModEffects.TUNDRA_STRIDER.get())) {
             BlockState blockState = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement());

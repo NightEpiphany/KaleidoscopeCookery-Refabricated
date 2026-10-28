@@ -28,7 +28,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
     }
 
     @Inject(method = "getArmPose", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), cancellable = true)
-    private static void getArmPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> cir) {
+    private static void kaleidoscopeCookery$getArmPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> cir) {
         final HumanoidModel.ArmPose liftPose = HumanoidModel.ArmPose.SPYGLASS; // fallback
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.isEmpty()) cir.setReturnValue(HumanoidModel.ArmPose.EMPTY);
@@ -44,7 +44,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
                     target = "Lnet/minecraft/client/renderer/entity/player/PlayerRenderer;setModelProperties(Lnet/minecraft/client/player/AbstractClientPlayer;)V"
             ), cancellable = true
     )
-    private void setModelProperties(AbstractClientPlayer abstractClientPlayer, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+    private void kaleidoscopeCookery$setModelProperties(AbstractClientPlayer abstractClientPlayer, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         var preEvent = new RenderPlayerEvent.Pre(abstractClientPlayer, ((PlayerRenderer) (Object)this) , g, poseStack, multiBufferSource, i);
         preEvent.post();
         if (preEvent.isCanceled()) ci.cancel();
@@ -54,7 +54,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
             method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("TAIL")
     )
-    private void render(AbstractClientPlayer abstractClientPlayer, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+    private void kaleidoscopeCookery$render(AbstractClientPlayer abstractClientPlayer, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         var postEvent = new RenderPlayerEvent.Post(abstractClientPlayer, ((PlayerRenderer) (Object)this) , g, poseStack, multiBufferSource, i);
         postEvent.post();
     }

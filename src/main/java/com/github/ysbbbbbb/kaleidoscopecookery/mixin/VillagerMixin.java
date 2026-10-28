@@ -19,7 +19,7 @@ public class VillagerMixin {
     private static Set<Item> MOD_WANTED_ITEMS = null;
 
     @Inject(method = "wantsToPickUp(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
-    public void onVillagerWantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    public void kaleidoscopeCookery$onVillagerWantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         // 避免过早初始化，导致读取的 Item 全部为 null
         if (MOD_WANTED_ITEMS == null) {
             MOD_WANTED_ITEMS = ImmutableSet.of(

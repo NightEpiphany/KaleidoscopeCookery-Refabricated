@@ -22,7 +22,7 @@ public class FarmBlockMixin {
             method = "fallOn",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/FarmBlock;turnToDirt(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", by = -1, shift = At.Shift.BY), cancellable = true
     )
-    private static void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
+    private static void kaleidoscopeCookery$fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
         if (level instanceof ServerLevel serverLevel) {
             List<ScarecrowEntity> entities = serverLevel.getEntitiesOfClass(ScarecrowEntity.class, new AABB(pos).inflate(16));
             if (!entities.isEmpty()) {

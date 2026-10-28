@@ -27,7 +27,7 @@ public abstract class LayeredCauldronBlockMixin extends AbstractCauldronBlock {
     }
 
     @Inject(method = "entityInside", at = @At("TAIL"))
-    private void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
+    private void kaleidoscopeCookery$entityInside(BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (entity instanceof ItemEntity itemEntity && itemEntity.getItem().getItem() instanceof FlourItem && this.isEntityInsideContent(state, pos, entity)) {
             itemEntity.setItem(new ItemStack(ModItems.RAW_DOUGH, itemEntity.getItem().getCount()));
         }

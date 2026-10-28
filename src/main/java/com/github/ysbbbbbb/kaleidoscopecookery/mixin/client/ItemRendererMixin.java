@@ -27,7 +27,7 @@ public abstract class ItemRendererMixin {
     public abstract ItemModelShaper getItemModelShaper();
 
     @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
-    public BakedModel usePlateModel(
+    public BakedModel kaleidoscopeCookery$usePlateModel(
             BakedModel model, ItemStack stack,
             ItemDisplayContext renderMode,
             boolean leftHanded,
