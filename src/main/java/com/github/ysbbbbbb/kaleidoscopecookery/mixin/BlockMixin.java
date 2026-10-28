@@ -24,7 +24,7 @@ public class BlockMixin {
             at = @At("RETURN"),
             cancellable = true
     )
-    private static void onGetDrops(
+    private static void kaleidoscopeCookery$onGetDrops(
             BlockState state,
             ServerLevel level,
             BlockPos pos,
