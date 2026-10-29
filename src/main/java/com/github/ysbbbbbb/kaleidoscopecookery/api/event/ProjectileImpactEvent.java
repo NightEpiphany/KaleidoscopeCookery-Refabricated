@@ -5,7 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.HitResult;
 
-public class ProjectileImpactEvent extends CancellableKCEvent implements IActionCancelable {
+public class ProjectileImpactEvent extends CancellableKCEvent {
     private final HitResult ray;
     private final Projectile projectile;
     protected final Entity entity;

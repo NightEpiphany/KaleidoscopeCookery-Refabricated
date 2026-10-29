@@ -1,14 +1,17 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.util.event;
 
+import org.jetbrains.annotations.ApiStatus;
+
 // 森罗厨房的可取消事件基类。
 public abstract class CancellableKCEvent implements IKCEvent {
-    boolean isCanceled;
+    private boolean canceled;
 
-    public final void setCanceledState(boolean canceled) {
-        this.isCanceled = canceled;
+    public final void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
-    public final boolean isCanceledState() {
-        return this.isCanceled;
+    @ApiStatus.NonExtendable
+    public final boolean isCanceled() {
+        return this.canceled;
     }
 }
