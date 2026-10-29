@@ -52,12 +52,11 @@ public final class CommonRegistry {
 
     public static void init() {
         registerDataListeners();
-        registerCustomEventHandlers();
         modCompat();
         registerPlateBlocks();
         registerTeacupBlocks();
         registerFoodBiteBlocks();
-        registerServerEvents();
+        events();
         addVillagerGift();
         addDispenserBehavior();
         storageRegister();
@@ -80,7 +79,7 @@ public final class CommonRegistry {
     public static void fuelRegister() {
     }
 
-    public static void registerServerEvents() {
+    public static void events() {
         MillstoneEntityEvent.register();
         PlaceIngredientEvent.register();
         SatiatedShieldEvent.register();
@@ -95,9 +94,7 @@ public final class CommonRegistry {
         RightClickEvent.register();
         ExtraLootTableDrop.register();
         PlayerSitEvent.register();
-    }
 
-    private static void registerCustomEventHandlers() {
         IKCEvent.CALLBACK.register(event -> {
             if (event instanceof RecipeItemEvent.CheckItem checkItem) {
                 SpecialRecipeItemEvent.onCheckItemEvent(checkItem);
