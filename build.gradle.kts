@@ -74,6 +74,7 @@ dependencies {
 	implementation("maven.modrinth:EsAfCjCV:PHjDtQay")
 	implementation ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${providers.gradleProperty("forge_config_api_version").get()}")
 	implementation("mezz.jei:jei-${providers.gradleProperty("jei_version").get()}")
+	implementation ("maven.modrinth:kaleidoscope-tavern-refabricated:${providers.gradleProperty("kaleidoscope_tavern_version").get()}-fabric+mc${providers.gradleProperty("minecraft_version").get()}")
 	// Mezz config
 	implementation("maven.modrinth:7tEfOcA7:7KlSXRjC")
 	implementation("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
