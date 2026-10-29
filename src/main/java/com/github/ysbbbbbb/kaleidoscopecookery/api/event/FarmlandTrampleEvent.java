@@ -1,12 +1,13 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableKCEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FarmlandTrampleEvent extends ActionEvent implements IActionCancelable {
+public class FarmlandTrampleEvent extends CancellableKCEvent implements IActionCancelable {
     private final Entity entity;
     private final float fallDistance;
     private final LevelAccessor level;

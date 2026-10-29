@@ -18,7 +18,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityEvaluator;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsBlockItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.recipes.RecipeIngredientStorage;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.RecipeIngredientStorage;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

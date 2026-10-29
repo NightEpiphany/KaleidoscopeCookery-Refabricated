@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableKCEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -10,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * <p>
  * 可以取消，取消后当前方块不会执行镰刀默认的收割行为
  */
-public class SickleHarvestEvent extends ActionEvent implements IActionCancelable {
+public class SickleHarvestEvent extends CancellableKCEvent implements IActionCancelable {
     private final ItemStack sickle;
     private final BlockPos harvestPos;
     private final BlockState harvestState;

@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.container.SimpleInput;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
@@ -7,7 +8,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class MillstoneMatchRecipeEvent extends ActionEvent {
+public abstract class MillstoneMatchRecipeEvent implements IKCEvent {
     private final Level level;
     private final MillstoneBlockEntity millstone;
     private final SimpleInput input;

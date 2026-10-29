@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.mixin;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.ProjectileImpactEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.world.entity.projectile.LlamaSpit;
@@ -17,7 +16,7 @@ public class LlamaSpitMixin {
         if (result.getType() == HitResult.Type.MISS)
             return original.call(projectile, result);
         ProjectileImpactEvent event = new ProjectileImpactEvent(projectile, result);
-        ModEvents.PROJECTILE_IMPACT.invoker().onProjectileImpact(event);
+        event.post();
         if (!event.isCanceled()) {
             return original.call(projectile, result);
         } else {

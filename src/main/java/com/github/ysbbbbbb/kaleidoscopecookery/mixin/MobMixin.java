@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.mixin;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.LivingChangeTargetEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -21,7 +20,7 @@ public abstract class MobMixin extends LivingEntity {
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
     public void kaleidoscopeCookery$setTarget(LivingEntity target, CallbackInfo ci) {
         var event = new LivingChangeTargetEvent(this, target, LivingChangeTargetEvent.LivingTargetType.MOB_TARGET);
-        ModEvents.ENTITY_CHANGE_TARGET.invoker().onEntityChangeTarget(event);
+        event.post();
         if (event.isCanceled()) ci.cancel();
     }
 }

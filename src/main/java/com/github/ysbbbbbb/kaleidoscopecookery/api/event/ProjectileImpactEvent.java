@@ -1,10 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableKCEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.HitResult;
 
-public class ProjectileImpactEvent extends ActionEvent implements IActionCancelable {
+public class ProjectileImpactEvent extends CancellableKCEvent implements IActionCancelable {
     private final HitResult ray;
     private final Projectile projectile;
     protected final Entity entity;
