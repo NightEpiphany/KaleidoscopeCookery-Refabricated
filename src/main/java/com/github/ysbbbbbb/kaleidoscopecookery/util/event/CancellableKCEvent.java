@@ -4,6 +4,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 // 森罗厨房的可取消事件基类。
 public abstract class CancellableKCEvent implements IKCEvent {
+
     private boolean canceled;
 
     public final void setCanceled(boolean canceled) {
@@ -11,7 +12,7 @@ public abstract class CancellableKCEvent implements IKCEvent {
     }
 
     @ApiStatus.NonExtendable
-    public final boolean isCanceled() {
+    public boolean isCanceled() {
         return this.canceled;
     }
 }
