@@ -11,7 +11,8 @@
           "minecraft:potato"
         ],
         "output": "kaleidoscope_cookery:braised_beef_with_potatoes",
-        "type": "kaleidoscope_cookery:stockpot"
+        "type": "kaleidoscope_cookery:stockpot",
+        "base": "minecraft:water"
       }
     }
   ],

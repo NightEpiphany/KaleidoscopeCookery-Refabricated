@@ -19,6 +19,7 @@ import org.jspecify.annotations.NonNull;
 public class ClientRecipeItemTooltip implements ClientTooltipComponent {
     private final RecipeItem.RecipeRecord recipeRecord;
     private final MutableComponent recipeTypeText;
+    private final MutableComponent baseText;
     private final MutableComponent ingredientsText;
     private final MutableComponent outputText;
 
@@ -31,20 +32,22 @@ public class ClientRecipeItemTooltip implements ClientTooltipComponent {
         if (quality != null) {
             this.recipeTypeText.append(CommonComponents.SPACE).append(quality.getTooltip());
         }
+        this.baseText = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.base");
         this.ingredientsText = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.ingredient");
         this.outputText = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.output");
     }
 
     @Override
     public int getHeight(@NonNull Font font) {
-        return 40;
+        return 64;
     }
 
     @Override
     public int getWidth(Font font) {
-        int ingredientsSize = recipeRecord.input().size() * 12 + font.width(ingredientsText) + 2;
+        int baseSize = font.width(baseText) + 20;
+        int ingredientsSize = recipeRecord.input().size() * 16 + font.width(ingredientsText) + 2;
         int outputSize = font.width(outputText) + 20;
-        return Math.max(font.width(recipeTypeText), Math.max(ingredientsSize, outputSize));
+        return Math.max(font.width(recipeTypeText), Math.max(baseSize, Math.max(ingredientsSize, outputSize)));
     }
 
     @Override
@@ -54,17 +57,22 @@ public class ClientRecipeItemTooltip implements ClientTooltipComponent {
 
         guiGraphics.text(font, recipeTypeText, pX, pY + 4, PortHelper.DEFAULT_COLOR);
 
-        int ingredientsYOffset = pY + 12;
+        int baseYOffset = pY + 16;
+        guiGraphics.text(font, baseText, pX, baseYOffset + 4, PortHelper.DEFAULT_COLOR);
+        guiGraphics.fakeItem(recipeRecord.baseStack(), pX + font.width(baseText), baseYOffset);
+
+        int ingredientsYOffset = pY + 32;
         guiGraphics.text(font, ingredientsText, pX, ingredientsYOffset + 4, PortHelper.DEFAULT_COLOR);
         int i = 0;
         for (ItemStack stack : recipeRecord.input()) {
-            int xOffset = pX + ingredientsWidth + i * 12;
+            int xOffset = pX + ingredientsWidth + i * 16;
             guiGraphics.fakeItem(stack, xOffset, ingredientsYOffset);
+            guiGraphics.itemDecorations(font, stack, xOffset, ingredientsYOffset);
             i++;
         }
 
         int xOffset = pX + outputWidth;
-        int yOffset = pY + 24;
+        int yOffset = pY + 48;
         guiGraphics.text(font, outputText, pX, yOffset + 4, PortHelper.DEFAULT_COLOR);
         ItemStack stack = recipeRecord.output();
         guiGraphics.fakeItem(stack, xOffset, yOffset);

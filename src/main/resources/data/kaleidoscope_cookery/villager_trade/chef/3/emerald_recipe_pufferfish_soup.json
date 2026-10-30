@@ -10,7 +10,8 @@
           "minecraft:seagrass"
         ],
         "output": "kaleidoscope_cookery:pufferfish_soup",
-        "type": "kaleidoscope_cookery:stockpot"
+        "type": "kaleidoscope_cookery:stockpot",
+        "base": "minecraft:water"
       }
     }
   ],

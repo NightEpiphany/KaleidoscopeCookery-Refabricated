@@ -2,15 +2,10 @@ package com.github.ysbbbbbb.kaleidoscopecookery.event;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.LivingChangeTargetEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 public class ChangeTargetEvent {
-
-    public static void register() {
-        ModEvents.ENTITY_CHANGE_TARGET.register(ChangeTargetEvent::onTarget);
-    }
 
     public static void onTarget(LivingChangeTargetEvent event) {
         LivingEntity newTarget = event.getNewTarget();

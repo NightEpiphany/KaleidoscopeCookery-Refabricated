@@ -4,31 +4,36 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ITeapot;
-import com.github.ysbbbbbb.kaleidoscopecookery.api.event.RecipeItemEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.container.TeapotInput;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.TeapotRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFluids;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.TeacupRegistry;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.tooltip.RecipeItemTooltip;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityEvaluator;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsBlockItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.IItemHandler;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.PlayerMainInvWrapper;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.RecipeIngredientStorage;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.TeaFluidHelper;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,10 +63,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.IntPredicate;
+import java.util.function.Predicate;
 
 public class RecipeItem extends WithTooltipsBlockItem {
 
@@ -102,7 +110,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
     public static void setAutoBind(ItemStack stack, boolean autoBind) {
         RecipeRecord record = getRecipe(stack);
         if (record != null) {
-            setRecipe(stack, new RecipeRecord(record.input(), record.output(), record.type(), record.flexRecipe(), autoBind));
+            setRecipe(stack, new RecipeRecord(record.input(), record.output(), record.type(), record.flexRecipe(), autoBind, record.base()));
         }
     }
 
@@ -209,129 +217,136 @@ public class RecipeItem extends WithTooltipsBlockItem {
             return InteractionResult.PASS;
         }
 
-        if (blockEntity instanceof PotBlockEntity pot && pot.getStatus() == IPot.PUT_INGREDIENT
-                && pot.getBlockState().getValue(PotBlock.HAS_OIL) && record.type().equals(POT)) {
-            List<ItemStack> inputs = pot.getInputs().stream().filter(s -> !s.isEmpty()).toList();
-            if (!inputs.isEmpty()) {
+        Identifier cookwareType;
+        switch (blockEntity) {
+            case PotBlockEntity _ -> cookwareType = POT;
+            case StockpotBlockEntity _ -> cookwareType = STOCKPOT;
+            case TeapotBlockEntity _ -> cookwareType = TEAPOT;
+            case null, default -> {
                 return InteractionResult.PASS;
             }
-            return handlePutRecipe(player, record, () -> pot.addAllIngredients(record.input(), player));
+        }
+        if (!record.type().equals(cookwareType)) {
+            return failRecipe(player, "wrong_container", parseType(record));
         }
 
-        if (blockEntity instanceof StockpotBlockEntity stockpot && stockpot.getStatus() == IStockpot.PUT_INGREDIENT && record.type().equals(STOCKPOT)) {
-            List<ItemStack> inputs = stockpot.getInputs().stream().filter(s -> !s.isEmpty()).toList();
-            if (!inputs.isEmpty()) {
-                return InteractionResult.PASS;
+        if (blockEntity instanceof PotBlockEntity pot) {
+            if (pot.getStatus() != IPot.PUT_INGREDIENT || !pot.isEmpty()
+                    || !hasValidInputs(record, pot.getInputs().size(), false)) {
+                return failRecipe(player, "blocked");
             }
-            return handlePutRecipe(player, record, () -> stockpot.addAllIngredients(record.input(), player));
+            BaseRequirement base = pot.getBlockState().getValue(PotBlock.HAS_OIL) ? null
+                    : new BaseRequirement(stack -> stack.is(TagMod.OIL),
+                    slot -> pot.onPlaceOil(player.level(), player, player.getInventory().getNonEquipmentItems().get(slot)));
+            return handlePutRecipe(player, record, base, () -> pot.addAllIngredients(record.input(), player));
         }
 
-        if (blockEntity instanceof TeapotBlockEntity teapot && teapot.getStatus() == ITeapot.PUT_INGREDIENT && record.type().equals(TEAPOT)) {
-            if (!teapot.getInput().isEmpty()) {
-                return InteractionResult.PASS;
+        if (blockEntity instanceof StockpotBlockEntity stockpot) {
+            if ((stockpot.getStatus() != IStockpot.PUT_SOUP_BASE && stockpot.getStatus() != IStockpot.PUT_INGREDIENT)
+                    || stockpot.hasLid() || !stockpot.isEmpty()
+                    || !hasValidInputs(record, stockpot.getInputs().size(), false)) {
+                return failRecipe(player, "blocked");
             }
-            return handlePutRecipe(player, record, () -> teapot.addAllIngredients(record.input(), player));
+            boolean needsBase = stockpot.getStatus() == IStockpot.PUT_SOUP_BASE;
+            if (!needsBase && !stockpot.getSoupBaseId().equals(record.base())) {
+                return failRecipe(player, "wrong_base", record.baseStack().getHoverName());
+            }
+            var soupBase = SoupBaseManager.getSoupBase(record.base());
+            BaseRequirement base = !needsBase ? null : new BaseRequirement(
+                    stack -> soupBase != null && soupBase.isSoupBase(stack),
+                    slot -> stockpot.addSoupBase(player.level(), player, player.getInventory().getNonEquipmentItems().get(slot)));
+            return handlePutRecipe(player, record, base, () -> stockpot.addAllIngredients(record.input(), player));
         }
 
-        return InteractionResult.CONSUME;
+        TeapotBlockEntity teapot = (TeapotBlockEntity) blockEntity;
+        if (teapot.getStatus() != ITeapot.PUT_INGREDIENT || !teapot.getInput().isEmpty()
+                || !hasValidInputs(record, 1, true)) {
+            return failRecipe(player, "blocked");
+        }
+        boolean needsBase = teapot.getTeaFluidId().equals(TeapotRecipeSerializer.EMPTY_TEA_FLUID);
+        if (!needsBase && !ModFluids.matchesTeaFluid(record.base(), teapot.getTeaFluidId())) {
+            return failRecipe(player, "wrong_base", record.baseStack().getHoverName());
+        }
+        ItemStack bucket = record.baseStack();
+        BaseRequirement base = !needsBase ? null : new BaseRequirement(stack -> {
+            var fluid = TeaFluidHelper.fromContainer(stack);
+            return stack.is(bucket.getItem()) && fluid != null && ModFluids.matchesTeaFluid(record.base(), fluid.id());
+        },
+                slot -> teapot.addTeaFluid(player.level(), player, player.getInventory().getNonEquipmentItems().get(slot),
+                        ContainerItemContext.ofPlayerSlot(player, PlayerInventoryStorage.of(player).getSlots().get(slot))));
+        return handlePutRecipe(player, record, base, () -> teapot.addAllIngredients(record.input(), player));
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private static boolean hasValidInputs(RecipeRecord record, int slots, boolean stacked) {
+        return !record.input().isEmpty() && record.input().size() <= slots
+                && record.input().stream().anyMatch(stack -> !stack.isEmpty())
+                && (stacked || record.input().stream().allMatch(stack -> stack.isEmpty() || stack.getCount() == 1));
+    }
+
+    private static InteractionResult failRecipe(Player player, String reason, Object... args) {
+        player.sendOverlayMessage(Component.translatable("tooltip.kaleidoscope_cookery.recipe_item." + reason, args));
+        return InteractionResult.FAIL;
     }
 
     @NotNull
-    private InteractionResult handlePutRecipe(Player player, RecipeRecord record, Runnable success) {
-        // 先对配方进行数量归纳
-        Reference2IntMap<Item> need = new Reference2IntOpenHashMap<>();
-        for (ItemStack s : record.input()) {
-            if (s.isEmpty()) {
-                continue;
-            }
-            Item item = s.getItem();
-            // 按实际堆叠数量统计，兼容茶壶这类单格多数量的配方
-            need.put(item, need.getInt(item) + s.getCount());
-        }
-        // 开始检查身上的物品
-        IItemHandler inventory = new PlayerMainInvWrapper(player.getInventory());
-        Reference2IntMap<Item> supply = new Reference2IntOpenHashMap<>();
-        for (int slot = 0; slot < inventory.getSlots(); slot++) {
-            ItemStack s = inventory.getStackInSlot(slot);
-            if (s.isEmpty()) {
-                continue;
-            }
-
-            // 触发特殊计数
-            var event = new RecipeItemEvent.CheckItem(s, supply);
-            ModEvents.CHECK_SPECIAL_ITEM.invoker().onCheckItemEvent(event);
-
-            // 正常计数
-            Item item = s.getItem();
-            supply.put(item, supply.getInt(item) + s.getCount());
-        }
-
-        // 两者做对比，检查物品是否足够
-        Reference2IntMap<Item> missing = new Reference2IntOpenHashMap<>();
-        for (Item item : need.keySet()) {
-            if (supply.getInt(item) < need.getInt(item)) {
-                missing.put(item, need.getInt(item) - supply.getInt(item));
-            }
-        }
-
-        if (!missing.isEmpty()) {
-            // 物品不足，提示缺少的物品
-            MutableComponent component = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.missing");
-            int i = 0;
-            for (Item s : missing.keySet()) {
-                Component hoverName = s.getDefaultInstance().getHoverName();
-                MutableComponent count = Component.literal("×%d".formatted(missing.getInt(s)));
-                if (i != 0) {
-                    component = component.append(CommonComponents.SPACE);
-                }
-                component.append(CommonComponents.SPACE).append(hoverName).append(count);
-                i++;
-            }
-            if (!player.level().isClientSide()) {
-                player.sendOverlayMessage(component);
-            }
-            return InteractionResult.FAIL;
-        }
-
-        // 物品足够，开始扣除物品
-        for (Item item : need.keySet()) {
-            int needCount = need.getInt(item);
-            for (int i = 0; i < inventory.getSlots(); i++) {
-                ItemStack inSlot = inventory.getStackInSlot(i);
-                if (inSlot.isEmpty()) {
-                    continue;
-                }
-
-                // 触发特殊扣除
-                var event = new RecipeItemEvent.DeductItem(inSlot, item, new int[]{needCount});
-                ModEvents.DEDUCT_SPECIAL_ITEM.invoker().onDeductItemEvent(event);
-                needCount = event.getNeedCount();
-                if (needCount <= 0) {
+    private InteractionResult handlePutRecipe(Player player, RecipeRecord record, @Nullable BaseRequirement base, Runnable success) {
+        if (base != null) {
+            int baseSlot = -1;
+            var inventory = player.getInventory().getNonEquipmentItems();
+            for (int slot = 0; slot < inventory.size(); slot++) {
+                if (!inventory.get(slot).isEmpty() && base.matches().test(inventory.get(slot))) {
+                    baseSlot = slot;
                     break;
                 }
-
-                // 正常扣除
-                if (inSlot.is(item)) {
-                    int extracted = Math.min(needCount, inSlot.getCount());
-                    inventory.extractItem(i, extracted, false);
-                    needCount -= extracted;
-                    if (needCount <= 0) {
-                        break;
-                    }
-                }
+            }
+            if (baseSlot < 0) {
+                player.sendOverlayMessage(Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.missing")
+                        .append(record.baseStack().getHoverName()).append("×1"));
+                return InteractionResult.FAIL;
+            }
+            // 基底也可能是配方食材；一起预检，避免同一个桶被重复计数。
+            List<ItemStack> required = new ArrayList<>(record.input());
+            if (!player.isCreative()) {
+                required.add(inventory.get(baseSlot).copyWithCount(1));
+            }
+            Reference2IntMap<Item> missing = RecipeIngredientStorage.check(player, required);
+            if (!missing.isEmpty()) {
+                return missingIngredients(player, missing);
+            }
+            // 预检事务会恢复槽位，加入基底时必须重新取得当前槽位中的物品。
+            if (!base.insert().test(baseSlot)) {
+                return failRecipe(player, "blocked");
             }
         }
 
-        // 扣除完毕，放入锅中
+        Reference2IntMap<Item> missing = RecipeIngredientStorage.extract(player, record.input());
+        if (!missing.isEmpty()) {
+            return missingIngredients(player, missing);
+        }
+
         success.run();
         return InteractionResult.SUCCESS;
+    }
+
+    private InteractionResult missingIngredients(Player player, Reference2IntMap<Item> missing) {
+        MutableComponent component = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.missing");
+        for (Item item : missing.keySet()) {
+            component.append(CommonComponents.SPACE).append(item.getDefaultInstance().getHoverName())
+                    .append(Component.literal("×%d".formatted(missing.getInt(item))));
+        }
+        player.sendOverlayMessage(component);
+        return InteractionResult.FAIL;
+    }
+
+    private record BaseRequirement(Predicate<ItemStack> matches, IntPredicate insert) {
     }
 
     private InteractionResult onRecordRecipe(Level level, Player player, BlockEntity blockEntity, RecipeManager recipeManager,
                                              ItemStack itemInHand, InteractionHand hand) {
         //2n-65 就很离谱
         if (blockEntity instanceof PotBlockEntity pot && pot.getStatus() == IPot.PUT_INGREDIENT) {
-            List<ItemStack> inputs = pot.getInputs().stream().filter(s -> !s.isEmpty()).toList();
+            List<ItemStack> inputs = pot.getInputs().stream().filter(s -> !s.isEmpty()).map(ItemStack::copy).toList();
             if (inputs.isEmpty()) {
                 return InteractionResult.PASS;
             }
@@ -358,7 +373,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
         }
 
         if (blockEntity instanceof StockpotBlockEntity stockpot && stockpot.getStatus() == IStockpot.PUT_INGREDIENT) {
-            List<ItemStack> inputs = stockpot.getInputs().stream().filter(s -> !s.isEmpty()).toList();
+            List<ItemStack> inputs = stockpot.getInputs().stream().filter(s -> !s.isEmpty()).map(ItemStack::copy).toList();
             if (inputs.isEmpty()) {
                 return InteractionResult.PASS;
             }
@@ -379,7 +394,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
                 );
             }
             RecipeResult recipeResult = getStockpotRecipeResult(level, recipeManager, stockpot, inputs, recordStack);
-            setRecipe(recordStack, new RecipeRecord(inputs, recipeResult.output(), STOCKPOT, recipeResult.flexRecipe()));
+            setRecipe(recordStack, new RecipeRecord(inputs, recipeResult.output(), STOCKPOT, recipeResult.flexRecipe(), stockpot.getSoupBaseId()));
             player.setItemInHand(hand, recordStack);
             return InteractionResult.SUCCESS;
         }
@@ -408,10 +423,10 @@ public class RecipeItem extends WithTooltipsBlockItem {
             TeapotInput container = new TeapotInput(teapot.getInput(), teapot.getTeaFluidId());
             recipeManager.getRecipeFor(ModRecipes.TEAPOT_RECIPE, container, level).ifPresentOrElse(recipe -> {
                 ItemStack resultItem = recipe.value().getResultItem(level.registryAccess());
-                setRecipe(recordStack, new RecipeRecord(Collections.singletonList(input), resultItem, TEAPOT));
+                setRecipe(recordStack, new RecipeRecord(Collections.singletonList(input.copy()), resultItem, TEAPOT, teapot.getTeaFluidId()));
             }, () -> {
-                ItemStack instance = Items.SUSPICIOUS_STEW.getDefaultInstance();
-                setRecipe(recordStack, new RecipeRecord(Collections.singletonList(input), instance, TEAPOT));
+                ItemStack instance = BuiltInRegistries.ITEM.getValue(TeacupRegistry.MYSTERY_TEA).getDefaultInstance();
+                setRecipe(recordStack, new RecipeRecord(Collections.singletonList(input.copy()), instance, TEAPOT, teapot.getTeaFluidId()));
             });
             // 与炒锅/煮锅一致：写回记录好的配方物品并返回成功
             player.setItemInHand(hand, recordStack);
@@ -490,7 +505,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
     private record RecipeResult(ItemStack output, boolean flexRecipe) {
     }
 
-    public record RecipeRecord(List<ItemStack> input, ItemStack output, Identifier type, boolean flexRecipe, boolean autoBind) {
+    public record RecipeRecord(List<ItemStack> input, ItemStack output, Identifier type, boolean flexRecipe, boolean autoBind, Identifier base) {
         public RecipeRecord(List<ItemStack> input, ItemStack output, Identifier type) {
             this(input, output, type, false, false);
         }
@@ -499,12 +514,36 @@ public class RecipeItem extends WithTooltipsBlockItem {
             this(input, output, type, flexRecipe, false);
         }
 
+        public RecipeRecord(List<ItemStack> input, ItemStack output, Identifier type, boolean flexRecipe, boolean autoBind) {
+            this(input, output, type, flexRecipe, autoBind, ModSoupBases.WATER);
+        }
+
+        public RecipeRecord(List<ItemStack> input, ItemStack output, Identifier type, Identifier base) {
+            this(input, output, type, false, false, base);
+        }
+
+        public RecipeRecord(List<ItemStack> input, ItemStack output, Identifier type, boolean flexRecipe, Identifier base) {
+            this(input, output, type, flexRecipe, false, base);
+        }
+
+        public ItemStack baseStack() {
+            if (type.equals(POT)) {
+                return ModItems.OIL.getDefaultInstance();
+            }
+            if (type.equals(STOCKPOT)) {
+                var soupBase = SoupBaseManager.getSoupBase(base);
+                return soupBase == null ? ItemStack.EMPTY : soupBase.getDisplayStack();
+            }
+            return type.equals(TEAPOT) ? TeaFluidHelper.getFilledContainer(base) : ItemStack.EMPTY;
+        }
+
         public static final Codec<RecipeRecord> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ItemStack.OPTIONAL_CODEC.listOf().fieldOf("input").forGetter(RecipeRecord::input),
                 ItemStack.CODEC.fieldOf("output").forGetter(RecipeRecord::output),
                 Identifier.CODEC.fieldOf("type").forGetter(RecipeRecord::type),
                 Codec.BOOL.optionalFieldOf("flex_recipe", false).forGetter(RecipeRecord::flexRecipe),
-                Codec.BOOL.optionalFieldOf("auto_bind", false).forGetter(RecipeRecord::autoBind)
+                Codec.BOOL.optionalFieldOf("auto_bind", false).forGetter(RecipeRecord::autoBind),
+                Identifier.CODEC.optionalFieldOf("base", ModSoupBases.WATER).forGetter(RecipeRecord::base)
         ).apply(instance, RecipeRecord::new));
 
         public static final RecipeRecord INSTANCE = new RecipeRecord(List.of(), ItemStack.EMPTY, POT, false, false);
@@ -521,7 +560,8 @@ public class RecipeItem extends WithTooltipsBlockItem {
                 Identifier type = buffer.readIdentifier();
                 boolean flexRecipe = buffer.readBoolean();
                 boolean autoBind = buffer.readBoolean();
-                return new RecipeRecord(inputs, output, type, flexRecipe, autoBind);
+                Identifier base = buffer.readIdentifier();
+                return new RecipeRecord(inputs, output, type, flexRecipe, autoBind, base);
             }
 
             @Override
@@ -534,6 +574,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
                 buffer.writeIdentifier(value.type());
                 buffer.writeBoolean(value.flexRecipe());
                 buffer.writeBoolean(value.autoBind());
+                buffer.writeIdentifier(value.base());
             }
         };
 
@@ -568,11 +609,16 @@ public class RecipeItem extends WithTooltipsBlockItem {
         }
     }
 
-    public record RecipeTemplate(List<Identifier> input, Identifier output, Identifier type) {
+    public record RecipeTemplate(List<Identifier> input, Identifier output, Identifier type, Identifier base) {
+        public RecipeTemplate(List<Identifier> input, Identifier output, Identifier type) {
+            this(input, output, type, ModSoupBases.WATER);
+        }
+
         public static final Codec<RecipeTemplate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Identifier.CODEC.listOf().fieldOf("input").forGetter(RecipeTemplate::input),
                 Identifier.CODEC.fieldOf("output").forGetter(RecipeTemplate::output),
-                Identifier.CODEC.fieldOf("type").forGetter(RecipeTemplate::type)
+                Identifier.CODEC.fieldOf("type").forGetter(RecipeTemplate::type),
+                Identifier.CODEC.optionalFieldOf("base", ModSoupBases.WATER).forGetter(RecipeTemplate::base)
         ).apply(instance, RecipeTemplate::new));
         public static final RecipeTemplate EMPTY = new RecipeTemplate(List.of(), Identifier.fromNamespaceAndPath("minecraft", "air"), POT);
 
@@ -581,7 +627,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
                     .map(id -> BuiltInRegistries.ITEM.getValue(id).getDefaultInstance())
                     .toList();
             ItemStack outputStack = BuiltInRegistries.ITEM.getValue(this.output).getDefaultInstance();
-            return new RecipeRecord(inputs, outputStack, this.type);
+            return new RecipeRecord(inputs, outputStack, this.type, this.base);
         }
     }
 }
