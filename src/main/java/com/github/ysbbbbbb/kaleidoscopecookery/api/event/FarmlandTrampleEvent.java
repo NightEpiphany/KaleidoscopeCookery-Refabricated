@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FarmlandTrampleEvent extends CancellableKCEvent implements IActionCancelable {
+public class FarmlandTrampleEvent extends CancellableKCEvent {
     private final Entity entity;
     private final float fallDistance;
     private final LevelAccessor level;
