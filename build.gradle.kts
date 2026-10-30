@@ -61,7 +61,7 @@ dependencies {
 	implementation ("maven.modrinth:create-fly:${providers.gradleProperty("create_version").get()}")
 	implementation("net.fabricmc:fabric-loader:${providers.gradleProperty("loader_version").get()}")
 	// Yyz backpack
-	compileOnly("maven.modrinth:zO7tsTJN:BUA3Pjct")
+	implementation("maven.modrinth:zO7tsTJN:BUA3Pjct")
 	implementation("maven.modrinth:jade:${providers.gradleProperty("jade_version").get()}")
 	implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabric_api_version").get()}")
 	implementation ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${providers.gradleProperty("forge_config_api_version").get()}")
