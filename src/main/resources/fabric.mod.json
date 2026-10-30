@@ -39,7 +39,10 @@
     "java": ">=25"
   },
   "breaks": {
-    "rrv": "<8.0.0"
+    "rrv": "<8.0.0",
+    "kaleidoscope_end": "<=1.1.0",
+    "kaleidoscope_nether": "<=1.1.13",
+    "kaleidoscope_chinesefood": "<=1.1.15.2"
   },
   "suggests": {
     "forgeconfigapiport": "*",
