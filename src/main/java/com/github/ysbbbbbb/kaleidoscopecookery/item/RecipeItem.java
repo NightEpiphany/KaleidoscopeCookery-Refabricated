@@ -219,9 +219,21 @@ public class RecipeItem extends WithTooltipsBlockItem {
 
         Identifier cookwareType;
         switch (blockEntity) {
-            case PotBlockEntity _ -> cookwareType = POT;
-            case StockpotBlockEntity _ -> cookwareType = STOCKPOT;
-            case TeapotBlockEntity _ -> cookwareType = TEAPOT;
+            case PotBlockEntity potBlock -> {
+                if (blockEntity.getLevel() != null && !potBlock.hasHeatSource(blockEntity.getLevel()))
+                    return failRecipeOnHeatSource(player);
+                cookwareType = POT;
+            }
+            case StockpotBlockEntity stockpotBlock -> {
+                if (blockEntity.getLevel() != null && !stockpotBlock.hasHeatSource(blockEntity.getLevel()))
+                    return failRecipeOnHeatSource(player);
+                cookwareType = STOCKPOT;
+            }
+            case TeapotBlockEntity teapotBlock -> {
+                if (blockEntity.getLevel() != null && !teapotBlock.hasHeatSource(blockEntity.getLevel()))
+                    return failRecipeOnHeatSource(player);
+                cookwareType = TEAPOT;
+            }
             case null, default -> {
                 return InteractionResult.PASS;
             }
@@ -282,6 +294,11 @@ public class RecipeItem extends WithTooltipsBlockItem {
         return !record.input().isEmpty() && record.input().size() <= slots
                 && record.input().stream().anyMatch(stack -> !stack.isEmpty())
                 && (stacked || record.input().stream().allMatch(stack -> stack.isEmpty() || stack.getCount() == 1));
+    }
+
+    private static InteractionResult failRecipeOnHeatSource(Player player) {
+        player.sendOverlayMessage(Component.translatable("tip.kaleidoscope_cookery.pot.need_lit_stove"));
+        return InteractionResult.FAIL;
     }
 
     private static InteractionResult failRecipe(Player player, String reason, Object... args) {
