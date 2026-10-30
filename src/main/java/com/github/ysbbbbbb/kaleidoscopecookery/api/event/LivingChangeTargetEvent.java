@@ -3,7 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableKCEvent;
 import net.minecraft.world.entity.LivingEntity;
 
-public class LivingChangeTargetEvent extends CancellableKCEvent implements IActionCancelable {
+public class LivingChangeTargetEvent extends CancellableKCEvent {
     private final LivingEntity entity;
     private final ILivingTargetType targetType;
     private final LivingEntity originalTarget;
