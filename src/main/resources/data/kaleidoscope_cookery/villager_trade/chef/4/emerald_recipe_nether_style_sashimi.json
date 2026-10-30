@@ -12,7 +12,8 @@
           "minecraft:tropical_fish"
         ],
         "output": "kaleidoscope_cookery:nether_style_sashimi",
-        "type": "kaleidoscope_cookery:pot"
+        "type": "kaleidoscope_cookery:pot",
+        "base": "kaleidoscope_cookery:oil"
       }
     }
   ],

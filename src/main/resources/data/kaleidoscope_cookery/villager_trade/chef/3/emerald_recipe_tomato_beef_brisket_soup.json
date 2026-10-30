@@ -12,7 +12,8 @@
           "kaleidoscope_cookery:tomato"
         ],
         "output": "kaleidoscope_cookery:tomato_beef_brisket_soup",
-        "type": "kaleidoscope_cookery:stockpot"
+        "type": "kaleidoscope_cookery:stockpot",
+        "base": "minecraft:water"
       }
     }
   ],

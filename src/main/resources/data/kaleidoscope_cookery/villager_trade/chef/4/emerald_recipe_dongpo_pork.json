@@ -11,7 +11,8 @@
           "minecraft:porkchop"
         ],
         "output": "kaleidoscope_cookery:dongpo_pork",
-        "type": "kaleidoscope_cookery:pot"
+        "type": "kaleidoscope_cookery:pot",
+        "base": "kaleidoscope_cookery:oil"
       }
     }
   ],

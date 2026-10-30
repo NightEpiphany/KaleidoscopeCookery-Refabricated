@@ -34,6 +34,17 @@ public final class RecipeIngredientStorage {
      * 尝试一次性取齐食材；返回缺少的数量，缺料时回滚所有扣除。
      */
     public static Reference2IntMap<Item> extract(Player player, List<ItemStack> ingredients) {
+        return extract(player, ingredients, true);
+    }
+
+    /**
+     * 检查食材是否齐全，始终回滚扣除，用于加入基底前预检整份配方。
+     */
+    public static Reference2IntMap<Item> check(Player player, List<ItemStack> ingredients) {
+        return extract(player, ingredients, false);
+    }
+
+    private static Reference2IntMap<Item> extract(Player player, List<ItemStack> ingredients, boolean commit) {
         Reference2IntMap<Item> remaining = new Reference2IntOpenHashMap<>(ingredients.size());
         for (ItemStack ingredient : ingredients) {
             if (!ingredient.isEmpty()) {
@@ -88,7 +99,7 @@ public final class RecipeIngredientStorage {
                 }
             }
 
-            if (remaining.isEmpty()) {
+            if (remaining.isEmpty() && commit) {
                 transaction.commit();
             }
         }
