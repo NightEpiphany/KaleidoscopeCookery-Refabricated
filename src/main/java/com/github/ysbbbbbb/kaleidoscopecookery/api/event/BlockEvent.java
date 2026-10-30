@@ -1,10 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class BlockEvent extends ActionEvent {
+public abstract class BlockEvent implements IKCEvent {
     private final LevelAccessor level;
     private final BlockPos pos;
     private final BlockState state;

@@ -1,8 +1,7 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.util.recipes;
+package com.github.ysbbbbbb.kaleidoscopecookery.util;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.RecipeItemEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.yyzsbackpack.YyzsBackpackCompat;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -35,6 +34,17 @@ public final class RecipeIngredientStorage {
      * 尝试一次性取齐食材；返回缺少的数量，缺料时回滚所有扣除。
      */
     public static Reference2IntMap<Item> extract(Player player, List<ItemStack> ingredients) {
+        return extract(player, ingredients, true);
+    }
+
+    /**
+     * 检查食材是否齐全，始终回滚扣除，用于加入基底前预检整份配方。
+     */
+    public static Reference2IntMap<Item> check(Player player, List<ItemStack> ingredients) {
+        return extract(player, ingredients, false);
+    }
+
+    private static Reference2IntMap<Item> extract(Player player, List<ItemStack> ingredients, boolean commit) {
         Reference2IntMap<Item> remaining = new Reference2IntOpenHashMap<>(ingredients.size());
         for (ItemStack ingredient : ingredients) {
             if (!ingredient.isEmpty()) {
@@ -89,7 +99,7 @@ public final class RecipeIngredientStorage {
                 }
             }
 
-            if (remaining.isEmpty()) {
+            if (remaining.isEmpty() && commit) {
                 transaction.commit();
             }
         }
@@ -119,7 +129,7 @@ public final class RecipeIngredientStorage {
         int count = (int) slot.getAmount();
         ItemStack stack = original.toStack(count);
         Reference2IntMap<Item> supply = new Reference2IntOpenHashMap<>(remaining.size());
-        ModEvents.CHECK_SPECIAL_ITEM.invoker().onCheckItemEvent(new RecipeItemEvent.CheckItem(stack, supply));
+        new RecipeItemEvent.CheckItem(stack, supply).post();
         if (supply.isEmpty()) {
             return;
         }
@@ -131,7 +141,7 @@ public final class RecipeIngredientStorage {
                 continue;
             }
             var event = new RecipeItemEvent.DeductItem(stack, item, new int[]{needed});
-            ModEvents.DEDUCT_SPECIAL_ITEM.invoker().onDeductItemEvent(event);
+            event.post();
             int deducted = needed - event.getNeedCount();
             if (deducted > 0) {
                 deductions.put(item, deducted);

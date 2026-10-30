@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.crop;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.Hooks;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.CropHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -119,7 +119,7 @@ public class TeaTreeBlock extends BushBlock implements BonemealableBlock, Simple
         int growthChance = this.isPlantedInRow(level, pos) ? 4 : 5;
         if (age < MAX_AGE
             && level.getRawBrightness(pos.above(), 0) >= 9
-            && Hooks.onCropsGrowPre(level, pos, state, random.nextInt(growthChance) == 0)
+            && CropHooks.onCropsGrowPre(level, pos, state, random.nextInt(growthChance) == 0)
         ) {
             BlockState grownState = state.setValue(AGE, age + 1);
             level.setBlock(pos, grownState, Block.UPDATE_CLIENTS);

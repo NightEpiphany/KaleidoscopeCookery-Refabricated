@@ -14,6 +14,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class ChefRecipeTradeFunction extends LootItemConditionalFunction {
     public static final Identifier ID = Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "trade_custom_recipe");
     public static final MapCodec<ChefRecipeTradeFunction> CODEC = RecordCodecBuilder.mapCodec(instance ->

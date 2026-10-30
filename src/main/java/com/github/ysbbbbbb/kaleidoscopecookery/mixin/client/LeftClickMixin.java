@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.mixin.client;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.PlayerLeftClickEvent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -23,6 +23,6 @@ public class LeftClickMixin {
 
     @Inject(method = "startAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/component/SwingAnimation;Z)Z", shift = At.Shift.BY))
     private void kaleidoscopeCookery$atk(CallbackInfoReturnable<Boolean> cir) {
-        ModEvents.PLAYER_LEFT_CLICK.invoker().onPlayerLeftClick(this.player, InteractionHand.MAIN_HAND);
+        new PlayerLeftClickEvent(this.player, InteractionHand.MAIN_HAND).post();
     }
 }

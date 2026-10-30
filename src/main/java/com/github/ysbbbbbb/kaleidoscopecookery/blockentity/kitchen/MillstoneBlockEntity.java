@@ -11,7 +11,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.MillstoneReci
 import com.github.ysbbbbbb.kaleidoscopecookery.datamap.MillstoneBindableData;
 import com.github.ysbbbbbb.kaleidoscopecookery.datamap.resources.MillstoneBindableDataReloadListener;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
@@ -308,7 +307,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         RecipeHolder<MillstoneRecipe> recipe = MillstoneRecipeSerializer.getEmptyRecipe();
 
         MillstoneMatchRecipeEvent.Pre preEvent = new MillstoneMatchRecipeEvent.Pre(level, this, input);
-        ModEvents.MILLSTONE_RECIPE_PRE.invoker().onMillstoneMatchRecipePre(preEvent);
+        preEvent.post();
         if (preEvent.getOutput() != null) {
             recipe = preEvent.getOutput();
         } else {
@@ -319,7 +318,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         }
 
         MillstoneMatchRecipeEvent.Post postEvent = new MillstoneMatchRecipeEvent.Post(level, this, input, recipe);
-        ModEvents.MILLSTONE_RECIPE_POST.invoker().onMillstoneMatchRecipePost(postEvent);
+        postEvent.post();
         if (postEvent.getOutput() != null) {
             recipe = postEvent.getOutput();
         }

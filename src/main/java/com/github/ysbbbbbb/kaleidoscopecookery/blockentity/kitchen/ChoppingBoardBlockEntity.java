@@ -7,7 +7,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.ChoppingBoardRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEnchantments;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
@@ -131,14 +130,13 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
             this.playParticlesSound();
             if (level instanceof ServerLevel) {
                 ChoppingBoardEvent.Modify event = new ChoppingBoardEvent.Modify(this, cutterItem, this.results, this.modelId);
-                ModEvents.CHOPPING_BOARD_MODIFY.invoker().onChoppingBoardModify(event);
+                event.post();
                 this.results = event.getResults();
                 this.modelId = event.getModelId();
             }
             this.refresh();
             if (level instanceof ServerLevel) {
-                ModEvents.CHOPPING_BOARD_POST.invoker().onChoppingBoardPost(
-                        new ChoppingBoardEvent.Post(this, user, cutterItem, this.results));
+                new ChoppingBoardEvent.Post(this, user, cutterItem, this.results).post();
             }
             return true;
         } else {
@@ -192,7 +190,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
         this.currentCutCount = 0;
         this.maxCutCount = 0;
         if (this.level instanceof ServerLevel) {
-            ModEvents.CHOPPING_BOARD_RESET.invoker().onChoppingBoardReset(new ChoppingBoardEvent.Reset(this));
+            new ChoppingBoardEvent.Reset(this).post();
         }
         this.refresh();
     }

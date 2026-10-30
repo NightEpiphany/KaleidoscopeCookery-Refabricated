@@ -15,7 +15,7 @@ public class FarmersDelightCompat {
         if (FabricLoader.getInstance().isModLoaded(ID)) {
             IS_LOADED = true;
             // 注册事件监听器
-            CookingPotCompat.afterStockpotRecipeMatch();
+            CookingPotCompat.registerEvents();
         }
 
     }

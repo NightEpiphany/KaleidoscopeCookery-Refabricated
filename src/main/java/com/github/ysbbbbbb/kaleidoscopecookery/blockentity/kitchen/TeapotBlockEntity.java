@@ -16,6 +16,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.CustomFluidTank;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.FluidUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.TeaFluidHelper;
 import com.google.common.collect.Lists;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -51,6 +52,7 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -197,6 +199,14 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
 
     @Override
     public boolean addTeaFluid(Level level, LivingEntity user, ItemStack itemStack) {
+        return this.addTeaFluid(level, user, itemStack, null);
+    }
+
+    /**
+     * 从指定物品槽位添加茶底液；传入 null 时沿用普通手持物交互。
+     */
+    public boolean addTeaFluid(Level level, LivingEntity user, ItemStack itemStack,
+                               @Nullable ContainerItemContext context) {
         if (itemStack.is(ModItems.RECIPE_ITEM)) {
             return false;
         }
@@ -247,7 +257,10 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         }
 
         CustomFluidTank needFluidHandler = new CustomFluidTank(FluidConstants.BUCKET, null);
-        if (!FluidUtils.emptyItem(user, itemStack, needFluidHandler, CustomFluidTank.MB_PER_BUCKET)) {
+        boolean emptied = context == null
+                ? FluidUtils.emptyItem(user, itemStack, needFluidHandler, CustomFluidTank.MB_PER_BUCKET)
+                : FluidUtils.emptyItem(user, itemStack, needFluidHandler, CustomFluidTank.MB_PER_BUCKET, context);
+        if (!emptied) {
             return false;
         }
 

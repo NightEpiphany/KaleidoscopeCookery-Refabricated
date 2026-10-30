@@ -12,7 +12,8 @@
           "minecraft:pumpkin_pie"
         ],
         "output": "kaleidoscope_cookery:stargazy_pie",
-        "type": "kaleidoscope_cookery:pot"
+        "type": "kaleidoscope_cookery:pot",
+        "base": "kaleidoscope_cookery:oil"
       }
     }
   ],

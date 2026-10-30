@@ -10,7 +10,8 @@
           "kaleidoscope_cookery:tomato"
         ],
         "output": "kaleidoscope_cookery:scramble_egg_with_tomatoes",
-        "type": "kaleidoscope_cookery:pot"
+        "type": "kaleidoscope_cookery:pot",
+        "base": "kaleidoscope_cookery:oil"
       }
     }
   ],

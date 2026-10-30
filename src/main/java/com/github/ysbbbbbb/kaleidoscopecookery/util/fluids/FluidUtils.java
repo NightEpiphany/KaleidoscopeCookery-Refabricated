@@ -32,11 +32,22 @@ public class FluidUtils {
      * @return 如果成功转移了流体，返回 true；如果没有转移任何流体，返回 false
      */
     public static boolean emptyItem(LivingEntity user, ItemStack bucket, Storage<FluidVariant> handler, int amount) {
+        return emptyItem(user, bucket, handler, amount, getInteractionContext(user, bucket));
+    }
+
+    /**
+     * 从指定物品槽位倒出流体，避免自动输送配方材料时误用玩家手中的食谱物品。
+     * 传入的ctx负责更新原槽位并放回流体容器。
+     */
+    public static boolean emptyItem(LivingEntity user, ItemStack bucket, Storage<FluidVariant> handler, int amount,
+                                    ContainerItemContext context) {
         if (bucket.isEmpty() || handler == null) {
             return false;
         }
         boolean creativePlayer = isCreativePlayer(user);
-        ContainerItemContext context = getInteractionContext(user, bucket);
+        if (creativePlayer) {
+            context = ContainerItemContext.withConstant(bucket.copyWithCount(1));
+        }
         Storage<FluidVariant> itemStorage = context.find(FluidStorage.ITEM);
         if (itemStorage == null) {
             return false;

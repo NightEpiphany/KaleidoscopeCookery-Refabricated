@@ -74,6 +74,7 @@ dependencies {
 	compileOnly("maven.modrinth:EsAfCjCV:PHjDtQay")
 	compileOnly ("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${providers.gradleProperty("forge_config_api_version").get()}")
 	compileOnly("mezz.jei:jei-${providers.gradleProperty("jei_version").get()}")
+	compileOnly("maven.modrinth:kaleidoscope-tavern-refabricated:${providers.gradleProperty("kaleidoscope_tavern_version").get()}-fabric+mc26.3")
 	// Mezz config
 	compileOnly("maven.modrinth:7tEfOcA7:7KlSXRjC")
 	compileOnly("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")

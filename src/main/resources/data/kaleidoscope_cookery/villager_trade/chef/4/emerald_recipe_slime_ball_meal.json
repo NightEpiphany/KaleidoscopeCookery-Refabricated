@@ -12,7 +12,8 @@
           "minecraft:slime_ball"
         ],
         "output": "kaleidoscope_cookery:slime_ball_meal",
-        "type": "kaleidoscope_cookery:pot"
+        "type": "kaleidoscope_cookery:pot",
+        "base": "kaleidoscope_cookery:oil"
       }
     }
   ],

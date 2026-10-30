@@ -12,7 +12,8 @@
           "kaleidoscope_cookery:green_chili"
         ],
         "output": "kaleidoscope_cookery:fish_flavored_shredded_pork",
-        "type": "kaleidoscope_cookery:pot"
+        "type": "kaleidoscope_cookery:pot",
+        "base": "kaleidoscope_cookery:oil"
       }
     }
   ],

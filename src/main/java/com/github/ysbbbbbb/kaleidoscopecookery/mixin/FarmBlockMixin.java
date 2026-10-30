@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.mixin;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.FarmlandTrampleEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -23,7 +22,7 @@ public class FarmBlockMixin {
             cancellable = true)
     private void kaleidoscopeCookery$onFallOn(Level level, BlockState state, BlockPos pos, Entity entity, double d, CallbackInfo ci) {
         FarmlandTrampleEvent farmlandTrampleEvent = new FarmlandTrampleEvent(level, pos, state, (float) d, entity);
-        ModEvents.FARMLAND_TRAMPLE.invoker().onFarmlandTrample(farmlandTrampleEvent);
+        farmlandTrampleEvent.post();
         if (farmlandTrampleEvent.isCanceled()) ci.cancel();
 
     }

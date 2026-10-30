@@ -11,7 +11,8 @@
           "kaleidoscope_cookery:lettuce"
         ],
         "output": "kaleidoscope_cookery:borscht",
-        "type": "kaleidoscope_cookery:stockpot"
+        "type": "kaleidoscope_cookery:stockpot",
+        "base": "minecraft:water"
       }
     }
   ],
