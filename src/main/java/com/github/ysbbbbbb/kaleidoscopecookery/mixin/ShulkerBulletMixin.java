@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.mixin;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.ProjectileImpactEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -16,7 +15,7 @@ public class ShulkerBulletMixin {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/ShulkerBullet;hitTargetOrDeflectSelf(Lnet/minecraft/world/phys/HitResult;)Lnet/minecraft/world/entity/projectile/ProjectileDeflection;"))
     private ProjectileDeflection kaleidoscopeCookery$onImpact(ShulkerBullet projectile, HitResult result, Operation<ProjectileDeflection> original) {
         ProjectileImpactEvent event = new ProjectileImpactEvent(projectile, result);
-        ModEvents.PROJECTILE_IMPACT.invoker().onProjectileImpact(event);
+        event.post();
         if (!event.isCanceled()) {
             return original.call(projectile, result);
         } else {

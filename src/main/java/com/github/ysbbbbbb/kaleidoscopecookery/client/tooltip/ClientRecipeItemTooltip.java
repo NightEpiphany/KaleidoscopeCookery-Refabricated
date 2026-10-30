@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 public class ClientRecipeItemTooltip implements ClientTooltipComponent {
     private final RecipeItem.RecipeRecord recipeRecord;
     private final MutableComponent recipeTypeText;
+    private final MutableComponent baseText;
     private final MutableComponent ingredientsText;
     private final MutableComponent outputText;
 
@@ -30,20 +31,22 @@ public class ClientRecipeItemTooltip implements ClientTooltipComponent {
             this.recipeTypeText.append(CommonComponents.SPACE).append(quality.getTooltip());
         }
 
+        this.baseText = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.base");
         this.ingredientsText = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.ingredient");
         this.outputText = Component.translatable("tooltip.kaleidoscope_cookery.recipe_item.output");
     }
 
     @Override
     public int getHeight() {
-        return 40;
+        return 64;
     }
 
     @Override
     public int getWidth(Font font) {
-        int ingredientsSize = recipeRecord.input().size() * 12 + font.width(ingredientsText) + 2;
+        int baseSize = font.width(baseText) + 20;
+        int ingredientsSize = recipeRecord.input().size() * 16 + font.width(ingredientsText) + 2;
         int outputSize = font.width(outputText) + 20;
-        return Math.max(font.width(recipeTypeText), Math.max(ingredientsSize, outputSize));
+        return Math.max(font.width(recipeTypeText), Math.max(baseSize, Math.max(ingredientsSize, outputSize)));
     }
 
     @Override
@@ -53,18 +56,23 @@ public class ClientRecipeItemTooltip implements ClientTooltipComponent {
 
         guiGraphics.drawString(font, recipeTypeText, pX, pY + 4, ChatFormatting.GRAY.getColor());
 
-        int ingredientsYOffset = pY + 12;
+        int baseYOffset = pY + 16;
+        guiGraphics.drawString(font, baseText, pX, baseYOffset + 4, ChatFormatting.GRAY.getColor());
+        guiGraphics.renderFakeItem(recipeRecord.baseStack(), pX + font.width(baseText), baseYOffset);
+
+        int ingredientsYOffset = pY + 32;
         guiGraphics.drawString(font, ingredientsText, pX, ingredientsYOffset + 4, ChatFormatting.GRAY.getColor());
 
         int i = 0;
         for (ItemStack stack : recipeRecord.input()) {
-            int xOffset = pX + ingredientsWidth + i * 12;
+            int xOffset = pX + ingredientsWidth + i * 16;
             guiGraphics.renderFakeItem(stack, xOffset, ingredientsYOffset);
+            guiGraphics.renderItemDecorations(font, stack, xOffset, ingredientsYOffset);
             i++;
         }
 
         int xOffset = pX + outputWidth;
-        int yOffset = pY + 24;
+        int yOffset = pY + 48;
         guiGraphics.drawString(font, outputText, pX, yOffset + 4, ChatFormatting.GRAY.getColor());
         ItemStack stack = recipeRecord.output();
         guiGraphics.renderFakeItem(stack, xOffset, yOffset);

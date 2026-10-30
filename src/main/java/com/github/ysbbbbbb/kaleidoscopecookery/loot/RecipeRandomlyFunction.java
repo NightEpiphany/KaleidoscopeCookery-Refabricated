@@ -6,6 +6,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.TeapotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModLootModifier;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
 import com.google.common.collect.ImmutableList;
@@ -78,7 +79,7 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
             List<ItemStack> inputs = recipe.getIngredients().stream()
                     .filter(i -> !i.isEmpty())
                     .map(i -> i.getItems()[0]).toList();
-            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.POT, false);
+            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.POT, ModSoupBases.OIL);
             RecipeItem.setRecipe(stack, record);
             return stack;
         }
@@ -94,7 +95,7 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
             List<ItemStack> inputs = recipe.getIngredients().stream()
                     .filter(i -> !i.isEmpty())
                     .map(i -> i.getItems()[0]).toList();
-            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.STOCKPOT, false);
+            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.STOCKPOT, recipe.soupBase());
             RecipeItem.setRecipe(stack, record);
             return stack;
         }
@@ -110,9 +111,9 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
             List<ItemStack> inputs = new ArrayList<>(List.of());
             if (!recipe.ingredient().isEmpty()) {
                 // 茶壶配方需要 ingredientCount 个原料，记录真实数量以保证后续放入/扣除一致
-                inputs.add(recipe.ingredient().getItems()[0]);
+                inputs.add(recipe.ingredient().getItems()[0].copyWithCount(recipe.ingredientCount()));
             }
-            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.TEAPOT, false);
+            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.TEAPOT, recipe.displayTeaFluid());
             RecipeItem.setRecipe(stack, record);
             return stack;
         }
@@ -139,7 +140,7 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
 
         public Builder pot(ItemLike output, ItemLike... input) {
             List<ItemStack> list = Arrays.stream(input).map(ItemStack::new).toList();
-            RecipeItem.RecipeRecord record = new RecipeItem.RecipeRecord(list, new ItemStack(output), RecipeItem.POT, false);
+            RecipeItem.RecipeRecord record = new RecipeItem.RecipeRecord(list, new ItemStack(output), RecipeItem.POT, ModSoupBases.OIL);
             return withRecord(record);
         }
 

@@ -96,36 +96,37 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
 
     @Override
     protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        if (!(level.getBlockEntity(blockPos) instanceof StockpotBlockEntity stockpot)) return;
-        var soupBaseId = stockpot.getSoupBaseId();
-        var soupBaseItem = stockpot.getSoupBaseItem();
-        if (!(level instanceof ServerLevel serverLevel)
-                || !shouldReleaseMob(soupBaseId, soupBaseItem)) {
-            return;
-        }
-        MobSoupBase soupBase = (MobSoupBase) stockpot.getSoupBase();
-        if (soupBase == null) {
-            KaleidoscopeCookery.LOGGER.warn("Could not load soup data {} at {}", soupBaseId, blockPos);
-            return;
-        }
-        Entity entity = soupBase.getType().create(
-                serverLevel,
-                EntityType.createDefaultStackConfig(serverLevel, soupBaseItem, null),
-                blockPos, MobSpawnType.BUCKET, true, false
-        );
-        if (entity == null) {
-            KaleidoscopeCookery.LOGGER.warn("Could not release stockpot mob {} at {}", soupBaseId, blockPos);
-            return;
-        }
-        if (entity instanceof Bucketable bucketable) {
-            CustomData data = soupBaseItem.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
-            bucketable.loadFromBucketTag(data.copyTag());
-            bucketable.setFromBucket(true);
-        }
-        if (serverLevel.addFreshEntity(entity)) {
-            KaleidoscopeCookery.LOGGER.debug("Released stockpot mob {} at {}", soupBaseId, blockPos);
-        } else {
-            KaleidoscopeCookery.LOGGER.warn("Could not add stockpot mob {} to level at {}", soupBaseId, blockPos);
+        if (blockState.getBlock() != blockState2.getBlock()
+                && level instanceof ServerLevel serverLevel
+                && level.getBlockEntity(blockPos) instanceof StockpotBlockEntity stockpot) {
+            var soupBaseId = stockpot.getSoupBaseId();
+            var soupBaseItem = stockpot.getSoupBaseItem();
+            if (shouldReleaseMob(soupBaseId, soupBaseItem)) {
+                MobSoupBase soupBase = (MobSoupBase) stockpot.getSoupBase();
+                if (soupBase == null) {
+                    KaleidoscopeCookery.LOGGER.warn("Could not load soup data {} at {}", soupBaseId, blockPos);
+                } else {
+                    Entity entity = soupBase.getType().create(
+                            serverLevel,
+                            EntityType.createDefaultStackConfig(serverLevel, soupBaseItem, null),
+                            blockPos, MobSpawnType.BUCKET, true, false
+                    );
+                    if (entity == null) {
+                        KaleidoscopeCookery.LOGGER.warn("Could not release stockpot mob {} at {}", soupBaseId, blockPos);
+                    } else {
+                        if (entity instanceof Bucketable bucketable) {
+                            CustomData data = soupBaseItem.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
+                            bucketable.loadFromBucketTag(data.copyTag());
+                            bucketable.setFromBucket(true);
+                        }
+                        if (serverLevel.addFreshEntity(entity)) {
+                            KaleidoscopeCookery.LOGGER.debug("Released stockpot mob {} at {}", soupBaseId, blockPos);
+                        } else {
+                            KaleidoscopeCookery.LOGGER.warn("Could not add stockpot mob {} to level at {}", soupBaseId, blockPos);
+                        }
+                    }
+                }
+            }
         }
         super.onRemove(blockState, level, blockPos, blockState2, bl);
     }

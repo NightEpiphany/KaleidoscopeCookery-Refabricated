@@ -14,6 +14,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.CustomFluidTank;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.FluidUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.TeaFluidHelper;
 import com.google.common.collect.Lists;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -46,6 +47,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -191,6 +193,11 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
 
     @Override
     public boolean addTeaFluid(Level level, LivingEntity user, ItemStack itemStack) {
+        return addTeaFluid(level, user, itemStack, null);
+    }
+
+    public boolean addTeaFluid(Level level, LivingEntity user, ItemStack itemStack,
+                               @Nullable ContainerItemContext context) {
         if (itemStack.is(ModItems.RECIPE_ITEM)) {
             return false;
         }
@@ -241,7 +248,10 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         }
 
         CustomFluidTank needFluidHandler = new CustomFluidTank(FluidConstants.BUCKET, null);
-        if (!FluidUtils.emptyItem(user, itemStack, needFluidHandler, CustomFluidTank.MB_PER_BUCKET)) {
+        boolean emptied = context == null
+                ? FluidUtils.emptyItem(user, itemStack, needFluidHandler, CustomFluidTank.MB_PER_BUCKET)
+                : FluidUtils.emptyItem(user, itemStack, needFluidHandler, CustomFluidTank.MB_PER_BUCKET, context);
+        if (!emptied) {
             return false;
         }
 

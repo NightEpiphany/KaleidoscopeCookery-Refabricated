@@ -117,7 +117,7 @@ dependencies {
     // Every Compat
     modCompileOnly("net.mehvahdjukaar:everycomp-fabric:1.21-2.11.52")
     modCompileOnly("net.mehvahdjukaar:moonlight-fabric:1.21.1-3.6.5")
-
+    modImplementation "maven.modrinth:kaleidoscope-tavern-refabricated:${project.kaleidoscope_tavern_version}-fabric+mc${project.minecraft_version}"
     // Delight family compact
     modImplementation("vectorwing:FarmersDelight:${fdrf_version}") {
         exclude(group: "net.fabricmc")
@@ -127,7 +127,7 @@ dependencies {
     modImplementation "curse.maven:brewin-and-chewin-637808:7523546"
     modImplementation("house.greenhouse:greenhouseconfig:2.2.3+1.21.1-fabric")
     modImplementation("house.greenhouse:greenhouseconfig_toml:1.1.0")
-
+    modImplementation "maven.modrinth:zO7tsTJN:mgV3AQ27"
     modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.6"
 
     testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"

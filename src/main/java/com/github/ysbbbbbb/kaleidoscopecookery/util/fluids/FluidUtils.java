@@ -32,11 +32,18 @@ public class FluidUtils {
      * @return 如果成功转移了流体，返回 true；如果没有转移任何流体，返回 false
      */
     public static boolean emptyItem(LivingEntity user, ItemStack bucket, Storage<FluidVariant> handler, int amount) {
+        return emptyItem(user, bucket, handler, amount, getInteractionContext(user, bucket));
+    }
+
+    public static boolean emptyItem(LivingEntity user, ItemStack bucket, Storage<FluidVariant> handler, int amount,
+                                    ContainerItemContext context) {
         if (bucket.isEmpty() || handler == null) {
             return false;
         }
         boolean creativePlayer = isCreativePlayer(user);
-        ContainerItemContext context = getInteractionContext(user, bucket);
+        if (creativePlayer) {
+            context = ContainerItemContext.withConstant(bucket.copyWithCount(1));
+        }
         Storage<FluidVariant> itemStorage = context.find(FluidStorage.ITEM);
         if (itemStorage == null) {
             return false;

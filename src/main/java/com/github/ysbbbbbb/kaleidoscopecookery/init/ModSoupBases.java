@@ -1,11 +1,14 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.kaleidoscopetavern.ModJuiceSoupBases;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 
 public final class ModSoupBases {
+    public static final ResourceLocation OIL = ResourceLocation.fromNamespaceAndPath("kaleidoscope_cookery", "oil");
     public static final ResourceLocation WATER = ResourceLocation.fromNamespaceAndPath("minecraft", "water");
     public static final ResourceLocation LAVA = ResourceLocation.fromNamespaceAndPath("minecraft", "lava");
     public static final ResourceLocation MILK = ModFluids.MILK_ID;
@@ -27,5 +30,9 @@ public final class ModSoupBases {
         SoupBaseManager.registerMobSoupBase(TROPICAL_FISH_BUCKET, Items.TROPICAL_FISH_BUCKET);
         SoupBaseManager.registerMobSoupBase(PUFFERFISH_BUCKET, Items.PUFFERFISH_BUCKET);
         SoupBaseManager.registerMobSoupBase(TADPOLE_BUCKET, Items.TADPOLE_BUCKET);
+
+        if (FabricLoader.getInstance().isModLoaded(ModJuiceSoupBases.ID)) {
+            ModJuiceSoupBases.registerSoupBases();
+        }
     }
 }

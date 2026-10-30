@@ -15,7 +15,7 @@ public class FarmersDelightCompat {
         if (FabricLoader.getInstance().isModLoaded(ID) && !FabricLoader.getInstance().getModContainer(ID).get().getMetadata().getVersion().getFriendlyString().contains("1.21.1-2.")) {
             IS_LOADED = true;
             // 注册事件监听器
-            CookingPotCompat.afterStockpotRecipeMatch();
+            CookingPotCompat.registerEvents();
         }
 
     }

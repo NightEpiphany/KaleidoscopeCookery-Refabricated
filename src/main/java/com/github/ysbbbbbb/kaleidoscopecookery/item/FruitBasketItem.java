@@ -28,10 +28,13 @@ public class FruitBasketItem extends WithTooltipsBlockItem {
 
     public static ItemStackHandler getItems(ItemStack stack) {
         ItemContainer container = stack.get(ModDataComponents.FRUIT_BASKET_ITEMS);
+        ItemStackHandler items = new ItemStackHandler(MAX_SLOTS);
         if (container != null) {
-            return new ItemStackHandler(container.items());
+            for (int slot = 0; slot < Math.min(MAX_SLOTS, container.items().size()); slot++) {
+                items.setStackInSlot(slot, container.items().get(slot).copy());
+            }
         }
-        return new ItemStackHandler(MAX_SLOTS);
+        return items;
     }
 
     public static void saveItems(ItemStack stack, ItemStackHandler items) {

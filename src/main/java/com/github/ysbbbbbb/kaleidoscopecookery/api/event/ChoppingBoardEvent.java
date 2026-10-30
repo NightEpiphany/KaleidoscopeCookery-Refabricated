@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ChoppingBoardBlockEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,9 +12,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 砧板事件，仅在服务端触发，通过 ModEvents 中对应的 Fabric 回调注册监听。
+ * 砧板事件，仅在服务端触发。
  */
-public abstract class ChoppingBoardEvent extends ActionEvent {
+public abstract class ChoppingBoardEvent implements IKCEvent {
     private final ChoppingBoardBlockEntity blockEntity;
 
     protected ChoppingBoardEvent(ChoppingBoardBlockEntity blockEntity) {
