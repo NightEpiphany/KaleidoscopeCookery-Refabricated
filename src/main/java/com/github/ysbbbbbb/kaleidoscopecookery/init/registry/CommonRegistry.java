@@ -1,6 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.FarmlandTrampleEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.LivingChangeTargetEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.PlayerLeftClickEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.ProjectileImpactEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.RecipeItemEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.SickleHarvestEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.PlateBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.BambooTrayDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.ChoppingBoardDispenseBehavior;
@@ -23,6 +29,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.PlateBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.TeacupItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import net.fabricmc.fabric.api.registry.CompostableRegistry;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
@@ -47,6 +54,7 @@ public final class CommonRegistry {
 
     public static void init() {
         registerDataListeners();
+        registerCustomEventHandlers();
         modCompat();
         addComposter();
         registerPlateBlocks();
@@ -86,19 +94,34 @@ public final class CommonRegistry {
         FlatulenceServerEvent.register();
         PreservationEvent.register();
         HinderEvent.register();
-        ProjectileDodgeEvent.register();
         VitalityEvent.register();
         ArmorEffectHandler.register();
-        ChangeTargetEvent.register();
         AddVillageStructuresEvent.register();
-        ScarecrowFarmlandTrampleEvent.register();
         EntityJoinWorldEvent.register();
-        SickleHarvestNetherWartEvent.register();
         HoeUseEvent.register();
         RightClickEvent.register();
-        LeftClickEvent.register();
         ExtraLootTableDrop.register();
         PlayerSitEvent.register();
+    }
+
+    private static void registerCustomEventHandlers() {
+        IKCEvent.CALLBACK.register(event -> {
+            if (event instanceof RecipeItemEvent.CheckItem checkItem) {
+                SpecialRecipeItemEvent.onCheckItemEvent(checkItem);
+            } else if (event instanceof RecipeItemEvent.DeductItem deductItem) {
+                SpecialRecipeItemEvent.onDeductItemEvent(deductItem);
+            } else if (event instanceof PlayerLeftClickEvent leftClick) {
+                LeftClickEvent.onHandle(leftClick);
+            } else if (event instanceof FarmlandTrampleEvent farmlandTrample) {
+                ScarecrowFarmlandTrampleEvent.onFarmlandTrample(farmlandTrample);
+            } else if (event instanceof SickleHarvestEvent sickleHarvest) {
+                SickleHarvestNetherWartEvent.onSickleHarvest(sickleHarvest);
+            } else if (event instanceof ProjectileImpactEvent projectileImpact) {
+                ProjectileDodgeEvent.onProjectileHit(projectileImpact);
+            } else if (event instanceof LivingChangeTargetEvent changeTarget) {
+                ChangeTargetEvent.onTarget(changeTarget);
+            }
+        });
     }
 
     private static void registerPlateBlocks() {

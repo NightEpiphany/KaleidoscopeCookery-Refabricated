@@ -371,7 +371,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         StockpotInput container = this.getContainer();
 
         StockpotMatchRecipeEvent.Pre preEvent = new StockpotMatchRecipeEvent.Pre(levelIn, this, container);
-        ModEvents.STOCKPOT_RECIPE_PRE.invoker().onStockMatchRecipePre(preEvent);
+        preEvent.post();
         if (preEvent.getOutput() != null) {
             this.applyRecipe(levelIn, container, preEvent.getOutput());
         }
@@ -392,7 +392,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
         // 触发事件，允许其他 mod 在配方匹配后进行操作
         StockpotMatchRecipeEvent.Post postEvent = new StockpotMatchRecipeEvent.Post(levelIn, this, container, this.recipeId);
-        ModEvents.STOCKPOT_RECIPE_POST.invoker().onStockMatchRecipePost(postEvent);
+        postEvent.post();
         if (postEvent.getOutput() != null) {
             this.applyRecipe(levelIn, container, postEvent.getOutput());
         }

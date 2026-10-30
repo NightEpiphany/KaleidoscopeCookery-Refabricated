@@ -41,8 +41,6 @@ public final class KaleidoscopeCookery implements ModInitializer {
         ModLootModifier.registerLootModifiers();
         ModSoupBases.registerSoupBases();
         ModDataComponents.registerDataComponents();
-        // 事件
-        ModEvents.init();
         CommonRegistry.init();
         NetworkHandler.init();
         // 注册额外的战利品表事件

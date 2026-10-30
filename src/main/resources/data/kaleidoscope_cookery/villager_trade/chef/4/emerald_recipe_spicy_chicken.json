@@ -13,7 +13,8 @@
           "minecraft:chicken"
         ],
         "output": "kaleidoscope_cookery:spicy_chicken",
-        "type": "kaleidoscope_cookery:pot"
+        "type": "kaleidoscope_cookery:pot",
+        "base": "kaleidoscope_cookery:oil"
       }
     }
   ],

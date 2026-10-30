@@ -4,7 +4,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.event.SickleHarvestEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.TeaTreeBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEnchantments;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsItem;
 import net.minecraft.core.BlockPos;
@@ -99,7 +98,7 @@ public class SickleItem extends WithTooltipsItem {
         Block block = blockState.getBlock();
         // 触发事件
         SickleHarvestEvent event = new SickleHarvestEvent(player, stack, newPos, blockState);
-        ModEvents.SICKLE_HARVEST.invoker().onSickleHarvest(event);
+        event.post();
         if (event.isCanceled()) {
             return event.isCostDurability();
         }

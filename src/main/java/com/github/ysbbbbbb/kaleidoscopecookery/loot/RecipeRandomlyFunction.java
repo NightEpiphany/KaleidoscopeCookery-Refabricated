@@ -100,7 +100,7 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
                 if (ingredient.isEmpty()) continue;
                 ingredient.items().forEach(itemHolder -> inputs.add(new ItemStack(itemHolder.value())));
             }
-            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.STOCKPOT);
+            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.STOCKPOT, recipe.soupBase());
             RecipeItem.setRecipe(stack, record);
             return stack;
         }
@@ -118,7 +118,7 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
                 // 茶壶配方需要 ingredientCount 个原料，记录真实数量以保证后续放入/扣除一致
                 recipe.ingredient().items().forEach(itemHolder -> inputs.add(new ItemStack(itemHolder.value(), recipe.ingredientCount())));
             }
-            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.TEAPOT);
+            record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.TEAPOT, recipe.displayTeaFluid());
             RecipeItem.setRecipe(stack, record);
             return stack;
         }

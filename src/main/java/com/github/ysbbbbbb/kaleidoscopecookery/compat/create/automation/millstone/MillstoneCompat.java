@@ -5,7 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.crafting.container.SimpleInput;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.output.RandomOutput;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.MillstoneRecipeSerializer;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEvents;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.zurrtum.create.AllRecipeTypes;
 import com.zurrtum.create.content.kinetics.millstone.MillingRecipe;
@@ -24,7 +24,11 @@ import java.util.function.Function;
 
 public class MillstoneCompat {
     public static void register(){
-        ModEvents.MILLSTONE_RECIPE_POST.register(MillstoneCompat::afterMillstoneRecipeMatch);
+        IKCEvent.CALLBACK.register(event -> {
+            if (event instanceof MillstoneMatchRecipeEvent.Post postEvent) {
+                afterMillstoneRecipeMatch(postEvent);
+            }
+        });
     }
     // 供 JEI、REI、EMI 查询的工具类
     public static void getTransformRecipeForSearch(Level level, List<RecipeHolder<MillstoneRecipe>> recipes) {
@@ -61,7 +65,7 @@ public class MillstoneCompat {
     }
 
 
-    static void afterMillstoneRecipeMatch(MillstoneMatchRecipeEvent.Post event) {
+    private static void afterMillstoneRecipeMatch(MillstoneMatchRecipeEvent.Post event) {
         RecipeHolder<MillstoneRecipe> rawOutput = event.getRawOutput();
         if (rawOutput.id().identifier() != MillstoneRecipeSerializer.EMPTY_ID) {
             return;

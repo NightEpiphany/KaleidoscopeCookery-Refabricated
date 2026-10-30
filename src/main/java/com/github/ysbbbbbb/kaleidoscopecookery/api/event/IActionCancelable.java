@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableKCEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
@@ -12,7 +13,7 @@ public interface IActionCancelable {
 
     @MustBeInvokedByOverriders
     default void setCanceled(boolean canceled) {
-        ((ActionEvent) this).isCanceled = canceled;
+        ((CancellableKCEvent) this).setCanceledState(canceled);
     }
 
     /**
@@ -20,6 +21,6 @@ public interface IActionCancelable {
      */
     @ApiStatus.NonExtendable
     default boolean isCanceled() {
-        return ((ActionEvent) this).isCanceled;
+        return ((CancellableKCEvent) this).isCanceledState();
     }
 }
