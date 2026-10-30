@@ -13,6 +13,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.TeacupRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.tooltip.RecipeItemTooltip;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.Quality;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.quality.QualityEvaluator;
@@ -342,7 +343,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
                 ItemStack resultItem = recipe.value().getResultItem(level.registryAccess());
                 setRecipe(recordStack, new RecipeRecord(Collections.singletonList(input), resultItem, TEAPOT));
             }, () -> {
-                ItemStack instance = Items.SUSPICIOUS_STEW.getDefaultInstance();
+                ItemStack instance = BuiltInRegistries.ITEM.getValue(TeacupRegistry.MYSTERY_TEA).getDefaultInstance();
                 setRecipe(recordStack, new RecipeRecord(Collections.singletonList(input), instance, TEAPOT));
             });
             // 与炒锅/煮锅一致：写回记录好的配方物品并返回成功
