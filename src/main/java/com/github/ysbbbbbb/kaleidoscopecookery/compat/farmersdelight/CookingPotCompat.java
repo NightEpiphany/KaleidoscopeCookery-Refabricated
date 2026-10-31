@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.compat.farmersdelight;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.StockpotMatchRecipeEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -35,6 +36,14 @@ public class CookingPotCompat {
                 cookingPotRecipe.getCookTime(),
                 cookingPotRecipe.getOutputContainer()
         );
+    }
+
+    static void registerEvents() {
+        IKCEvent.CALLBACK.register(event -> {
+            if (event instanceof StockpotMatchRecipeEvent.Post postEvent) {
+                afterStockpotRecipeMatch(postEvent);
+            }
+        });
     }
 
     static void afterStockpotRecipeMatch(StockpotMatchRecipeEvent.Post event) {

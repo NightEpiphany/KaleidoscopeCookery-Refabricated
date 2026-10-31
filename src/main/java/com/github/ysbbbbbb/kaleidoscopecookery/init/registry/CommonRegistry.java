@@ -1,8 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.api.event.LivingChangeTargetEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.api.event.RecipeItemEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.api.event.SickleHarvestEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.PlateBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.BambooTrayDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.ChoppingBoardDispenseBehavior;
@@ -23,6 +21,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModVillager;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -41,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 public final class CommonRegistry {
     public static void init() {
         registerDataListeners();
+        registerCustomEventHandlers();
         registerFluidStorage();
         ItemStorage.SIDED.registerForBlockEntity((teapot, side) -> teapot.getInputStorage(), ModBlocks.TEAPOT_BE);
         modCompat();
@@ -68,18 +68,34 @@ public final class CommonRegistry {
         PreservationEvent.register();
         VitalityEvent.register();
         HinderEvent.register();
-        ProjectileDodgeEvent.register();
+        PortingLibEventBridge.register();
         EntityJoinWorldEvent.register();
         HoeUseEvent.register();
         RightClickEvent.register();
-        LeftClickEvent.register();
         MillstoneEntityEvent.register();
         ExtraLootTableDrop.register();
         ArmorEffectEvent.register();
-        RecipeItemEvent.register();
-        SickleHarvestEvent.register();
-        LivingChangeTargetEvent.register();
         AddVillageStructuresEvent.addVillageStructures();
+    }
+
+    private static void registerCustomEventHandlers() {
+        IKCEvent.CALLBACK.register(event -> {
+            if (event instanceof RecipeItemEvent.CheckItem checkItem) {
+                SpecialRecipeItemEvent.onCheckItemEvent(checkItem);
+            } else if (event instanceof RecipeItemEvent.DeductItem deductItem) {
+                SpecialRecipeItemEvent.onDeductItemEvent(deductItem);
+            } else if (event instanceof PlayerLeftClickEvent leftClick) {
+                LeftClickEvent.onHandle(leftClick);
+            } else if (event instanceof FarmlandTrampleEvent farmlandTrample) {
+                ScarecrowFarmlandTrampleEvent.onFarmlandTrample(farmlandTrample);
+            } else if (event instanceof SickleHarvestEvent sickleHarvest) {
+                SickleHarvestNetherWartEvent.onSickleHarvest(sickleHarvest);
+            } else if (event instanceof ProjectileImpactEvent projectileImpact) {
+                ProjectileDodgeEvent.onProjectileHit(projectileImpact);
+            } else if (event instanceof LivingChangeTargetEvent changeTarget) {
+                ChangeTargetEvent.onTarget(changeTarget);
+            }
+        });
     }
 
     public static void fuelRegister() {

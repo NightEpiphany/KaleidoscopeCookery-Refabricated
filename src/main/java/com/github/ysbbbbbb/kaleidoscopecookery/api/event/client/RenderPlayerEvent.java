@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event.client;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.PlayerRenderEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableKCEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 
 @Environment(EnvType.CLIENT)
-public abstract class RenderPlayerEvent extends CancellableEvent {
+public abstract class RenderPlayerEvent extends CancellableKCEvent {
     private final Player player;
     private final PlayerRenderer renderer;
     private final float partialTick;
@@ -65,11 +65,6 @@ public abstract class RenderPlayerEvent extends CancellableEvent {
     {
         return packedLight;
     }
-    @Override
-    public void post() {
-        CALLBACK.invoker().post(this);
-    }
-
     public static class Pre extends RenderPlayerEvent
     {
         @ApiStatus.Internal

@@ -5,7 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.crafting.output.RandomOutput;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.MillstoneRecipeSerializer;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.kinetics.millstone.MillingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
@@ -59,7 +59,7 @@ public class MillstoneCompat {
     }
 
     public static void register() {
-        IEvent.CALLBACK.register(event -> {
+        IKCEvent.CALLBACK.register(event -> {
             if (event instanceof MillstoneMatchRecipeEvent.Post post)
                 afterMillstoneRecipeMatch(post);
         });

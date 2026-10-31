@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.event.effect;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEffects;
-import io.github.fabricators_of_create.porting_lib.entity.events.ProjectileImpactEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.ProjectileImpactEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -21,10 +21,6 @@ public class ProjectileDodgeEvent {
      * 闪避消耗的持续时间 (tick)
      */
     private static final int DODGE_COST = 200;
-    public static void register() {
-        ProjectileImpactEvent.PROJECTILE_IMPACT.register(ProjectileDodgeEvent::onProjectileHit);
-    }
-
     public static void onProjectileHit(ProjectileImpactEvent event) {
         if (event.getEntity().level().isClientSide()) {
             return;
@@ -36,7 +32,7 @@ public class ProjectileDodgeEvent {
                 && living.hasEffect(ModEffects.PROJECTILE_DODGE.get())
         ) {
             // 取消弹射物碰撞并随机传送
-            event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+            event.setCanceled(true);
             randomTeleport(living.level(), living, 0.5, 2, 16);
 
             // 消耗持续时间

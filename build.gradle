@@ -185,7 +185,8 @@ dependencies {
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:12.1.785"
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:12.1.785"
     modCompileOnly "maven.modrinth:rei:12.1.785+fabric-fabric,1.20.1"
-
+    modImplementation "maven.modrinth:kaleidoscope-tavern-refabricated:${project.kaleidoscope_tavern_version}-fabric+mc${project.minecraft_version}"
+    modImplementation "maven.modrinth:zO7tsTJN:mHFSAYGR"
     // EMI
     //modCompileOnly "dev.emi:emi-fabric:1.1.22+1.20.1:api"
     //modCompileOnly "dev.emi:emi-fabric:1.1.22+1.20.1"

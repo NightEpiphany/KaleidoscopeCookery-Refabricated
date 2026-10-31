@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class SickleHarvestNetherWartEvent {
 
-    public static void onSickleHarvestNetherWart(SickleHarvestEvent event) {
+    public static void onSickleHarvest(SickleHarvestEvent event) {
         BlockState harvestState = event.getHarvestState();
         if (harvestState.is(Blocks.NETHER_WART)) {
             boolean isMaxAge = harvestState.getValue(NetherWartBlock.AGE) >= 3;

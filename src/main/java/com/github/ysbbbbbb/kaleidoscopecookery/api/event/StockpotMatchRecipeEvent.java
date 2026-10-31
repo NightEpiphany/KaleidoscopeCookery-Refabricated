@@ -3,13 +3,12 @@ package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.container.StockpotContainer;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IEvent;
-import net.fabricmc.fabric.api.event.Event;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class StockpotMatchRecipeEvent implements IEvent {
+public abstract class StockpotMatchRecipeEvent implements IKCEvent {
     private final Level level;
     private final StockpotBlockEntity stockpot;
     private final StockpotContainer container;
@@ -54,10 +53,6 @@ public abstract class StockpotMatchRecipeEvent implements IEvent {
             super(level, stockpot, container);
         }
 
-        @Override
-        public void post() {
-            CALLBACK.invoker().post(this);
-        }
     }
 
     /**
@@ -80,9 +75,5 @@ public abstract class StockpotMatchRecipeEvent implements IEvent {
             return rawOutput;
         }
 
-        @Override
-        public void post() {
-            CALLBACK.invoker().post(this);
-        }
     }
 }

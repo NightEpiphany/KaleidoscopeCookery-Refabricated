@@ -1,13 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.event.SickleHarvestNetherWartEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.CancellableKCEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SickleHarvestEvent extends CancellableEvent {
+public class SickleHarvestEvent extends CancellableKCEvent {
     private final ItemStack sickle;
     private final BlockPos harvestPos;
     private final BlockState harvestState;
@@ -19,18 +18,6 @@ public class SickleHarvestEvent extends CancellableEvent {
         this.sickle = sickle;
         this.harvestPos = harvestPos;
         this.harvestState = harvestState;
-    }
-
-    public static void register() {
-        CALLBACK.register(event -> {
-            if (event instanceof SickleHarvestEvent sickleHarvestEvent)
-                SickleHarvestNetherWartEvent.onSickleHarvestNetherWart(sickleHarvestEvent);
-        });
-    }
-
-    @Override
-    public void post() {
-        CALLBACK.invoker().post(this);
     }
 
     public ItemStack getSickle() {

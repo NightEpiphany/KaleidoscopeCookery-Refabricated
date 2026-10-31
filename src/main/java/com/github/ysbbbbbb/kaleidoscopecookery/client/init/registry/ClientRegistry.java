@@ -6,6 +6,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.event.FlatulenceEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.PotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.TipOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TrashcanOverlayEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.TeapotOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.ColdCutHamSlicesModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.MillstoneModel;
@@ -83,7 +84,7 @@ public final class ClientRegistry {
         PotOverlayEvent.register();
         TrashcanOverlayEvent.register();
         TipOverlayEvent.register();
-        com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.TeapotOverlay.register();
+        TeapotOverlay.register();
         RenderPlayerEvent.register();
         ViewportEvent.register();
     }

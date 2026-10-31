@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Bucketable;
@@ -91,16 +92,17 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     @Override
     public void onRemove(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState2, boolean bl) {
         try {
-            if (!bl
-                    && blockState.getBlock() != blockState2.getBlock()
+            if (blockState.getBlock() != blockState2.getBlock()
                     && level instanceof ServerLevel serverLevel
                     && level.getBlockEntity(blockPos) instanceof StockpotBlockEntity stockpot) {
                 ResourceLocation soupBaseId = stockpot.getSoupBaseId();
                 ItemStack soupBaseItem = stockpot.getSoupBaseItem();
                 if (shouldReleaseMob(soupBaseId, soupBaseItem)
                         && stockpot.getSoupBase() instanceof MobSoupBase soupBase) {
-                    Entity entity = soupBase.getType().spawn(
-                            serverLevel, soupBaseItem, null, blockPos, MobSpawnType.BUCKET, true, false);
+                    Entity entity = soupBase.getType().create(
+                            serverLevel, soupBaseItem.getTag(),
+                            EntityType.createDefaultStackConfig(serverLevel, soupBaseItem, null),
+                            blockPos, MobSpawnType.BUCKET, true, false);
                     if (entity == null) {
                         KaleidoscopeCookery.LOGGER.warn("Could not release stockpot mob {} at {}", soupBaseId, blockPos);
                     } else {
@@ -108,7 +110,11 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
                             bucketable.loadFromBucketTag(soupBaseItem.getOrCreateTag());
                             bucketable.setFromBucket(true);
                         }
-                        KaleidoscopeCookery.LOGGER.debug("Released stockpot mob {} at {}", soupBaseId, blockPos);
+                        if (serverLevel.addFreshEntity(entity)) {
+                            KaleidoscopeCookery.LOGGER.debug("Released stockpot mob {} at {}", soupBaseId, blockPos);
+                        } else {
+                            KaleidoscopeCookery.LOGGER.warn("Could not add stockpot mob {} to level at {}", soupBaseId, blockPos);
+                        }
                     }
                 }
             }

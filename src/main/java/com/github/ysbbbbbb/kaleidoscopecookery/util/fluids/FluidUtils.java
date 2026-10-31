@@ -29,17 +29,21 @@ public class FluidUtils {
      * @return 如果成功转移了流体，返回 true；如果没有转移任何流体，返回 false
      */
     public static boolean emptyItem(LivingEntity user, ItemStack bucket, Storage<FluidVariant> handler, int amount) {
+        return emptyItem(user, bucket, handler, amount, getMutableContext(user, bucket));
+    }
+
+    public static boolean emptyItem(LivingEntity user, ItemStack bucket, Storage<FluidVariant> handler, int amount,
+                                    @Nullable ContainerItemContext context) {
         if (bucket.isEmpty() || handler == null) {
-            return false;
-        }
-        ContainerItemContext context = getMutableContext(user, bucket);
-        if (context == null) {
             return false;
         }
         boolean creative = user instanceof Player player && player.isCreative();
         if (creative) {
             // Discard returned containers without exposing the player's inventory to extraction.
             context = ContainerItemContext.withConstant(bucket.copyWithCount(1));
+        }
+        if (context == null) {
+            return false;
         }
         Storage<FluidVariant> itemStorage = context.find(FluidStorage.ITEM);
         if (itemStorage == null) {

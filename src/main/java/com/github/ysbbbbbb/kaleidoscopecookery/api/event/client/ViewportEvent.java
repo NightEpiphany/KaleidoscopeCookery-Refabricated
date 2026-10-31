@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event.client;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.CameraEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import org.jetbrains.annotations.ApiStatus;
 
 @Environment(EnvType.CLIENT)
-public abstract class ViewportEvent implements IEvent {
+public abstract class ViewportEvent implements IKCEvent {
     private final GameRenderer renderer;
     private final Camera camera;
     private final double partialTick;
@@ -41,11 +41,6 @@ public abstract class ViewportEvent implements IEvent {
             if (event instanceof ViewportEvent.ComputeCameraAngles computeCameraAngles)
                 CameraEvent.onCameraTick(computeCameraAngles);
         });
-    }
-
-    @Override
-    public void post() {
-        CALLBACK.invoker().post(this);
     }
 
     public static class ComputeCameraAngles extends ViewportEvent

@@ -23,16 +23,17 @@ public class FruitBasketItem extends WithTooltipsBlockItem {
     }
 
     public static ItemStackHandler getItems(ItemStack stack) {
+        ItemStackHandler items = new ItemStackHandler(MAX_SLOTS);
         CompoundTag tag = stack.getTag();
         if (tag != null && tag.contains(TAG)) {
             CompoundTag compound = tag.getCompound(TAG);
             if (compound.contains(FruitBasketBlockEntity.ITEMS)) {
-                ItemStackHandler handler = new ItemStackHandler(MAX_SLOTS);
-                handler.deserializeNBT(compound.getCompound(FruitBasketBlockEntity.ITEMS));
-                return handler;
+                CompoundTag itemsTag = compound.getCompound(FruitBasketBlockEntity.ITEMS).copy();
+                itemsTag.putInt("Size", MAX_SLOTS);
+                items.deserializeNBT(itemsTag);
             }
         }
-        return new ItemStackHandler(MAX_SLOTS);
+        return items;
     }
 
     public static void saveItems(ItemStack stack, ItemStackHandler items) {

@@ -26,10 +26,6 @@ public abstract class CropGrowEvent extends BlockEvent {
             return this.result;
         }
 
-        @Override
-        public void post() {
-            CALLBACK.invoker().post(this);
-        }
 
         public enum Result {
             GROW,
@@ -57,9 +53,5 @@ public abstract class CropGrowEvent extends BlockEvent {
             return super.getState();
         }
 
-        @Override
-        public void post() {
-            CALLBACK.invoker().post(this);
-        }
     }
 }

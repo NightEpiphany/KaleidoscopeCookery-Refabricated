@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.event.SpecialRecipeItemEvent;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -9,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * 当菜谱进行物品放入时触发
  */
-public abstract class RecipeItemEvent implements IEvent {
+public abstract class RecipeItemEvent implements IKCEvent {
     private final ItemStack stack;
 
     public RecipeItemEvent(ItemStack stack) {
@@ -18,20 +17,6 @@ public abstract class RecipeItemEvent implements IEvent {
 
     public ItemStack getStack() {
         return stack;
-    }
-
-    public static void register() {
-        CALLBACK.register(event -> {
-            if (event instanceof DeductItem deductItem)
-                SpecialRecipeItemEvent.onDeductItemEvent(deductItem);
-            if (event instanceof CheckItem checkItem)
-                SpecialRecipeItemEvent.onCheckItemEvent(checkItem);
-        });
-    }
-
-    @Override
-    public void post() {
-        CALLBACK.invoker().post(this);
     }
 
     public static class CheckItem extends RecipeItemEvent {

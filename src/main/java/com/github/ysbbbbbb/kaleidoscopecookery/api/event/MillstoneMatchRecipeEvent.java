@@ -2,12 +2,12 @@ package com.github.ysbbbbbb.kaleidoscopecookery.api.event;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.event.IKCEvent;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class MillstoneMatchRecipeEvent implements IEvent {
+public class MillstoneMatchRecipeEvent implements IKCEvent {
     private final Level level;
     private final MillstoneBlockEntity millstone;
     private final SimpleContainer container;
@@ -42,11 +42,6 @@ public class MillstoneMatchRecipeEvent implements IEvent {
 
     public void setOutput(@Nullable MillstoneRecipe output) {
         this.output = output;
-    }
-
-    @Override
-    public void post() {
-        CALLBACK.invoker().post(this);
     }
 
     /**

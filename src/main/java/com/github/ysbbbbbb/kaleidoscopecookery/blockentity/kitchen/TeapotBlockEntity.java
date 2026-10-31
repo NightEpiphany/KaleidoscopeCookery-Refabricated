@@ -13,6 +13,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.CustomFluidTank;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.FluidUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.google.common.collect.Lists;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,6 +46,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -205,6 +207,11 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
 
     @Override
     public boolean addTeaFluid(Level level, LivingEntity user, ItemStack itemStack) {
+        return addTeaFluid(level, user, itemStack, null);
+    }
+
+    public boolean addTeaFluid(Level level, LivingEntity user, ItemStack itemStack,
+                               @Nullable ContainerItemContext context) {
         if (itemStack.is(ModItems.RECIPE_ITEM)) {
             return false;
         }
@@ -240,7 +247,9 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         }
 
         // 填满
-        boolean transferred = FluidUtils.emptyItem(user, itemStack, this.teaTank, CustomFluidTank.MB_PER_BUCKET);
+        boolean transferred = context == null
+                ? FluidUtils.emptyItem(user, itemStack, this.teaTank, CustomFluidTank.MB_PER_BUCKET)
+                : FluidUtils.emptyItem(user, itemStack, this.teaTank, CustomFluidTank.MB_PER_BUCKET, context);
         if (transferred) {
             this.refreshTeaFluidId();
             this.refresh();

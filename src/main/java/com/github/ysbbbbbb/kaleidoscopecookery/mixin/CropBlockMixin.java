@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.mixin;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.util.forge.Hooks;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.CropHooks;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -20,7 +20,7 @@ public class CropBlockMixin {
     @WrapOperation(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;nextInt(I)I"))
     public int randomTick(RandomSource instance, int i, Operation<Integer> original,
                           BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, @Local(ordinal = 0) float f) {
-        return Hooks.onCropsGrowPre(
+        return CropHooks.onCropsGrowPre(
                 serverLevel,
                 blockPos,
                 blockState,
@@ -30,7 +30,7 @@ public class CropBlockMixin {
 
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
     public void kaleidoscopeCookery$injectRandomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
-        Hooks.onCropsGrowPost(serverLevel, blockPos, blockState);
+        CropHooks.onCropsGrowPost(serverLevel, blockPos, blockState);
     }
 
 }
