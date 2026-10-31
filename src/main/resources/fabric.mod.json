@@ -44,6 +44,7 @@
     "farmersdelight": ">1.21.1-3.0.0+refabricated"
   },
   "breaks": {
-    "farmersdelight": "<=1.21.1-3.0.0+refabricated"
+    "farmersdelight": "<=1.21.1-3.0.0+refabricated",
+    "kaleidoscope_chinesefood": "<=1.1.15.2"
   }
 }
