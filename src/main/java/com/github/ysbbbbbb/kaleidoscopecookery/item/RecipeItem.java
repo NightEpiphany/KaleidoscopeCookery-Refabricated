@@ -56,7 +56,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -445,7 +444,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
     }
 
     @Override
-    public @NotNull Optional<TooltipComponent> getTooltipImage(@NonNull ItemStack stack) {
+    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
         if (hasRecipe(stack)) {
             RecipeRecord recipe = getRecipe(stack);
             if (recipe == null) {
