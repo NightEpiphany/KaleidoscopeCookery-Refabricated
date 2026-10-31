@@ -56,6 +56,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+@SuppressWarnings("UnstableApiUsage")
 public class RecipeItem extends WithTooltipsBlockItem {
     public static final ResourceLocation HAS_RECIPE_PROPERTY = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "has_recipe");
     public static final ResourceLocation POT = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "pot");
@@ -443,7 +445,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
     }
 
     @Override
-    public @NotNull Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+    public @NotNull Optional<TooltipComponent> getTooltipImage(@NonNull ItemStack stack) {
         if (hasRecipe(stack)) {
             RecipeRecord recipe = getRecipe(stack);
             if (recipe == null) {
