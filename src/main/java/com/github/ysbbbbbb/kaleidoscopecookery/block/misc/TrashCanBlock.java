@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.Mob;
@@ -128,7 +129,7 @@ public class TrashCanBlock extends HorizontalDirectionalBlock implements SimpleW
     @Override
     public void fallOn(@NonNull Level level, @NonNull BlockState state, @NonNull BlockPos pos, @NonNull Entity entity, double fallDistance) {
         super.fallOn(level, state, pos, entity, fallDistance);
-        if (entity instanceof Player player && player.getVehicle() == null && fallDistance > 1f) {
+        if (entity instanceof Avatar player && player.getVehicle() == null && fallDistance > 1f) {
             List<SitEntity> entities = level.getEntitiesOfClass(SitEntity.class, new AABB(pos));
             if (!entities.isEmpty()) {
                 return;
