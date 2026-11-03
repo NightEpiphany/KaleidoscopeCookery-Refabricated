@@ -48,11 +48,11 @@ public class SimplePotRecipeProvider extends ModRecipeProvider {
     }
 
     public void addSingleItemRecipe(TagKey<Item> inputItem, Item outputItem, String idInput, RecipeOutput consumer) {
-        this.addSingleItemRecipe(inputItem, outputItem, idInput, Ingredient.of(), consumer);
+        this.addSingleItemRecipe(inputItem, outputItem, idInput, Ingredient.of(Items.AIR), consumer);
     }
 
     public void addSingleItemRecipe(ItemLike inputItem, Item outputItem, String idInput, RecipeOutput consumer) {
-        this.addSingleItemRecipe(inputItem, outputItem, idInput, Ingredient.of(), consumer);
+        this.addSingleItemRecipe(inputItem, outputItem, idInput, Ingredient.of(Items.AIR), consumer);
     }
 
     public void addSingleItemRecipe(TagKey<Item> inputItem, Item outputItem, String idInput, Ingredient carrier, RecipeOutput consumer) {

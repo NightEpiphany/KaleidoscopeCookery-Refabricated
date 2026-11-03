@@ -25,7 +25,7 @@ public class FlexPotRecipeBuilder implements RecipeBuilder {
     private static final String NAME = "flex_pot";
     private int time = 200;
     private int stirFryCount = 3;
-    private Ingredient carrier = Ingredient.of();
+    private Ingredient carrier = Ingredient.of(Items.AIR);
     private final List<Ingredient> ingredients = Lists.newArrayList();
     private ItemStackTemplate result;
 

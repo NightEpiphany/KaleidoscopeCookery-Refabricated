@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.BambooTrayRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.BambooTrayRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.DatagenIngredients;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
@@ -44,7 +45,7 @@ public class BambooTrayRecipeBuilder implements RecipeBuilder {
     }
 
     public BambooTrayRecipeBuilder setIngredient(TagKey<Item> tag) {
-        this.ingredient = Ingredient.of();
+        this.ingredient = DatagenIngredients.tag(tag);
         return this;
     }
 

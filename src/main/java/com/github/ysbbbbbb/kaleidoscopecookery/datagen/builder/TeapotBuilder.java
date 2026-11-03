@@ -12,10 +12,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemInstance;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -27,7 +24,7 @@ public class TeapotBuilder implements RecipeBuilder {
     private static final String NAME = "teapot";
 
     private Identifier teaFluid = TeapotRecipeSerializer.EMPTY_TEA_FLUID;
-    private Ingredient ingredient = Ingredient.of();
+    private Ingredient ingredient = Ingredient.of(Items.AIR);
     private int ingredientCount = TeapotRecipeSerializer.DEFAULT_INGREDIENT_COUNT;
     private int time = TeapotRecipeSerializer.DEFAULT_TIME;
     private ItemStackTemplate result;
