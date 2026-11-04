@@ -60,6 +60,7 @@ public class ExtraLoadingItemModel implements ItemModel {
         return List.copyOf(models.values());
     }
 
+    @SuppressWarnings("all")
     private static void collectModels(ResourceManager resourceManager, String directory, Map<Identifier, ExternalModel> models) {
         resourceManager.listResources(directory, id -> id.getPath().endsWith(JSON)).keySet().forEach(resourceId -> {
             String path = resourceId.getPath();
@@ -129,19 +130,20 @@ public class ExtraLoadingItemModel implements ItemModel {
 
             for (Entry entry : this.entries) {
                 ItemModel baked = entry.model.bake(context, childTransform);
-                modelMap.put(entry.name, baked);
                 // 同时登记带命名空间的 key，供按完整 id 查询（避免不同模组同名模型冲突）
-                modelMap.putIfAbsent(KaleidoscopeCookery.MOD_ID + ":" + entry.name, baked);
+                if (!entry.name.contains(":"))
+                    modelMap.putIfAbsent(KaleidoscopeCookery.MOD_ID + ":" + entry.name, baked);
+                else
+                    modelMap.put(entry.name, baked);
             }
 
             for (ExternalModel external : getExternalModels()) {
-                if (modelMap.containsKey(external.displayId().getPath())) {
+                if (modelMap.containsKey(external.displayId().toString())) {
                     continue;
                 }
                 ItemModel baked = new CuboidItemModelWrapper.Unbaked(external.modelId(), Optional.empty(), List.of())
                         .bake(context, childTransform);
                 modelMap.putIfAbsent(external.displayId().toString(), baked);
-                modelMap.putIfAbsent(external.displayId().getPath(), baked);
             }
 
             ItemModel bakedFallback = this.fallback.map(m -> m.bake(context, childTransform)).orElseGet(() -> context.missingItemModel(childTransform));
