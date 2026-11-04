@@ -58,7 +58,7 @@ public class ChoppingBoardBlockEntityRender implements BlockEntityRenderer<Chopp
             int index = Math.min(blockEntityRenderState.currentCutCount, blockEntityRenderState.cacheModels.length - 1);
             Identifier cacheModel = blockEntityRenderState.cacheModels[index];
             if (cacheModel == null) return;
-            ItemStack chopContent = getBaseModelDisplay(cacheModel.getPath());
+            ItemStack chopContent = getBaseModelDisplay(cacheModel.toString());
             this.itemModelResolver.updateForTopItem(blockEntityRenderState.contentModel, chopContent, ItemDisplayContext.NONE, blockEntity.getLevel(), null, 0);
         }
     }
