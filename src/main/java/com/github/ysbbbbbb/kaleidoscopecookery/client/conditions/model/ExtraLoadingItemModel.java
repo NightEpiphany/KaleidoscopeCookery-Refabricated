@@ -27,7 +27,6 @@ import java.util.*;
 public class ExtraLoadingItemModel implements ItemModel {
     private static final String MODELS = "models/";
     private static final String CHOPPING_BOARD = MODELS + "chopping_board";
-    private static final String ITEM_CHOPPING_BOARD = MODELS + "item/chopping_board";
     private static final String ITEM_PREFIX = "item/";
     private static final String JSON = ".json";
 
@@ -46,9 +45,13 @@ public class ExtraLoadingItemModel implements ItemModel {
      * <p>
      * 26.x 的 model_display 条目是静态写死的，只有厨房本体的模型；插件模组（如国味）通过
      * model_id 注册的砧板模型不在条目表里，会回退成 item/model 的灰色占位模型。
-     * 这里沿用 1.21.1 ModModelLoading 的动态扫描行为：把 models/chopping_board 与
-     * models/item/chopping_board 下的所有模型补进条目表。
+     * 这里沿用 1.21.1 ModModelLoading 的动态扫描行为：把 models/chopping_board 下的所有模型补进条目表。
+     * <p>
+     * model_display 的静态注册依旧支持自定义模型存放路径，例如 models/items/chopping_board
+     * <p>
+     * 同时需要注意，这里的路径是不会动态注册模型的。
      */
+    @SuppressWarnings("all")
     private static List<ExternalModel> getExternalModels() {
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         if (resourceManager == null) {
@@ -56,7 +59,6 @@ public class ExtraLoadingItemModel implements ItemModel {
         }
         Map<Identifier, ExternalModel> models = new LinkedHashMap<>();
         collectModels(resourceManager, CHOPPING_BOARD, models);
-        collectModels(resourceManager, ITEM_CHOPPING_BOARD, models);
         return List.copyOf(models.values());
     }
 
