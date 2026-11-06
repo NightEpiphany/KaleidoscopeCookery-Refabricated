@@ -449,7 +449,9 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             ItemStack stack = this.inputs.get(i);
             if (!stack.isEmpty()) {
                 this.inputs.set(i, ItemStack.EMPTY);
-                ItemUtils.getItemToLivingEntity(user, stack);
+                if (stack.has(ModDataComponents.SPECIAL_RENDER))
+                    stack.remove(ModDataComponents.SPECIAL_RENDER);
+                ItemUtils.getItemToLivingEntity(user, stack.copy());
                 if (this.hasHeatSource(level)) {
                     user.hurt(level.damageSources().inFire(), 1);
                     ModTrigger.EVENT.trigger(user, ModEventTriggerType.HURT_WHEN_TAKEOUT_FROM_POT);
