@@ -4,6 +4,6 @@
     "supported_formats": [15, 255],
     "min_format": 15,
     "max_format": 255,
-    "description": "Animated food bites."
+    "description": "Animated bites for KC foods."
   }
 }
