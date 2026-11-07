@@ -613,31 +613,33 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.sendActionBarMessage(user, "tip.kaleidoscope_cookery.pot.need_carrier", carrierName);
             return true;
         }
-        if (!carrier.isEmpty()) {
+        if (!carrier.isEmpty() && carrier.items().anyMatch(s -> s.is(TagMod.INGREDIENT_CONTAINER)))
             stack.shrink(1);
-        }
 
         ItemStack resultCopy = this.result.copyWithCount(1);
         ItemUtils.getItemToLivingEntity(user, resultCopy);
         this.takeoutCount--;
-        if (this.takeoutCount <= 0) {
-            this.status = PUT_SOUP_BASE;
-            this.inputs.clear();
-            this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
-            this.soupBaseId = ModSoupBases.WATER;
-            this.soupBaseItem = ItemStack.EMPTY;
-            this.result = ItemStack.EMPTY;
-            this.currentTick = -1;
-            this.renderEntity = null;
-            this.flexRecipe = false;
-            this.carrier = StockpotRecipeSerializer.DEFAULT_CARRIER;
-            this.cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
-            this.finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
-            this.cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
-            this.finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
-        }
+        if (this.takeoutCount <= 0)
+            this.reset();
         this.refresh();
         return true;
+    }
+
+    public void reset() {
+        this.status = PUT_SOUP_BASE;
+        this.inputs.clear();
+        this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
+        this.soupBaseId = ModSoupBases.WATER;
+        this.soupBaseItem = ItemStack.EMPTY;
+        this.result = ItemStack.EMPTY;
+        this.currentTick = -1;
+        this.renderEntity = null;
+        this.flexRecipe = false;
+        this.carrier = StockpotRecipeSerializer.DEFAULT_CARRIER;
+        this.cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
+        this.finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
+        this.cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
+        this.finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
     }
 
     private void sendActionBarMessage(LivingEntity user, String key, Object... args) {

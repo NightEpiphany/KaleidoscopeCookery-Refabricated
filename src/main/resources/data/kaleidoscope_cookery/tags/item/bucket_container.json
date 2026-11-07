@@ -1,5 +1,13 @@
 {
   "values": [
+    { "id": "kaleidoscope_tavern:grape_bucket", "required":false },
+    { "id": "kaleidoscope_tavern:ice_grape_bucket", "required":false },
+    { "id": "kaleidoscope_tavern:gold_grape_bucket", "required":false },
+    { "id": "kaleidoscope_tavern:green_grape_bucket", "required":false },
+    { "id": "kaleidoscope_tavern:sweet_berries_bucket", "required":false },
+    { "id": "kaleidoscope_tavern:glow_berries_bucket", "required":false },
+    { "id": "create:chocolate_bucket", "required":false },
+    { "id": "create:honey_bucket", "required":false },
     "minecraft:water_bucket",
     "minecraft:lava_bucket",
     "minecraft:milk_bucket",
