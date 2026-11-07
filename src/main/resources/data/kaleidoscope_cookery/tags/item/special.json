@@ -2,6 +2,8 @@
   "values": [
     "kaleidoscope_cookery:cooked_rice",
     "minecraft:egg",
+    "minecraft:blue_egg",
+    "minecraft:brown_egg",
     "minecraft:honey_bottle",
     {
       "id": "farmersdelight:tomato_sauce", "required": false

@@ -1,4 +1,5 @@
 {
+	"ambientocclusion": false,
 	"credit": "Made with Blockbench",
 	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
@@ -46,7 +47,7 @@
 		},
 		{
 			"name": "fish",
-			"shade": false,
+			"shade_direction_override": "up",
 			"from": [4, 4, 9],
 			"to": [6, 8, 12],
 			"rotation": {"angle": 22.5, "axis": "z", "origin": [4, 6, 9.5]},
@@ -60,7 +61,7 @@
 		},
 		{
 			"name": "fish",
-			"shade": false,
+			"shade_direction_override": "up",
 			"from": [3, 4, 4],
 			"to": [6, 8, 6],
 			"rotation": {"angle": 45, "axis": "y", "origin": [4.78369, 6, 5.09604]},

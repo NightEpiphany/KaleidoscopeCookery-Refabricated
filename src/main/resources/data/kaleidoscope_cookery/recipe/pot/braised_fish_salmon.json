@@ -3,24 +3,8 @@
   "carrier": "minecraft:bowl",
   
   "ingredients": [
-
       "#c:raw_fishes/salmon",
-    
-
-      "#c:raw_fishes/salmon",
-    
-
-      "#c:raw_fishes/salmon",
-    
-
-      "#c:raw_fishes/salmon",
-    
-
-      "#c:raw_fishes/salmon",
-    
-
       "#c:raw_fishes/salmon"
-
   ],
   "result": {
     "count": 1,
