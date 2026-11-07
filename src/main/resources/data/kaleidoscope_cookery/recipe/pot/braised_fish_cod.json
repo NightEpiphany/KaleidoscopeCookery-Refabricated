@@ -2,24 +2,8 @@
   "type": "kaleidoscope_cookery:pot",
   "carrier": "minecraft:bowl",
   "ingredients": [
-
       "#c:raw_fishes/cod",
-    
-
-      "#c:raw_fishes/cod",
-    
-
-      "#c:raw_fishes/cod",
-    
-
-      "#c:raw_fishes/cod",
-    
-
-      "#c:raw_fishes/cod",
-    
-
       "#c:raw_fishes/cod"
-
   ],
   "result": {
     "count": 1,
