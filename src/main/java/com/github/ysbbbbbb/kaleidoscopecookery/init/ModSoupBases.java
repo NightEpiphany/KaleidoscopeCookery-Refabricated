@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.souobase.CreateSoupBase;
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.soupbase.CreateSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.kaleidoscopetavern.ModJuiceSoupBases;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import net.fabricmc.loader.api.FabricLoader;

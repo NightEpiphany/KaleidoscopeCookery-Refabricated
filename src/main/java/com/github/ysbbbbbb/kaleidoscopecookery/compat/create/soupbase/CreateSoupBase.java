@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.compat.create.souobase;
+package com.github.ysbbbbbb.kaleidoscopecookery.compat.create.soupbase;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.zurrtum.create.AllFluids;

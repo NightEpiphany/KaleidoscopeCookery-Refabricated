@@ -3,7 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.client.render.soupbase;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.client.render.ISoupBaseRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.renderstate.StockpotBlockEntityRenderState;
-import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.souobase.CreateSoupBase;
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.soupbase.CreateSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFluids;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
