@@ -4,7 +4,7 @@
   "carrier": "kaleidoscope_cookery:kitchen_shovel",
   "ingredients": [
     "kaleidoscope_cookery:dried_tea_leaves",
-    "minecraft:egg"
+    "#c:eggs"
   ],
   "result": {
     "count": 1,

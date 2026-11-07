@@ -3,12 +3,14 @@ package com.github.ysbbbbbb.kaleidoscopecookery.client.render.soupbase;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.client.render.ISoupBaseRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.renderstate.StockpotBlockEntityRenderState;
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.souobase.CreateSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFluids;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.impl.client.rendering.fluid.FluidRenderingRegistryImpl;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.FluidModel;
@@ -68,6 +70,9 @@ public class FluidSoupBaseRender implements ISoupBaseRender {
         if (fluid == BuiltInRegistries.FLUID.getValue(ModFluids.MILK_ID)) {
             return Minecraft.getInstance().getModelManager().atlasManager.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "stockpot/milk")));
         }
+        // Patch
+        if (FabricLoader.getInstance().isModLoaded("create"))
+            return CreateSoupBase.ClientPatch.getStillFluidSprite(fluid);
         // 如果没有找到渲染处理器，使用默认水纹理作为后备
         return Minecraft.getInstance().getModelManager().atlasManager.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath("minecraft", "block/water_still")));
     }

@@ -7,10 +7,10 @@
     "kaleidoscope_cookery:dried_tea_leaves",
     "kaleidoscope_cookery:dried_tea_leaves",
     "kaleidoscope_cookery:dried_tea_leaves",
-    "minecraft:egg",
-    "minecraft:egg",
-    "minecraft:egg",
-    "minecraft:egg"
+    "#c:eggs",
+    "#c:eggs",
+    "#c:eggs",
+    "#c:eggs"
   ],
   "result": {
     "count": 4,
