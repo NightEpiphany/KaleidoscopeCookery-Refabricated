@@ -382,7 +382,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
     @SuppressWarnings("deprecation")
     private boolean takeOutWithCarrier(Level level, LivingEntity user, ItemStack mainHandItem, ItemStack finallyResult) {
         if (this.carrier != null && this.carrier.test(mainHandItem)) {
-            if (mainHandItem.is(ModItems.KITCHEN_SHOVEL)) {
+            if (!mainHandItem.is(TagMod.INGREDIENT_CONTAINER)) {
                 ItemUtils.getItemToLivingEntity(user, finallyResult.copy());
                 this.reset();
                 return true;
