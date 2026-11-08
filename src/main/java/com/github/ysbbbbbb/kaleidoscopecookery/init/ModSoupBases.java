@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.soupbase.CreateSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.kaleidoscopetavern.ModJuiceSoupBases;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import net.fabricmc.loader.api.FabricLoader;
@@ -34,6 +35,9 @@ public final class ModSoupBases {
 
         if (FabricLoader.getInstance().isModLoaded(ModJuiceSoupBases.ID)) {
             ModJuiceSoupBases.registerSoupBases();
+        }
+        if (FabricLoader.getInstance().isModLoaded(CreateSoupBase.ID)) {
+            CreateSoupBase.registerSoupBases();
         }
     }
 }
