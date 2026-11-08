@@ -1,5 +1,6 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
+  "carrier": "kaleidoscope_cookery:kitchen_shovel",
   "ingredients": [
     "kaleidoscope_cookery:raw_zongzi"
   ],
