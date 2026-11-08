@@ -26,7 +26,7 @@ public interface ISoupBaseRender {
     @Contract(pure = true)
     static void renderSurface(TextureAtlasSprite sprite, int color, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, float y) {
         // 26.2 起自定义几何需要先提交到收集器，再由底层新渲染管线统一分组执行。
-        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucentEmissive(sprite.atlasLocation()), (pose, vertexConsumer) -> {
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(sprite.atlasLocation()), (pose, vertexConsumer) -> {
             float min = 3 / 16f;
             float max = 1 - 3 / 16f;
             renderVertex(vertexConsumer, pose, min, y, min, color, sprite.getU0(), sprite.getV0(), light);
