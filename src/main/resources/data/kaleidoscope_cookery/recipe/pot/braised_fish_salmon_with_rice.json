@@ -4,7 +4,8 @@
   
   "ingredients": [
       "#c:raw_fishes/salmon",
-      "#c:raw_fishes/salmon"
+      "#c:raw_fishes/salmon",
+      "minecraft:sugar"
   ],
   "result": {
     "count": 1,
