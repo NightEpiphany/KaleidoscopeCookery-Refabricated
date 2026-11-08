@@ -4,14 +4,8 @@
     "tag": "c:cooked_rice"
   },
   "ingredients": [
-    {
-      "tag": "c:raw_fishes/cod"
-    },
-    {
-      "tag": "c:raw_fishes/cod"
-    },
-    {
-      "tag": "c:raw_fishes/cod"
+	{
+      "item": "minecraft:sugar"
     },
     {
       "tag": "c:raw_fishes/cod"

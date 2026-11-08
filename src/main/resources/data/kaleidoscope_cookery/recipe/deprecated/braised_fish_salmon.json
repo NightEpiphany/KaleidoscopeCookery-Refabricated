@@ -4,17 +4,8 @@
     "item": "minecraft:bowl"
   },
   "ingredients": [
-    {
-      "tag": "c:raw_fishes/salmon"
-    },
-    {
-      "tag": "c:raw_fishes/salmon"
-    },
-    {
-      "tag": "c:raw_fishes/salmon"
-    },
-    {
-      "tag": "c:raw_fishes/salmon"
+	{
+      "item": "minecraft:sugar"
     },
     {
       "tag": "c:raw_fishes/salmon"

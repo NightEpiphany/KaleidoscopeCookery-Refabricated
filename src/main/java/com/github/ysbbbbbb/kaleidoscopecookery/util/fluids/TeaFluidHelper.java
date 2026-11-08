@@ -176,6 +176,9 @@ public final class TeaFluidHelper {
         if (id == null || id.equals(TeapotRecipeSerializer.EMPTY_TEA_FLUID)) {
             return ItemStack.EMPTY;
         }
+        if (ModFluids.isMilkId(id)) {
+            return Items.MILK_BUCKET.getDefaultInstance();
+        }
         if (isPhysicalFluid(id)) {
             Fluid fluid = BuiltInRegistries.FLUID.get(id);
             return fluid.getBucket().getDefaultInstance();

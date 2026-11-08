@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.container.TeapotInput;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFluids;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.TeaFluidHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -47,7 +48,8 @@ public record TeapotRecipe(ResourceLocation teaFluid,
         }
         return BuiltInRegistries.FLUID.entrySet().stream()
                 .filter(entry -> entry.getValue() != Fluids.EMPTY && entry.getValue().is(teaFluidTag.get()))
-                .map(entry -> BuiltInRegistries.FLUID.getKey(entry.getValue()))
+                .map(entry -> entry.getKey().location())
+                .filter(id -> !TeaFluidHelper.getFilledContainer(id).isEmpty())
                 .findFirst()
                 .orElse(teaFluid);
     }
