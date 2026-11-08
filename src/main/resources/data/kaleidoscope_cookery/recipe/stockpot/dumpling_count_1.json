@@ -1,6 +1,7 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
   "finished_texture": "kaleidoscope_cookery:stockpot/default_finished_avgolemon",
+  "carrier": "kaleidoscope_cookery:kitchen_shovel",
   "ingredients": [
     "kaleidoscope_cookery:stuffed_dough_food"
   ],
