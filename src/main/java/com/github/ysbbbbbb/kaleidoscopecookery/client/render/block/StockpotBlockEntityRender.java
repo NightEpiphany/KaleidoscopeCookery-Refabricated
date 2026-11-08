@@ -43,6 +43,10 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBlockEntity, StockpotBlockEntityRenderState> {
+    // 锅底上表面为 2/16，非空液面必须高于锅底。
+    private static final float MIN_SOUP_HEIGHT = 2 / 16f;
+    private static final float MAX_SOUP_HEIGHT = 0.38f;
+
     /*汤锅的可渲染实体只会做一层渲染，不会将真实实体属性添加到世界当中*/
     private static int nextRenderEntityId = Integer.MIN_VALUE;
 
@@ -140,15 +144,19 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
             return;
         }
         if (status == StockpotBlockEntity.PUT_INGREDIENT) {
-            soupBase.renderWhenPutIngredient(blockEntityRenderState, 0, poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0.38f, cameraRenderState);
+            soupBase.renderWhenPutIngredient(blockEntityRenderState, 0, poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, MAX_SOUP_HEIGHT, cameraRenderState);
             renderItems(blockEntityRenderState, poseStack, submitNodeCollector);
         } else if (status == StockpotBlockEntity.COOKING) {
-            soupBase.renderWhenCooking(blockEntityRenderState, 0, poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, blockEntityRenderState.cookingTexture, 0.38f, cameraRenderState);
+            soupBase.renderWhenCooking(blockEntityRenderState, 0, poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, blockEntityRenderState.cookingTexture, MAX_SOUP_HEIGHT, cameraRenderState);
             renderItems(blockEntityRenderState, poseStack, submitNodeCollector);
         } else if (status == StockpotBlockEntity.FINISHED) {
             int takeoutCount = blockEntityRenderState.takeOutCount;
             int maxCount = Math.min(blockEntityRenderState.output.getCount(), StockpotBlockEntity.MAX_TAKEOUT_COUNT);
-            float soupHeight = 0.065f + 0.315f / maxCount * takeoutCount;
+            if (takeoutCount <= 0 || maxCount <= 0) {
+                return;
+            }
+            float fillRatio = Math.min(takeoutCount, maxCount) / (float) maxCount;
+            float soupHeight = MIN_SOUP_HEIGHT + (MAX_SOUP_HEIGHT - MIN_SOUP_HEIGHT) * fillRatio;
             soupBase.renderWhenFinished(blockEntityRenderState, 0, poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, blockEntityRenderState.finishedTexture, soupHeight, cameraRenderState);
         }
     }

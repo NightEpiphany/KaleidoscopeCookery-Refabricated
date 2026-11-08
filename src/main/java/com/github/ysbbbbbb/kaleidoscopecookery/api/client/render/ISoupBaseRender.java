@@ -29,7 +29,7 @@ public interface ISoupBaseRender {
     @Contract(pure = true)
     static void renderSurface(TextureAtlasSprite sprite, int color, PoseStack poseStack, int light, float y) {
         MultiBufferSource.BufferSource bufferSource = MC.renderBuffers().bufferSource();
-        VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderTypes.entityTranslucentEmissive(sprite.atlasLocation()));
+        VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderTypes.entityTranslucent(sprite.atlasLocation()));
         Matrix4f matrix = poseStack.last().pose();
 
         // 锅内水面的位置和大小（根据实际锅模型调整）
