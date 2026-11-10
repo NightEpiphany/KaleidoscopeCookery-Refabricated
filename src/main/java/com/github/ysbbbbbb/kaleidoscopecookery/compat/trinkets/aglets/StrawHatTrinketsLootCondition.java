@@ -13,6 +13,7 @@ import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jspecify.annotations.NonNull;
@@ -20,7 +21,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 import java.util.Set;
 
-public class StrawHatTrinketsLootCondition implements LootItemCondition {
+public class StrawHatTrinketsLootCondition implements LootItemCondition.ContextUser {
 
     public static final Identifier ID = Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "straw_hat_trinkets_loot_condition");
 
@@ -36,8 +37,12 @@ public class StrawHatTrinketsLootCondition implements LootItemCondition {
 
 
     @Override
-    public @NonNull Set<ContextKey<?>> getReferencedContextParams() {
-        return ImmutableSet.of(LootContextParams.LAST_DAMAGE_PLAYER);
+    public @NonNull Set<ContextKey<?>> requiredContextParams() {
+        return ImmutableSet.of(LootContextParams.THIS_ENTITY);
+    }
+
+    @Override
+    public void validate(@NonNull ValidationContext context) {
     }
 
     @Override
@@ -60,7 +65,7 @@ public class StrawHatTrinketsLootCondition implements LootItemCondition {
     }
 
     @Override
-    public @NonNull MapCodec<? extends LootItemCondition> codec() {
+    public @NonNull MapCodec<StrawHatTrinketsLootCondition> codec() {
         return CODEC;
     }
 }

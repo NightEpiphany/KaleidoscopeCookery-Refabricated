@@ -447,14 +447,14 @@ public class TransmutationLunchBagItem extends WithTooltipsItem {
                 CompoundTag compoundTag = buffer.readNbt();
                 ItemStackHandler handler = new ItemStackHandler(MAX_SIZE);
                 if (compoundTag != null) {
-                    handler.deserializeNBT(TagValueInput.create(ProblemReporter.DISCARDING, buffer.registryAccess(), compoundTag));
+                    handler.deserializeNBT(TagValueInput.create(ProblemReporter.DISCARDING, buffer.registries(), compoundTag));
                 }
                 return ItemContainer.of(handler);
             }
 
             @Override
             public void encode(RegistryFriendlyByteBuf buffer, TransmutationLunchBagItem.ItemContainer value) {
-                CompoundTag compoundTag = value.items().serializeNBT(TagValueOutput.createWithContext(ProblemReporter.DISCARDING, buffer.registryAccess()));
+                CompoundTag compoundTag = value.items().serializeNBT(TagValueOutput.createWithContext(ProblemReporter.DISCARDING, buffer.registries()));
                 buffer.writeNbt(compoundTag);
             }
         };

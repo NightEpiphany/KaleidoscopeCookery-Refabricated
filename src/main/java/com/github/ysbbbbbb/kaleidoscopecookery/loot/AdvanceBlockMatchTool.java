@@ -12,13 +12,14 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Set;
 
-public class AdvanceBlockMatchTool implements LootItemCondition {
+public class AdvanceBlockMatchTool implements LootItemCondition.ContextUser {
     public static final Identifier ID = Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "advance_block_match_tool");
     public static final MapCodec<AdvanceBlockMatchTool> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             EquipmentSlot.CODEC.fieldOf("slot").forGetter(tool -> tool.slot),
@@ -34,8 +35,12 @@ public class AdvanceBlockMatchTool implements LootItemCondition {
     }
 
     @Override
-    public @NonNull Set<ContextKey<?>> getReferencedContextParams() {
+    public @NonNull Set<ContextKey<?>> requiredContextParams() {
         return ImmutableSet.of(LootContextParams.THIS_ENTITY);
+    }
+
+    @Override
+    public void validate(@NonNull ValidationContext context) {
     }
 
     @Override
@@ -55,7 +60,7 @@ public class AdvanceBlockMatchTool implements LootItemCondition {
     }
 
     @Override
-    public @NonNull MapCodec<? extends LootItemCondition> codec() {
+    public @NonNull MapCodec<AdvanceBlockMatchTool> codec() {
         return CODEC;
     }
 }

@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -48,6 +49,10 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
     @Override
     public @NonNull MapCodec<? extends LootItemConditionalFunction> codec() {
         return CODEC;
+    }
+
+    @Override
+    protected void validateCustom(@NonNull ValidationContext context) {
     }
 
     @SuppressWarnings("deprecation")

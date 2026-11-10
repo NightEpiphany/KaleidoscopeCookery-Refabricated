@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -28,7 +28,7 @@ public abstract class BaseBlockEntity extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NonNull Provider registries) {
+    public @NotNull CompoundTag getUpdateTag(HolderGetter.@NonNull Provider registries) {
         return this.saveWithoutMetadata(registries);
     }
 

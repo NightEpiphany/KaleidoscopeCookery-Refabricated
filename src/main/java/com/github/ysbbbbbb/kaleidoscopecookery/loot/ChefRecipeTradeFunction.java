@@ -8,6 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jspecify.annotations.NonNull;
@@ -32,6 +33,10 @@ public class ChefRecipeTradeFunction extends LootItemConditionalFunction {
     @Override
     public @NonNull MapCodec<? extends LootItemConditionalFunction> codec() {
         return CODEC;
+    }
+
+    @Override
+    protected void validateCustom(@NonNull ValidationContext context) {
     }
 
     @Override

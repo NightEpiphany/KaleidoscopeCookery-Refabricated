@@ -79,7 +79,7 @@ public class FruitBasketItem extends WithTooltipsBlockItem {
                 CompoundTag compoundTag = buffer.readNbt();
                 NonNullList<ItemStack> handler = NonNullList.withSize(8, ItemStack.EMPTY);
                 if (compoundTag != null) {
-                    ValueInput valueInput = TagValueInput.create(ProblemReporter.DISCARDING, buffer.registryAccess(), compoundTag);
+                    ValueInput valueInput = TagValueInput.create(ProblemReporter.DISCARDING, buffer.registries(), compoundTag);
                     ContainerHelper.loadAllItems(valueInput, handler);
                 }
                 return new ItemContainer(handler);
@@ -87,7 +87,7 @@ public class FruitBasketItem extends WithTooltipsBlockItem {
 
             @Override
             public void encode(RegistryFriendlyByteBuf buffer, ItemContainer value) {
-                CompoundTag compoundTag = PortHelper.saveAllItems(new CompoundTag(), value.items, true, buffer.registryAccess());
+                CompoundTag compoundTag = PortHelper.saveAllItems(new CompoundTag(), value.items, true, buffer.registries());
                 buffer.writeNbt(compoundTag);
             }
         };

@@ -14,5 +14,5 @@ accessible method net/minecraft/world/item/crafting/RecipeManager byKeyTyped (Ln
 accessible field net/minecraft/client/resources/model/ModelManager atlasManager Lnet/minecraft/client/resources/model/sprite/AtlasManager;
 accessible field net/minecraft/world/effect/MobEffectInstance duration I
 accessible field net/minecraft/world/entity/ai/behavior/GiveGiftToHero GIFTS Ljava/util/Map;
-accessible method net/minecraft/resources/RegistryOps <init> (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/resources/RegistryOps$RegistryInfoLookup;)V
+accessible method net/minecraft/resources/RegistryOps <init> (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/core/HolderGetter$Provider;)V
 accessible field net/minecraft/world/entity/Entity invulnerableTime I

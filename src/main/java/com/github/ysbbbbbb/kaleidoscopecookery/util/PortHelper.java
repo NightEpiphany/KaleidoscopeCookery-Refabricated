@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.util;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -56,7 +56,7 @@ public class PortHelper {
         return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, name));
     }
 
-    public static CompoundTag saveAllItems(CompoundTag tag, NonNullList<ItemStack> items, boolean alwaysPutTag, HolderLookup.Provider levelRegistry) {
+    public static CompoundTag saveAllItems(CompoundTag tag, NonNullList<ItemStack> items, boolean alwaysPutTag, HolderGetter.Provider levelRegistry) {
         ListTag listTag = new ListTag();
 
         for (int i = 0; i < items.size(); i++) {
