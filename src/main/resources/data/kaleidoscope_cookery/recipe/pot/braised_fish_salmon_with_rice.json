@@ -1,9 +1,7 @@
 {
   "type": "kaleidoscope_cookery:pot",
   "carrier": "kaleidoscope_cookery:cooked_rice",
-  
   "ingredients": [
-      "#c:raw_fishes/salmon",
       "#c:raw_fishes/salmon",
       "minecraft:sugar"
   ],

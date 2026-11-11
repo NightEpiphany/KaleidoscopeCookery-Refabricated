@@ -21,6 +21,10 @@
             {
               "type": "minecraft:item",
               "name": "minecraft:bone"
+            },
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:bowl"
             }
           ]
         }
@@ -49,6 +53,10 @@
             {
               "type": "minecraft:item",
               "name": "minecraft:bone_meal"
+            },
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:bowl"
             }
           ]
         }

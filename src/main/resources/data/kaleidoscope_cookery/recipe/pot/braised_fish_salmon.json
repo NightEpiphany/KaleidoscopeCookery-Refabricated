@@ -1,7 +1,6 @@
 {
   "type": "kaleidoscope_cookery:pot",
   "carrier": "minecraft:bowl",
-  
   "ingredients": [
       "#c:raw_fishes/salmon",
       "#c:raw_fishes/salmon",

@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ColorParticleOption;
@@ -70,6 +71,7 @@ public final class FoodBiteAnimateTicks {
 
     public interface AnimateTick {
         default void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+            KaleidoscopeCookery.LOGGER.warn("Raw use of AnimateTick");
         }
     }
 }
