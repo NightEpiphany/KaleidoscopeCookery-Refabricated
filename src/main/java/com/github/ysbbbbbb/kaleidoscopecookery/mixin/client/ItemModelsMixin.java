@@ -13,6 +13,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.core.Registry;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -27,10 +28,10 @@ public class ItemModelsMixin {
     );
 
     @WrapMethod(method = "bootstrap")
-    private static Object kaleidoscopeCookery$bootstrap(Registry<MapCodec<? extends ItemModel.Unbaked>> registry, Operation<Object> original) {
+    private static void kaleidoscopeCookery$bootstrap(WritableRegistry<MapCodec<? extends ItemModel.Unbaked>> registry, Operation<Void> original) {
         ExtraModelLoadingProperties.bootstrap(ExtraModelLoadingProperties.REGISTRY);
         extraReg(registry);
-        return original.call(registry);
+        original.call(registry);
     }
 
     @Unique

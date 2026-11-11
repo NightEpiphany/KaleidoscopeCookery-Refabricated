@@ -12,6 +12,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.core.Registry;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -32,9 +33,9 @@ public class ConditionalItemModelPropertiesMixin {
     );
 
     @WrapMethod(method = "bootstrap")
-    private static Object kaleidoscopeCookery$bootstrap(Registry<MapCodec<? extends ConditionalItemModelProperty>> registry, Operation<Object> original) {
+    private static void kaleidoscopeCookery$bootstrap(WritableRegistry<MapCodec<? extends ConditionalItemModelProperty>> registry, Operation<Void> original) {
         extraReg(registry);
-        return original.call(registry);
+        original.call(registry);
     }
 
     @Unique
