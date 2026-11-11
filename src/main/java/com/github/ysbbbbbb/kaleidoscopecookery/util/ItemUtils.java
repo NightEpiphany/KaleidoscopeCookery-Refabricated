@@ -6,7 +6,9 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.IItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.PlayerMainInvWrapper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Prediction;
@@ -17,11 +19,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
 
+@SuppressWarnings({"resource", "BooleanMethodIsAlwaysInverted"})
 public class ItemUtils {
     public static void getItemToLivingEntity(LivingEntity entity, ItemStack stack) {
         if (stack.isEmpty()) {
@@ -152,32 +156,85 @@ public class ItemUtils {
     }
 
     public static Item getContainerItem(ItemStack stack) {
+        return getContainerStack(stack).getItem();
+    }
+
+    public static ItemStack getContainerStack(ItemStack stack) {
         if (stack.isEmpty()) {
-            return Items.AIR;
+            return ItemStack.EMPTY;
         }
         UseRemainder useRemainder = stack.get(DataComponents.USE_REMAINDER);
-        if (useRemainder != null) {
-            return useRemainder.convertInto().item().value();
-        }
+        ItemStack container;
         Item item = stack.getItem();
-        if (item instanceof IHasContainer hasContainer) {
-            return hasContainer.getContainerItem();
+        if (useRemainder != null) {
+            container = useRemainder.convertInto().create();
+        } else if (item instanceof IHasContainer hasContainer) {
+            container = hasContainer.getContainerItem().getDefaultInstance();
         } else if (stack.is(TagMod.BOWL_CONTAINER)) {
-            return Items.BOWL;
+            container = Items.BOWL.getDefaultInstance();
         } else if (stack.is(TagMod.GLASS_BOTTLE_CONTAINER)) {
-            return Items.GLASS_BOTTLE;
+            container = Items.GLASS_BOTTLE.getDefaultInstance();
         } else if (stack.is(TagMod.BUCKET_CONTAINER)) {
-            return Items.BUCKET;
+            container = Items.BUCKET.getDefaultInstance();
         } else if (stack.is(Items.POTION)) {
-            return Items.GLASS_BOTTLE;
+            container = Items.GLASS_BOTTLE.getDefaultInstance();
+        } else if (item.getCraftingRemainder() != null) {
+            container = item.getCraftingRemainder().create();
+        } else {
+            return ItemStack.EMPTY;
         }
-        if (item.getCraftingRemainder() == null) {
-            return Items.AIR;
+        if (!container.isEmpty()) {
+            container.setCount(container.getCount() * stack.getCount());
         }
-        ItemStack remainingItem = item.getCraftingRemainder().create();
-        if (!remainingItem.isEmpty()) {
-            return remainingItem.getItem();
+        return container;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public static boolean returnIngredientContainers(LivingEntity user, ItemStack ingredient) {
+        if (user.level().isClientSide()) {
+            return false;
         }
-        return Items.AIR;
+        ItemStack containers = getIngredientContainerStack(ingredient);
+        if (containers.isEmpty()) {
+            return false;
+        }
+        while (!containers.isEmpty()) {
+            getItemToLivingEntity(user, containers.split(containers.getMaxStackSize()));
+        }
+        return true;
+    }
+
+    public static boolean consumeIngredientContainers(LivingEntity user, ItemStack ingredient) {
+        ItemStack containers = getIngredientContainerStack(ingredient);
+        if (containers.isEmpty()) {
+            return true;
+        }
+        ItemStack held = user.getMainHandItem();
+        if (!ItemStack.isSameItemSameComponents(held, containers) || held.getCount() < containers.getCount()) {
+            if (user instanceof ServerPlayer player) {
+                player.sendOverlayMessage(Component.translatable(
+                        "tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container", containers.getHoverName()));
+            }
+            return false;
+        }
+        if (!user.level().isClientSide()) {
+            held.shrink(containers.getCount());
+        }
+        return true;
+    }
+
+    private static ItemStack getIngredientContainerStack(ItemStack ingredient) {
+        if (ingredient.isEmpty() || !ingredient.is(TagMod.SPECIAL)) {
+            return ItemStack.EMPTY;
+        }
+        ItemStackTemplate remainder = ingredient.getCraftingRemainder();
+        if (remainder == null) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack containers = remainder.create();
+        if (!containers.isEmpty()) {
+            containers.setCount(containers.getCount() * ingredient.getCount());
+        }
+        return containers;
     }
 }

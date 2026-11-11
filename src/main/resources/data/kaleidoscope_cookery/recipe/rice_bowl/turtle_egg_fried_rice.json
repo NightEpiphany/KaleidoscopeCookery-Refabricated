@@ -1,0 +1,9 @@
+{
+  "type": "kaleidoscope_cookery:rice_bowl",
+  "category": "misc",
+  "ingredient": "minecraft:turtle_egg",
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_cookery:egg_fried_rice"
+  }
+}

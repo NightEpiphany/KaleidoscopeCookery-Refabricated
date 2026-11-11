@@ -18,10 +18,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -335,7 +337,7 @@ public class TeapotItem extends WithTooltipsBlockItem {
     @Environment(EnvType.CLIENT)
     public void appendHoverText(@NonNull ItemStack stack, @NonNull TooltipContext context, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag pFlag) {
         super.appendHoverText(stack, context, tooltipDisplay, consumer, pFlag);
-        // 如果是成品阶段，那么显示成品信息
+        // 根据茶壶状态显示原料或成品信息
         if (!stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
             return;
         }
@@ -344,14 +346,21 @@ public class TeapotItem extends WithTooltipsBlockItem {
         int status = getInt(tag, TeapotBlockEntity.STATUS, ITeapot.PUT_INGREDIENT);
         if (status == ITeapot.PUT_INGREDIENT) {
             String fluidId = getString(tag, TeapotBlockEntity.TEA_FLUID_ID, EMPTY_TEA_FLUID.toString());
-            if (fluidId.equals(EMPTY_TEA_FLUID.toString())) {
-                return;
+            if (!fluidId.equals(EMPTY_TEA_FLUID.toString())) {
+                Identifier key = Identifier.tryParse(fluidId);
+                if (key != null) {
+                    consumer.accept(TeaFluidHelper.getDisplayName(key).copy().withStyle(ChatFormatting.GRAY));
+                }
             }
-            Identifier key = Identifier.tryParse(fluidId);
-            if (key == null) {
-                return;
+            HolderLookup.Provider registries = context.registries();
+            if (registries != null && tag.contains(TeapotBlockEntity.INPUT)) {
+                ItemStack ingredient = ItemStack.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE),
+                                getCompound(tag, TeapotBlockEntity.INPUT))
+                        .result().orElse(ItemStack.EMPTY);
+                if (!ingredient.isEmpty()) {
+                    consumer.accept(ingredient.getHoverName().copy().withStyle(ChatFormatting.GRAY));
+                }
             }
-            consumer.accept(TeaFluidHelper.getDisplayName(key).copy().withStyle(ChatFormatting.GRAY));
         }
 
         ClientLevel level = Minecraft.getInstance().level;
@@ -377,7 +386,7 @@ public class TeapotItem extends WithTooltipsBlockItem {
                 .copyTagWithoutId();
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "NullableProblems"})
     private static CompoundTag quickFetchBlockEntityData(ItemStack stack) {
         if (stack.get(DataComponents.BLOCK_ENTITY_DATA) == null) return new CompoundTag();
         return Objects.requireNonNull(stack.get(DataComponents.BLOCK_ENTITY_DATA)).getUnsafe();
@@ -420,7 +429,7 @@ public class TeapotItem extends WithTooltipsBlockItem {
             return PortHelper.decodeItem(resultTag, serverLevel);
         }
         if (level instanceof ClientLevel clientLevel) {
-            return ItemStack.CODEC.parse(clientLevel.registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), resultTag)
+            return ItemStack.CODEC.parse(clientLevel.registryAccess().createSerializationContext(NbtOps.INSTANCE), resultTag)
                     .result()
                     .orElse(ItemStack.EMPTY);
         }
