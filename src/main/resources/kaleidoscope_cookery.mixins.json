@@ -17,15 +17,13 @@
     "LayeredCauldronBlockMixin",
     "LivingEntityMixin",
     "LlamaSpitMixin",
-    "LootTableRegistryLoadMixin",
     "MobBucketItemMixin",
     "MobMixin",
     "PowderSnowBlockMixin",
     "ShulkerBulletMixin",
     "ThrowableProjectileMixin",
     "VillagerMixin",
-    "accessor.GiveGiftToHeroAccessor",
-    "accessor.LootTableAccessor"
+    "accessor.GiveGiftToHeroAccessor"
   ],
   "client": [
     "client.CameraMixin",

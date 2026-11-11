@@ -4,12 +4,13 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceBlockMatchTool;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceEntityMatchTool;
-import com.github.ysbbbbbb.kaleidoscopecookery.mixin.accessor.LootTableAccessor;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
@@ -29,54 +30,46 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCon
 import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import static com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery.LOGGER;
 
 public final class ExtraLootTableDrop {
+    private static final Identifier DONKEY = Identifier.withDefaultNamespace("entities/donkey");
     private static final Identifier HOGLIN = Identifier.fromNamespaceAndPath("minecraft", "entities/hoglin");
     private static final Identifier PIG = Identifier.fromNamespaceAndPath("minecraft", "entities/pig");
     private static final Identifier PIGLIN = Identifier.fromNamespaceAndPath("minecraft", "entities/piglin");
     private static final Identifier PIGLIN_BRUTE = Identifier.fromNamespaceAndPath("minecraft", "entities/piglin_brute");
+    private static final Identifier ZOGLIN = Identifier.withDefaultNamespace("entities/zoglin");
+    private static final Identifier ZOMBIFIED_PIGLIN = Identifier.withDefaultNamespace("entities/zombified_piglin");
     private static final Identifier GRASS = Identifier.fromNamespaceAndPath("minecraft", "blocks/short_grass");
-    private static final AtomicBoolean ENABLED = new AtomicBoolean();
 
     private ExtraLootTableDrop() {
     }
 
     public static void register() {
-        ENABLED.set(true);
+        LootTableEvents.MODIFY.register(ExtraLootTableDrop::modify);
     }
 
-    public static void modify(ResourceKey<LootTable> key, LootTable lootTable, RegistryOps<?> registries) {
-        if (!ENABLED.get()) {
+    private static void modify(ResourceKey<LootTable> key, LootTable.Builder tableBuilder, LootTableSource source, HolderLookup.Provider registries) {
+        if (!source.isBuiltin()) {
             return;
         }
 
-        try {
-            LootPool.Builder extraPool = createExtraPool(key.identifier(), registries);
-            if (extraPool == null) {
-                return;
-            }
-
-            LootTableAccessor accessor = (LootTableAccessor) lootTable;
-            List<LootPool> pools = new ArrayList<>(accessor.kaleidoscopeCookery$getPools());
-            pools.add(extraPool.build());
-            accessor.kaleidoscopeCookery$setPools(List.copyOf(pools));
+        LootPool.Builder extraPool = createExtraPool(key.identifier(), registries);
+        if (extraPool != null) {
+            tableBuilder.withPool(extraPool);
             LOGGER.debug("Added Cookery drops to loot table {}", key.identifier());
-        } catch (Exception exception) {
-            LOGGER.error("Failed to add Cookery drops to loot table {}; keeping the original table", key.identifier(), exception);
         }
     }
 
-    private static LootPool.Builder createExtraPool(Identifier id, RegistryOps<?> registries) {
-        if (id.equals(HOGLIN) || id.equals(PIGLIN) || id.equals(PIGLIN_BRUTE)) {
-            return createOilPool(2, registries);
+    private static LootPool.Builder createExtraPool(Identifier id, HolderLookup.Provider registries) {
+        if (id.equals(DONKEY)) {
+            return createEntityDropPool(ModItems.RAW_DONKEY_MEAT, 2, registries);
+        }
+        if (id.equals(HOGLIN) || id.equals(PIGLIN) || id.equals(PIGLIN_BRUTE) || id.equals(ZOGLIN) || id.equals(ZOMBIFIED_PIGLIN)) {
+            return createEntityDropPool(ModItems.OIL, 2, registries);
         }
         if (id.equals(PIG)) {
-            return createOilPool(1, registries);
+            return createEntityDropPool(ModItems.OIL, 1, registries);
         }
         if (id.equals(GRASS)) {
             return createSeedPool(registries);
@@ -84,25 +77,24 @@ public final class ExtraLootTableDrop {
         return null;
     }
 
-    private static LootPool.Builder createOilPool(int rolls, RegistryOps<?> registries) {
-        // 仅在玩家主手持厨房刀击杀时掉落油。
-        HolderGetter<Item> itemLookup = registries.getter(Registries.ITEM).orElseThrow();
-        HolderGetter<Enchantment> enchantmentLookup = registries.getter(Registries.ENCHANTMENT).orElseThrow();
+    private static LootPool.Builder createEntityDropPool(ItemLike item, int rolls, HolderLookup.Provider registries) {
+        // 仅在玩家主手持厨房刀击杀时追加掉落，保留原版战利品池。
+        HolderGetter<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
+        HolderGetter<Enchantment> enchantmentLookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
         ItemPredicate hasKnife = ItemPredicate.Builder.item().of(itemLookup, TagMod.KITCHEN_KNIFE).build();
         LootItemCondition.Builder toolMatches = AdvanceEntityMatchTool.toolMatches(EquipmentSlot.MAINHAND, hasKnife);
         var count = SetItemCountFunction.setCount(ContextIntProviders.between(1, 2));
         var looting = EnchantedCountIncreaseFunction.lootingMultiplier(enchantmentLookup, ContextFloatProviders.between(0.0F, 1.0F));
-        var oil = LootItem.lootTableItem(ModItems.OIL).apply(count).apply(looting);
-        var empty = EmptyLootItem.emptyItem();
+        var drop = LootItem.lootTableItem(item).apply(count).apply(looting);
 
         return LootPool.lootPool()
                 .setRolls(ContextIntProviders.exactly(rolls))
-                .add(oil).add(empty).when(toolMatches);
+                .add(drop).when(toolMatches);
     }
 
-    private static LootPool.Builder createSeedPool(RegistryOps<?> registries) {
-        HolderGetter<Enchantment> enchantmentLookup = registries.getter(Registries.ENCHANTMENT).orElseThrow();
-        HolderGetter<Item> itemLookup = registries.getter(Registries.ITEM).orElseThrow();
+    private static LootPool.Builder createSeedPool(HolderLookup.Provider registries) {
+        HolderGetter<Enchantment> enchantmentLookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
+        HolderGetter<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
         // 穿戴草帽破坏矮草丛时有概率掉落作物种子。
         var tomato = createSeedEntry(ModItems.TOMATO_SEED, enchantmentLookup, itemLookup);
         var chili = createSeedEntry(ModItems.CHILI_SEED, enchantmentLookup, itemLookup);

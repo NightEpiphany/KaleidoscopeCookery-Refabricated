@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "kaleidoscope_cookery:shelf_mushroom_pot_soup",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "kaleidoscope_cookery:shelf_mushroom_pot_soup",
+                "state": {
+                  "bites": "0"
+                }
+              }
+            },
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:flower_pot"
+            }
+          ]
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    }
+  ],
+  "random_sequence": "kaleidoscope_cookery:blocks/shelf_mushroom_pot_soup"
+}

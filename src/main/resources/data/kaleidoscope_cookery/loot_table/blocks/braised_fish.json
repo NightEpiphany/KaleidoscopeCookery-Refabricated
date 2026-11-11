@@ -20,10 +20,6 @@
             },
             {
               "type": "minecraft:item",
-              "name": "minecraft:bone"
-            },
-            {
-              "type": "minecraft:item",
               "name": "minecraft:bowl"
             }
           ]
@@ -52,11 +48,35 @@
             },
             {
               "type": "minecraft:item",
-              "name": "minecraft:bone_meal"
+              "name": "minecraft:bone"
+            }
+          ]
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    },
+    {
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:empty",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "kaleidoscope_cookery:braised_fish",
+                "state": {
+                  "bites": "0"
+                }
+              }
             },
             {
               "type": "minecraft:item",
-              "name": "minecraft:bowl"
+              "name": "minecraft:bone_meal"
             }
           ]
         }
