@@ -155,16 +155,13 @@ public class TeapotBlock extends HorizontalDirectionalBlock implements SimpleWat
             return teapot.addIngredient(level, player, mainHandItem) ? SUCCESS_SERVER : CONSUME;
         }
 
-        // 取出原料
+        // 潜行时拿起整壶，原料保留在壶中
         if (player.isSecondaryUseActive()) {
-            return teapot.removeIngredient(level, player) ? SUCCESS_SERVER : CONSUME;
-        }
-
-        // 拿起茶壶
-        if (mainHandItem.isEmpty() && !player.isSecondaryUseActive()) {
             return teapot.takeTeapot(level, player) ? SUCCESS_SERVER : CONSUME;
         }
-        return InteractionResult.PASS;
+
+        // 空手普通右键取出原料
+        return teapot.removeIngredient(level, player) ? SUCCESS_SERVER : CONSUME;
     }
 
     @Override

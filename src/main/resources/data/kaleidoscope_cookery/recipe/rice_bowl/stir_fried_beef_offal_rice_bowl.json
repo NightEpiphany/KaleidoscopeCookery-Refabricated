@@ -1,0 +1,9 @@
+{
+  "type": "kaleidoscope_cookery:rice_bowl",
+  "category": "misc",
+  "ingredient": "kaleidoscope_cookery:stir_fried_beef_offal",
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_cookery:stir_fried_beef_offal_rice_bowl"
+  }
+}

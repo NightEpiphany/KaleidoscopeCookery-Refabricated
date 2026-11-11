@@ -15,7 +15,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.CustomFluidTank;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.FluidUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.TeaFluidHelper;
-import com.google.common.collect.Lists;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -36,9 +35,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
@@ -54,6 +51,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,10 +62,10 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
     public static final int INGREDIENT_TIME = 200;
 
     public static final String TEA_FLUID_ID = "TeaFluidId";
+    public static final String INPUT = "Input";
     public static final String RESULT = "Result";
     public static final String STATUS = "Status";
 
-    private static final String INPUT = "Input";
     private static final String CURRENT_TICK = "CurrentTick";
 
     private final RecipeManager.CachedCheck<TeapotInput, TeapotRecipe> quickCheck = RecipeManager.createCheck(ModRecipes.TEAPOT_RECIPE);
@@ -412,7 +410,7 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         }
 
         // 先保存数据并确认方块移除成功，再发放物品；不能忽略 setBlock 的失败。
-        List<ItemStack> drops = getDrops();
+        List<ItemStack> drops = getDrops(true);
         if (!level.setBlock(worldPosition, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL)) {
             KaleidoscopeCookery.LOGGER.warn("Cannot take teapot at {} in {} (status={}): block removal failed",
                     worldPosition, level.dimension().identifier(), status);
@@ -442,13 +440,9 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
         if (stack.isEmpty()) {
             return;
         }
-        // 如果带有容器，此时返还容器
-        Item containerItem = ItemUtils.getContainerItem(stack);
-        if (containerItem != Items.AIR) {
-            ItemUtils.getItemToLivingEntity(user, containerItem.getDefaultInstance());
-        }
         // 茶壶配方需要 ingredientCount 个原料，保留记录中的实际数量以便匹配配方
         this.input = stack.copy();
+        ItemUtils.returnIngredientContainers(user, this.input);
         level.playSound(null, this.worldPosition,
                 SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
                 ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
@@ -459,18 +453,29 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
      * 茶壶变成物品时执行的逻辑
      */
     public List<ItemStack> getDrops() {
-        List<ItemStack> drops = Lists.newArrayList();
+        return getDrops(false);
+    }
+
+    private List<ItemStack> getDrops(boolean keepIngredient) {
+        List<ItemStack> drops = new ArrayList<>(2);
 
         ItemStack teapot = ModItems.TEAPOT.getDefaultInstance();
 
         // 如果当前是准备状态
         if (this.status == PUT_INGREDIENT) {
-            // 如果有原料，掉落原料
-            if (!this.input.isEmpty()) {
+            TagValueOutput tag = this.level == null
+                    ? TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING)
+                    : TagValueOutput.createWithContext(ProblemReporter.DISCARDING, this.level.registryAccess());
+            // 拿起整壶时保存原料与准备进度；破坏方块时仍单独掉落原料
+            if (keepIngredient) {
+                if (!this.input.isEmpty()) {
+                    tag.store(INPUT, ItemStack.CODEC, this.input);
+                }
+                tag.putInt(CURRENT_TICK, this.currentTick);
+            } else if (!this.input.isEmpty()) {
                 drops.add(this.input.copy());
             }
 
-            TagValueOutput tag = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
             tag.putString(TEA_FLUID_ID, this.teaFluidId.toString());
             BlockItem.setBlockEntityData(teapot, ModBlocks.TEAPOT_BE, tag);
             drops.add(teapot);
@@ -486,7 +491,7 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
 
         // 完成，那么返回部分数值
         if (this.level != null && this.level instanceof ServerLevel serverLevel) {
-            TagValueOutput tag = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+            TagValueOutput tag = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, serverLevel.registryAccess());
             tag.store(RESULT, ItemStack.CODEC, this.result);
             tag.putInt(STATUS, this.status);
             BlockItem.setBlockEntityData(teapot, ModBlocks.TEAPOT_BE, tag);
