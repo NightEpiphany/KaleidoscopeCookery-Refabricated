@@ -34,7 +34,6 @@ import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -419,7 +418,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
 
     @Override
     public boolean addIngredient(Level level, LivingEntity user, ItemStack itemStack) {
-        if (this.status != PUT_INGREDIENT) {
+        if (itemStack.isEmpty() || this.status != PUT_INGREDIENT) {
             return false;
         }
         // 只允许食物和特定 tag 的东西放入
@@ -430,9 +429,14 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         for (int i = 0; i < this.inputs.size(); i++) {
             ItemStack item = this.inputs.get(i);
             if (item.isEmpty()) {
-                this.inputs.set(i, itemStack.copyWithCount(1));
-                itemStack.shrink(1);
+                if (level.isClientSide()) {
+                    return true;
+                }
+                ItemStack ingredient = itemStack.split(1);
+                this.inputs.set(i, ingredient);
+                ItemUtils.returnIngredientContainers(user, ingredient);
                 level.playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
+                this.refresh();
                 return true;
             }
         }
@@ -448,6 +452,12 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         for (int i = this.inputs.size() - 1; i >= 0; i--) {
             ItemStack stack = this.inputs.get(i);
             if (!stack.isEmpty()) {
+                if (level.isClientSide()) {
+                    return true;
+                }
+                if (!ItemUtils.consumeIngredientContainers(user, stack)) {
+                    return false;
+                }
                 this.inputs.set(i, ItemStack.EMPTY);
                 if (stack.has(ModDataComponents.SPECIAL_RENDER))
                     stack.remove(ModDataComponents.SPECIAL_RENDER);
@@ -456,6 +466,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
                     user.hurt(level.damageSources().inFire(), 1);
                     ModTrigger.EVENT.trigger(user, ModEventTriggerType.HURT_WHEN_TAKEOUT_FROM_POT);
                 }
+                this.refresh();
                 return true;
             }
         }
@@ -543,12 +554,9 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             if (stack.isEmpty()) {
                 continue;
             }
-            // 如果带有容器，此时返还容器
-            Item containerItem = ItemUtils.getContainerItem(stack);
-            if (containerItem != Items.AIR) {
-                ItemUtils.getItemToLivingEntity(user, containerItem.getDefaultInstance());
-            }
-            this.inputs.set(i, stack.copyWithCount(1));
+            ItemStack ingredient = stack.copyWithCount(1);
+            this.inputs.set(i, ingredient);
+            ItemUtils.returnIngredientContainers(user, ingredient);
         }
         level.playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
         this.refresh();

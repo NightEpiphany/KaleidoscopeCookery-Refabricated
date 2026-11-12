@@ -16,7 +16,7 @@ public interface TagMod {
      */
     TagKey<Item> STEAMER_INGREDIENTS = itemTag("steamer_ingredients");
     /**
-     * 本模组所有可以进食的食物
+     * 厨具中单独渲染的特殊食材；有合成剩余物时，投料后返还容器
      */
     TagKey<Item> SPECIAL = itemTag("special");
     /**
