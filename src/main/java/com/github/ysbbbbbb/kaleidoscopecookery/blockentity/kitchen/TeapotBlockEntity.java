@@ -332,9 +332,8 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
             return false;
         }
         this.insertIngredient(itemStack);
-        if (!(user instanceof Player player && player.isCreative())) {
-            itemStack.shrink(1);
-        }
+        itemStack.shrink(1);
+
         return true;
     }
 
