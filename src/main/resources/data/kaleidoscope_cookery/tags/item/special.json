@@ -4,6 +4,8 @@
     "minecraft:egg",
     "minecraft:blue_egg",
     "minecraft:brown_egg",
+    "minecraft:turtle_egg",
+    "minecraft:dragon_breath",
     "minecraft:honey_bottle",
     {
       "id": "farmersdelight:tomato_sauce", "required": false

@@ -338,9 +338,11 @@ public class TeapotItem extends WithTooltipsBlockItem {
     public void appendHoverText(@NonNull ItemStack stack, @NonNull TooltipContext context, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag pFlag) {
         super.appendHoverText(stack, context, tooltipDisplay, consumer, pFlag);
         // 根据茶壶状态显示原料或成品信息
-        if (!stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
+        if (!stack.has(DataComponents.BLOCK_ENTITY_DATA))
             return;
-        }
+        else
+            // 间隔一行显示茶壶具体的液体和茶叶存储信息
+            consumer.accept(Component.empty());
         CompoundTag tag = getBlockEntityData(stack);
 
         int status = getInt(tag, TeapotBlockEntity.STATUS, ITeapot.PUT_INGREDIENT);
@@ -349,7 +351,7 @@ public class TeapotItem extends WithTooltipsBlockItem {
             if (!fluidId.equals(EMPTY_TEA_FLUID.toString())) {
                 Identifier key = Identifier.tryParse(fluidId);
                 if (key != null) {
-                    consumer.accept(TeaFluidHelper.getDisplayName(key).copy().withStyle(ChatFormatting.GRAY));
+                    consumer.accept(TeaFluidHelper.getDisplayName(key).copy().withStyle(ChatFormatting.WHITE));
                 }
             }
             HolderLookup.Provider registries = context.registries();
@@ -358,7 +360,7 @@ public class TeapotItem extends WithTooltipsBlockItem {
                                 getCompound(tag, TeapotBlockEntity.INPUT))
                         .result().orElse(ItemStack.EMPTY);
                 if (!ingredient.isEmpty()) {
-                    consumer.accept(ingredient.getHoverName().copy().withStyle(ChatFormatting.GRAY));
+                    consumer.accept(ingredient.getHoverName().copy().withStyle(ChatFormatting.WHITE));
                 }
             }
         }
