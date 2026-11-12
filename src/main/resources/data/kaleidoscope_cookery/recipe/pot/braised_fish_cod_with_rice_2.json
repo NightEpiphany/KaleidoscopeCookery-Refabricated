@@ -1,0 +1,13 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "carrier": "minecraft:bowl",
+  "ingredients": [
+    "#c:raw_fishes/cod",
+    "minecraft:sugar",
+    "#c:foods/cooked_rice"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_cookery:braised_fish_rice_bowl"
+  }
+}
