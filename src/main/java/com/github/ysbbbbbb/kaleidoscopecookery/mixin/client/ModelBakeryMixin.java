@@ -31,6 +31,8 @@ public abstract class ModelBakeryMixin {
     @Unique
     private static final ModelResourceLocation HONEY = ModelResourceLocation.inventory(ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "honey"));
     @Unique
+    private static final ModelResourceLocation DRAGON_BREATH = ModelResourceLocation.inventory(ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "dragon_breath"));
+    @Unique
     private static final ModelResourceLocation TOMATO_SAUCE = ModelResourceLocation.inventory(ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "tomato_sauce_spray"));
     @Unique
     private static final ModelResourceLocation RAW_DOUGH_IN_MILLSTONE = ModelResourceLocation.inventory(ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "raw_dough_in_millstone"));
@@ -53,6 +55,7 @@ public abstract class ModelBakeryMixin {
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/ModelBakery;loadSpecialItemModelAndDependencies(Lnet/minecraft/client/resources/model/ModelResourceLocation;)V", shift = At.Shift.AFTER, ordinal = 1))
     private void kaleidoscopeCookery$loadSpecialItemModelAndDependencies(BlockColors blockColors, ProfilerFiller profilerFiller, Map<ResourceLocation, BlockModel> modelResources, Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> blockStateResources, CallbackInfo ci) {
         this.loadSpecialItemModelAndDependencies(HONEY);
+        this.loadSpecialItemModelAndDependencies(DRAGON_BREATH);
         this.loadSpecialItemModelAndDependencies(EGG);
         this.loadSpecialItemModelAndDependencies(RAW_DOUGH_IN_MILLSTONE);
         this.loadSpecialItemModelAndDependencies(OIL_IN_MILLSTONE);

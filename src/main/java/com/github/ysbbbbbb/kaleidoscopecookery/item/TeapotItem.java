@@ -11,10 +11,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -344,26 +343,35 @@ public class TeapotItem extends WithTooltipsBlockItem {
     @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> list, TooltipFlag pFlag) {
         super.appendHoverText(stack, context, list, pFlag);
-        // 如果是成品阶段，那么显示成品信息
+        // 根据茶壶状态显示原料或成品信息
         CustomData data = stack.get(DataComponents.BLOCK_ENTITY_DATA);
         if (data == null) {
             return;
         }
+        // 间隔一行显示茶壶具体的液体和茶叶存储信息
+        list.add(Component.empty());
         CompoundTag tag = data.copyTag();
+        HolderLookup.Provider registries = context.registries();
 
         int status = tag.getInt(TeapotBlockEntity.STATUS);
         if (status == ITeapot.PUT_INGREDIENT) {
             String fluidId = StringUtils.defaultIfBlank(tag.getString(TeapotBlockEntity.TEA_FLUID_ID), EMPTY_TEA_FLUID.toString());
-            if (fluidId.equals(EMPTY_TEA_FLUID.toString())) {
-                return;
+            if (!fluidId.equals(EMPTY_TEA_FLUID.toString())) {
+                ResourceLocation key = ResourceLocation.tryParse(fluidId);
+                if (key != null) {
+                    list.add(TeaFluidHelper.getDisplayName(key).copy().withStyle(ChatFormatting.WHITE));
+                }
             }
-            ResourceLocation key = ResourceLocation.parse(fluidId);
-            list.add(TeaFluidHelper.getDisplayName(key).copy().withStyle(ChatFormatting.GRAY));
+            if (registries != null && tag.contains(TeapotBlockEntity.INPUT)) {
+                ItemStack ingredient = ItemStack.parseOptional(registries, tag.getCompound(TeapotBlockEntity.INPUT));
+                if (!ingredient.isEmpty()) {
+                    list.add(ingredient.getHoverName().copy().withStyle(ChatFormatting.WHITE));
+                }
+            }
         }
 
-        ClientLevel level = Minecraft.getInstance().level;
-        if (status == ITeapot.FINISHED && level != null) {
-            ItemStack result = ItemStack.parseOptional(level.registryAccess(), tag.getCompound(TeapotBlockEntity.RESULT));
+        if (status == ITeapot.FINISHED && registries != null) {
+            ItemStack result = ItemStack.parseOptional(registries, tag.getCompound(TeapotBlockEntity.RESULT));
             if (result.isEmpty()) {
                 return;
             }

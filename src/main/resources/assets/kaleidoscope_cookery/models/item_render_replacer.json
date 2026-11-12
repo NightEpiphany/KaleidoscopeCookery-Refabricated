@@ -2,17 +2,20 @@
   "pot": {
     "kaleidoscope_cookery:cooked_rice": "kaleidoscope_cookery:rice#inventory",
     "minecraft:honey_bottle": "kaleidoscope_cookery:honey#inventory",
-    "minecraft:egg": "kaleidoscope_cookery:egg#inventory"
+    "minecraft:egg": "kaleidoscope_cookery:egg#inventory",
+    "minecraft:dragon_breath": "kaleidoscope_cookery:dragon_breath#inventory"
   },
   "stockpot_cooking": {
     "kaleidoscope_cookery:cooked_rice": "kaleidoscope_cookery:rice#inventory",
     "minecraft:honey_bottle": "kaleidoscope_cookery:honey#inventory",
-    "minecraft:egg": "kaleidoscope_cookery:egg#inventory"
+    "minecraft:egg": "kaleidoscope_cookery:egg#inventory",
+    "minecraft:dragon_breath": "kaleidoscope_cookery:dragon_breath#inventory"
   },
   "stockpot_finished": {
     "kaleidoscope_cookery:cooked_rice": "kaleidoscope_cookery:rice#inventory",
     "minecraft:honey_bottle": "kaleidoscope_cookery:honey#inventory",
-    "minecraft:egg": "kaleidoscope_cookery:egg#inventory"
+    "minecraft:egg": "kaleidoscope_cookery:egg#inventory",
+    "minecraft:dragon_breath": "kaleidoscope_cookery:dragon_breath#inventory"
   },
   "millstone": {
     "kaleidoscope_cookery:oil_pot": "kaleidoscope_cookery:oil_in_millstone#inventory"

@@ -75,7 +75,7 @@ public class BowlFoodBlockItem extends BlockItem implements IHasContainer, ICust
                 effectInstances.add(effect.effect());
             }
         });
-        this.qualityComponents = new QualityFoodComponents(properties);
+        this.qualityComponents = new QualityFoodComponents(this.components().get(DataComponents.FOOD));
     }
 
     @Override

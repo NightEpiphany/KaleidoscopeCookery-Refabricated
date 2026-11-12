@@ -75,7 +75,7 @@ public interface ITeapot {
     /**
      * 将茶壶直接取下，变成物品形态
      * <p>
-     * 当茶壶处于完成状态时，才能取下，其他状态返回 false
+     * 准备阶段会保留流体、原料和准备进度，完成阶段会保留成品；烹煮中返回 false
      *
      * @param level 使用者所处的 level
      * @param user  使用者

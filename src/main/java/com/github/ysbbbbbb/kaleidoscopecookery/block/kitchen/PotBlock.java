@@ -7,6 +7,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -119,7 +120,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
         ItemStack itemInHand = player.getItemInHand(hand);
         RandomSource random = level.random;
         // 先检查执行配菜取出逻辑
-        if (itemInHand.isEmpty() && pot.removeIngredient(level, player)) {
+        if ((itemInHand.isEmpty() || itemInHand.is(TagMod.INGREDIENT_CONTAINER)) && pot.removeIngredient(level, player)) {
             return ItemInteractionResult.SUCCESS;
         }
         // 再检查成品取出逻辑

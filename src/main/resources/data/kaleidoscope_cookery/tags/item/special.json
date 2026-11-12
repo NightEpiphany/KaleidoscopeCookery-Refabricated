@@ -3,6 +3,7 @@
     "kaleidoscope_cookery:cooked_rice",
     "minecraft:egg",
     "minecraft:honey_bottle",
+    "minecraft:dragon_breath",
     {
       "id": "farmersdelight:tomato_sauce", "required": false
     },
