@@ -1,9 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.create.soupbase;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
-import com.simibubi.create.AllFluids;
+import com.simibubi.create.api.registrate.CreateRegistrateRegistrationCallback;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 public final class CreateSoupBase {
     public static final String ID = "create";
@@ -15,7 +17,14 @@ public final class CreateSoupBase {
     }
 
     public static void registerSoupBases() {
-        SoupBaseManager.registerFluidSoupBase(CHOCOLATE, BuiltInRegistries.ITEM.get(id("chocolate_bucket")), AllFluids.CHOCOLATE.getSource().getSource(), 0xA04A3C);
-        SoupBaseManager.registerFluidSoupBase(HONEY, BuiltInRegistries.ITEM.get(id("honey_bucket")), AllFluids.HONEY.getSource().getSource(), 0xEAAE30);
+        registerFluidSoupBase(CHOCOLATE, id("chocolate_bucket"), 0xA04A3C);
+        registerFluidSoupBase(HONEY, id("honey_bucket"), 0xEAAE30);
+    }
+
+    private static void registerFluidSoupBase(ResourceLocation name, ResourceLocation bucketId, int bubbleColor) {
+        BuiltInRegistries.ITEM.getOptional(bucketId).ifPresentOrElse(
+                bucket -> SoupBaseManager.registerFluidSoupBase(name, bucket, bubbleColor),
+                () -> CreateRegistrateRegistrationCallback.register(Registries.ITEM, bucketId,
+                        bucket -> SoupBaseManager.registerFluidSoupBase(name, bucket, bubbleColor)));
     }
 }

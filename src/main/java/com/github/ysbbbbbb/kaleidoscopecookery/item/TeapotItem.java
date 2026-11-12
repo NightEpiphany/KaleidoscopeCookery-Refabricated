@@ -351,21 +351,30 @@ public class TeapotItem extends WithTooltipsBlockItem {
     @Override
     public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> list, @NotNull TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, list, pFlag);
-        // 如果是成品阶段，那么显示成品信息
+        // 根据茶壶状态显示原料或成品信息。
         CompoundTag data = BlockItem.getBlockEntityData(pStack);
         if (data == null) {
             return;
         }
+        // 间隔一行显示茶壶具体的液体和茶叶存储信息。
+        list.add(Component.empty());
 
         int status = data.getInt(TeapotBlockEntity.STATUS);
         if (status == ITeapot.PUT_INGREDIENT) {
             String fluidId = StringUtils.defaultIfBlank(data.getString(TeapotBlockEntity.TEA_FLUID_ID), EMPTY_TEA_FLUID.toString());
-            if (fluidId.equals(EMPTY_TEA_FLUID.toString())) {
-                return;
+            if (!fluidId.equals(EMPTY_TEA_FLUID.toString())) {
+                ResourceLocation key = ResourceLocation.tryParse(fluidId);
+                if (key != null) {
+                    Fluid fluid = BuiltInRegistries.FLUID.get(key);
+                    list.add(FluidVariantAttributes.getName(FluidVariant.of(fluid)).copy().withStyle(ChatFormatting.WHITE));
+                }
             }
-            ResourceLocation key = new ResourceLocation(fluidId);
-            Fluid fluid = BuiltInRegistries.FLUID.get(key);
-            list.add(FluidVariantAttributes.getName(FluidVariant.of(fluid)).copy().withStyle(ChatFormatting.GRAY));
+            if (data.contains(TeapotBlockEntity.INPUT)) {
+                ItemStack ingredient = ItemStack.of(data.getCompound(TeapotBlockEntity.INPUT));
+                if (!ingredient.isEmpty()) {
+                    list.add(ingredient.getHoverName().copy().withStyle(ChatFormatting.WHITE));
+                }
+            }
         }
 
         if (status == ITeapot.FINISHED) {

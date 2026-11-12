@@ -1,0 +1,10 @@
+{
+  "type": "kaleidoscope_cookery:rice_bowl",
+  "category": "misc",
+  "ingredient": {
+    "item": "kaleidoscope_cookery:spicy_chicken"
+  },
+  "result": {
+    "item": "kaleidoscope_cookery:spicy_chicken_rice_bowl"
+  }
+}

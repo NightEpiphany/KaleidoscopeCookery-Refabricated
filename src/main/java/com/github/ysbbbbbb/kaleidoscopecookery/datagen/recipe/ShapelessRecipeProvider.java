@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.recipe;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -17,6 +18,13 @@ public class ShapelessRecipeProvider extends ModRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> consumer) {
+        consumer.accept(new RiceBowlFinishedRecipe(modLoc("braised_fish_rice_bowl"),
+                FoodBiteRegistry.getItem(FoodBiteRegistry.BRAISED_FISH), ModItems.BRAISED_FISH_RICE_BOWL));
+        consumer.accept(new RiceBowlFinishedRecipe(modLoc("spicy_chicken_rice_bowl"),
+                FoodBiteRegistry.getItem(FoodBiteRegistry.SPICY_CHICKEN), ModItems.SPICY_CHICKEN_RICE_BOWL));
+        consumer.accept(new RiceBowlFinishedRecipe(modLoc("stir_fried_beef_offal_rice_bowl"),
+                ModItems.STIR_FRIED_BEEF_OFFAL, ModItems.STIR_FRIED_BEEF_OFFAL_RICE_BOWL));
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.RICE_PANICLE, 9)
                 .requires(ModItems.STRAW_BLOCK)
                 .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE))

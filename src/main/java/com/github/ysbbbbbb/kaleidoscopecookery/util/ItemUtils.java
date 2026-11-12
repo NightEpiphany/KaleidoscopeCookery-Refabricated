@@ -3,6 +3,8 @@ package com.github.ysbbbbbb.kaleidoscopecookery.util;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.item.IHasContainer;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -75,5 +77,49 @@ public class ItemUtils {
             return Items.GLASS_BOTTLE;
         }
         return Items.AIR;
+    }
+
+    public static boolean returnIngredientContainers(LivingEntity user, ItemStack ingredient) {
+        if (user.level().isClientSide) {
+            return false;
+        }
+        ItemStack containers = getIngredientContainerStack(ingredient);
+        if (containers.isEmpty()) {
+            return false;
+        }
+        while (!containers.isEmpty()) {
+            getItemToLivingEntity(user, containers.split(containers.getMaxStackSize()));
+        }
+        return true;
+    }
+
+    public static boolean consumeIngredientContainers(LivingEntity user, ItemStack ingredient) {
+        ItemStack containers = getIngredientContainerStack(ingredient);
+        if (containers.isEmpty()) {
+            return true;
+        }
+        ItemStack held = user.getMainHandItem();
+        if (!ItemStack.isSameItemSameTags(held, containers) || held.getCount() < containers.getCount()) {
+            if (user instanceof ServerPlayer player) {
+                player.displayClientMessage(Component.translatable(
+                        "tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container", containers.getHoverName()), true);
+            }
+            return false;
+        }
+        if (!user.level().isClientSide) {
+            held.shrink(containers.getCount());
+        }
+        return true;
+    }
+
+    private static ItemStack getIngredientContainerStack(ItemStack ingredient) {
+        if (ingredient.isEmpty() || !ingredient.is(TagMod.SPECIAL)) {
+            return ItemStack.EMPTY;
+        }
+        Item remainder = ingredient.getItem().getCraftingRemainingItem();
+        if (remainder == null) {
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(remainder, ingredient.getCount());
     }
 }

@@ -43,7 +43,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -416,7 +415,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     }
 
     public void addAllIngredients(List<ItemStack> ingredients, LivingEntity user) {
-        if (this.level == null) {
+        if (this.level == null || this.level.isClientSide) {
             return;
         }
         if (this.hasLid()) {
@@ -430,12 +429,9 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (stack.isEmpty()) {
                 continue;
             }
-            // 如果带有容器，此时返还容器
-            Item containerItem = ItemUtils.getContainerItem(stack);
-            if (containerItem != Items.AIR) {
-                ItemUtils.getItemToLivingEntity(user, containerItem.getDefaultInstance());
-            }
-            this.inputs.set(i, stack.copyWithCount(1));
+            ItemStack ingredient = stack.copyWithCount(1);
+            this.inputs.set(i, ingredient);
+            ItemUtils.returnIngredientContainers(user, ingredient);
         }
         level.playSound(null, this.worldPosition,
                 SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
@@ -445,7 +441,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     @Override
     public boolean addIngredient(Level level, LivingEntity user, ItemStack itemStack) {
-        if (this.hasLid()) {
+        if (itemStack.isEmpty() || this.hasLid()) {
             return false;
         }
         if (this.status != PUT_INGREDIENT) {
@@ -459,12 +455,12 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (!this.inputs.get(i).isEmpty()) {
                 continue;
             }
-            // 如果带有容器，此时返还容器
-            Item containerItem = ItemUtils.getContainerItem(itemStack);
-            if (containerItem != Items.AIR) {
-                ItemUtils.getItemToLivingEntity(user, containerItem.getDefaultInstance());
+            if (level.isClientSide) {
+                return true;
             }
-            this.inputs.set(i, itemStack.split(1));
+            ItemStack ingredient = itemStack.split(1);
+            this.inputs.set(i, ingredient);
+            ItemUtils.returnIngredientContainers(user, ingredient);
             level.playSound(null, user.getX(), user.getY() + 0.5, user.getZ(),
                     SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
                     ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
@@ -488,8 +484,11 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (stack.isEmpty()) {
                 continue;
             }
+            if (level.isClientSide) {
+                return true;
+            }
             // 检查容器是否符合取出条件
-            if (!containerIsMatch(user, stack)) {
+            if (!ItemUtils.consumeIngredientContainers(user, stack)) {
                 return false;
             }
             this.inputs.set(i, ItemStack.EMPTY);
@@ -504,20 +503,6 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.refresh();
             return true;
         }
-        return false;
-    }
-
-    private boolean containerIsMatch(LivingEntity user, ItemStack stack) {
-        Item containerItem = ItemUtils.getContainerItem(stack);
-        if (containerItem == Items.AIR) {
-            return true;
-        }
-        if (user.getMainHandItem().is(containerItem)) {
-            user.getMainHandItem().shrink(1);
-            return true;
-        }
-        sendActionBarMessage(user, "tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container",
-                containerItem.getDefaultInstance().getHoverName());
         return false;
     }
 

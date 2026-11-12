@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ITeapot;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.fluids.FluidUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -171,7 +172,15 @@ public class TeapotBlock extends HorizontalDirectionalBlock implements SimpleWat
         if (!(blockEntity instanceof ITeapot teapot)) {
             return PASS;
         }
+        if (level.isClientSide) {
+            return SUCCESS;
+        }
         ItemStack mainHandItem = player.getMainHandItem();
+        // 原料容器优先用于取回原料，避免被流体容器交互拦截。
+        if (blockEntity instanceof TeapotBlockEntity teapotBlockEntity && !teapotBlockEntity.getInput().isEmpty()
+                && mainHandItem.is(TagMod.INGREDIENT_CONTAINER)) {
+            return teapot.removeIngredient(level, player) ? SUCCESS : CONSUME;
+        }
         // 加入茶水
         if (FluidUtils.isFluidContainer(mainHandItem)) {
             // 如果手持物有流体，那么灌入
@@ -184,19 +193,16 @@ public class TeapotBlock extends HorizontalDirectionalBlock implements SimpleWat
             boolean result = teapot.removeTeaFluid(level, player, mainHandItem);
             return result ? SUCCESS : CONSUME;
         }
-        // 取出原料
-        if (mainHandItem.isEmpty() && player.isSecondaryUseActive()) {
-            return teapot.removeIngredient(level, player) ? SUCCESS : CONSUME;
-        }
-        // 拿起茶壶
-        if (mainHandItem.isEmpty() && !player.isSecondaryUseActive()) {
-            return teapot.takeTeapot(level, player) ? SUCCESS : CONSUME;
-        }
         // 加入原料
         if (!mainHandItem.isEmpty()) {
             return teapot.addIngredient(level, player, mainHandItem) ? SUCCESS : CONSUME;
         }
-        return PASS;
+        // 潜行时拿起整壶，原料保留在壶中。
+        if (player.isSecondaryUseActive()) {
+            return teapot.takeTeapot(level, player) ? SUCCESS : CONSUME;
+        }
+        // 空手普通右键取出原料。
+        return teapot.removeIngredient(level, player) ? SUCCESS : CONSUME;
     }
 
     @Override

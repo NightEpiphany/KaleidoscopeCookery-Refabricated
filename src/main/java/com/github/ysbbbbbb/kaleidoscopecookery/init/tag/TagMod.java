@@ -98,7 +98,7 @@ public interface TagMod {
      */
     TagKey<Item> FEASTS = itemTag("feasts");
     /**
-     * 本模组使用特殊渲染的物品
+     * 厨具中单独渲染的特殊食材；有合成剩余物时，投料后返还容器
      */
     TagKey<Item> SPECIAL = itemTag("special");
     /**

@@ -60,6 +60,9 @@ public class TagItem extends ItemTagsProvider {
         );
 
         this.tag(INGREDIENT_CONTAINER).add(BUCKET, BOWL, GLASS_BOTTLE);
+        this.tag(SPECIAL).add(ModItems.COOKED_RICE, EGG, HONEY_BOTTLE, DRAGON_BREATH)
+                .addOptional(new ResourceLocation("farmersdelight", "tomato_sauce"))
+                .addOptional(new ResourceLocation("farmersdelight", "cooked_rice"));
         this.tag(GLASS_BOTTLE_CONTAINER).add(HONEY_BOTTLE);
         this.tag(BUCKET_CONTAINER).add(WATER_BUCKET, LAVA_BUCKET, MILK_BUCKET,
                 SALMON_BUCKET, COD_BUCKET, TROPICAL_FISH_BUCKET, PUFFERFISH_BUCKET,

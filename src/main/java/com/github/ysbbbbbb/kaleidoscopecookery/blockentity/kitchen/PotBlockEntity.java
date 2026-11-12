@@ -33,7 +33,6 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -429,7 +428,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
     }
 
     public void addAllIngredients(List<ItemStack> ingredients, LivingEntity user) {
-        if (this.level == null) {
+        if (this.level == null || this.level.isClientSide) {
             return;
         }
         if (this.status != PUT_INGREDIENT) {
@@ -440,12 +439,9 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             if (stack.isEmpty()) {
                 continue;
             }
-            // 如果带有容器，此时返还容器
-            Item containerItem = ItemUtils.getContainerItem(stack);
-            if (containerItem != Items.AIR) {
-                ItemUtils.getItemToLivingEntity(user, containerItem.getDefaultInstance());
-            }
-            this.inputs.set(i, stack.copyWithCount(1));
+            ItemStack ingredient = stack.copyWithCount(1);
+            this.inputs.set(i, ingredient);
+            ItemUtils.returnIngredientContainers(user, ingredient);
         }
         level.playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
         this.refresh();
@@ -453,7 +449,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
 
     @Override
     public boolean addIngredient(Level level, LivingEntity user, ItemStack itemStack) {
-        if (this.status != PUT_INGREDIENT) {
+        if (itemStack.isEmpty() || this.status != PUT_INGREDIENT) {
             return false;
         }
         // 黑名单物品不可放入
@@ -463,13 +459,14 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         for (int i = 0; i < this.inputs.size(); i++) {
             ItemStack item = this.inputs.get(i);
             if (item.isEmpty()) {
-                // 如果带有容器，此时返还容器
-                Item containerItem = ItemUtils.getContainerItem(itemStack);
-                if (containerItem != Items.AIR) {
-                    ItemUtils.getItemToLivingEntity(user, containerItem.getDefaultInstance());
+                if (level.isClientSide) {
+                    return true;
                 }
-                this.inputs.set(i, itemStack.split(1));
+                ItemStack ingredient = itemStack.split(1);
+                this.inputs.set(i, ingredient);
+                ItemUtils.returnIngredientContainers(user, ingredient);
                 level.playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
+                this.refresh();
                 return true;
             }
         }
@@ -486,8 +483,11 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             if (stack.isEmpty()) {
                 continue;
             }
+            if (level.isClientSide) {
+                return true;
+            }
             // 检查容器是否符合取出条件
-            if (!containerIsMatch(user, stack)) {
+            if (!ItemUtils.consumeIngredientContainers(user, stack)) {
                 return false;
             }
             this.inputs.set(i, ItemStack.EMPTY);
@@ -496,23 +496,8 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
                 user.hurt(level.damageSources().inFire(), 1);
                 ModTrigger.EVENT.trigger(user, ModEventTriggerType.HURT_WHEN_TAKEOUT_FROM_POT);
             }
+            this.refresh();
             return true;
-        }
-        return false;
-    }
-
-    private boolean containerIsMatch(LivingEntity user, ItemStack stack) {
-        Item containerItem = ItemUtils.getContainerItem(stack);
-        if (containerItem == Items.AIR) {
-            return true;
-        }
-        if (user.getMainHandItem().is(containerItem)) {
-            user.getMainHandItem().shrink(1);
-            return true;
-        }
-        if (user instanceof ServerPlayer player) {
-            player.sendSystemMessage(Component.translatable("tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container",
-                    containerItem.getDefaultInstance().getHoverName()));
         }
         return false;
     }
