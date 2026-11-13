@@ -41,9 +41,9 @@ public class KitchenwareRacksBlockEntity extends BaseBlockEntity implements IKit
         // 放入物品
         if (stack.isDamageableItem() && stackInRacks.isEmpty()) {
             if (isLeft) {
-                itemLeft = stack.split(1);
+                itemLeft = ItemUtils.separate(stack, user, 1);
             } else {
-                itemRight = stack.split(1);
+                itemRight = ItemUtils.separate(stack, user, 1);
             }
             user.playSound(SoundEvents.ITEM_FRAME_ADD_ITEM, 1.0F, 1.0F);
             this.refresh();

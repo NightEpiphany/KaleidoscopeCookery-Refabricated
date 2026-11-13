@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.item.IHasContainer;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
@@ -65,7 +66,7 @@ public class TeacupItem extends BlockItem implements IHasContainer {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        return ItemUtils.startUsingInstantly(level, player, hand);
+        return net.minecraft.world.item.ItemUtils.startUsingInstantly(level, player, hand);
     }
 
     @Override
@@ -75,9 +76,7 @@ public class TeacupItem extends BlockItem implements IHasContainer {
             serverPlayer.awardStat(Stats.ITEM_USED.get(this));
         }
         this.addTeaEffect(level, entity);
-        if (entity instanceof Player player && !player.isCreative()) {
-            stack.shrink(1);
-        }
+        ItemUtils.consume(stack, entity, 1);
         return returnContainerToEntity(stack, level, entity);
     }
 

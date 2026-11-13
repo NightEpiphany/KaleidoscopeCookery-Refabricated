@@ -223,8 +223,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         if (stack.is(TagMod.OIL)) {
             // 普通情况油脂
             placeOil(level, user, level.random);
-            if (user instanceof Player player && !player.isCreative())
-                stack.shrink(1);
+            ItemUtils.consume(stack, user, 1);
             ModTrigger.EVENT.trigger(user, ModEventTriggerType.PUT_OIL_IN_POT);
             return true;
         } else if (stack.is(ModItems.KITCHEN_SHOVEL) && KitchenShovelItem.hasOil(stack)) {
@@ -363,7 +362,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
 
         // 迷之炒菜盖饭特判逻辑
         if (finallyResult.is(getItem(SUSPICIOUS_STIR_FRY)) && stack.is(TagCommon.COOKED_RICE)) {
-            stack.shrink(1);
+            ItemUtils.consume(stack, user, 1);
             ItemUtils.getItemToLivingEntity(user, ModItems.SUSPICIOUS_STIR_FRY_RICE_BOWL.getDefaultInstance());
             this.reset();
             return true;
@@ -402,7 +401,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
                 this.sendActionBarMessage(user, "carrier_count_not_enough", finallyResult.getCount(), carrierName);
                 return false;
             } else {
-                mainHandItem.shrink(finallyResult.getCount());
+                ItemUtils.consume(mainHandItem, user, finallyResult.getCount());
                 ItemUtils.getItemToLivingEntity(user, finallyResult);
                 this.reset();
                 return true;
@@ -462,7 +461,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
                 if (level.isClientSide) {
                     return true;
                 }
-                ItemStack ingredient = itemStack.split(1);
+                ItemStack ingredient = ItemUtils.separate(itemStack, user, 1);
                 this.inputs.set(i, ingredient);
                 ItemUtils.returnIngredientContainers(user, ingredient);
                 level.playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);

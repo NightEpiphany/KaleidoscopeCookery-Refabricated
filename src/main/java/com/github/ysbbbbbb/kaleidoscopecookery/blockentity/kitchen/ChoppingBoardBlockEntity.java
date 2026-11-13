@@ -8,6 +8,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEnchantments;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -74,7 +75,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
             this.modelId = recipe.getModelId();
             this.maxCutCount = recipe.getCutCount();
             this.currentCutCount = 0;
-            this.currentCutStack = putOnItem.split(1);
+            this.currentCutStack = ItemUtils.separate(putOnItem, user, 1);
             this.results = recipe.getResults();
             this.refresh();
             level.playSound(null, this.worldPosition,

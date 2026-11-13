@@ -12,6 +12,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.forge.IItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.forge.ItemHandlerHelper;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.forge.ItemStackHandler;
@@ -271,6 +272,11 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     @Override
     public boolean onPutItem(Level level, ItemStack putOnItem) {
+        return this.onPutItem(level, null, putOnItem);
+    }
+
+    @Override
+    public boolean onPutItem(Level level, @Nullable LivingEntity user, ItemStack putOnItem) {
         // 先清空输出槽才可以
         if (!this.isOutputEmpty()) {
             return false;
@@ -281,7 +287,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         }
         SimpleContainer container = new SimpleContainer(putOnItem);
         return this.matchRecipe(container, level).map(recipe -> {
-            this.input = putOnItem.split(MAX_INPUT_COUNT);
+            this.input = ItemUtils.separate(putOnItem, user, MAX_INPUT_COUNT);
             this.progress = Math.max(Math.round(this.rotSpeedTick), 1);
             this.refresh();
             level.playSound(null, this.worldPosition,

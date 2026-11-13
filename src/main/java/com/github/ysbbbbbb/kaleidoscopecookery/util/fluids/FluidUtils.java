@@ -29,7 +29,7 @@ public class FluidUtils {
      * @return 如果成功转移了流体，返回 true；如果没有转移任何流体，返回 false
      */
     public static boolean emptyItem(LivingEntity user, ItemStack bucket, Storage<FluidVariant> handler, int amount) {
-        return emptyItem(user, bucket, handler, amount, getMutableContext(user, bucket));
+        return emptyItem(user, bucket, handler, amount, getInteractionContext(user, bucket));
     }
 
     public static boolean emptyItem(LivingEntity user, ItemStack bucket, Storage<FluidVariant> handler, int amount,
@@ -37,7 +37,7 @@ public class FluidUtils {
         if (bucket.isEmpty() || handler == null) {
             return false;
         }
-        boolean creative = user instanceof Player player && player.isCreative();
+        boolean creative = user instanceof Player player && player.getAbilities().instabuild;
         if (creative) {
             // Discard returned containers without exposing the player's inventory to extraction.
             context = ContainerItemContext.withConstant(bucket.copyWithCount(1));
@@ -104,7 +104,7 @@ public class FluidUtils {
         if (bucket.isEmpty() || handler == null) {
             return false;
         }
-        ContainerItemContext context = getMutableContext(user, bucket);
+        ContainerItemContext context = getInteractionContext(user, bucket);
         if (context == null) {
             return false;
         }
@@ -191,15 +191,15 @@ public class FluidUtils {
     }
 
     @Nullable
-    private static ContainerItemContext getMutableContext(LivingEntity user, ItemStack stack) {
+    private static ContainerItemContext getInteractionContext(LivingEntity user, ItemStack stack) {
         if (!(user instanceof Player player)) {
             return null;
         }
         if (player.getMainHandItem() == stack) {
-            return ContainerItemContext.ofPlayerHand(player, InteractionHand.MAIN_HAND);
+            return ContainerItemContext.forPlayerInteraction(player, InteractionHand.MAIN_HAND);
         }
         if (player.getOffhandItem() == stack) {
-            return ContainerItemContext.ofPlayerHand(player, InteractionHand.OFF_HAND);
+            return ContainerItemContext.forPlayerInteraction(player, InteractionHand.OFF_HAND);
         }
         return null;
     }

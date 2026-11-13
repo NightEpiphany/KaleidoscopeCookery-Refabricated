@@ -310,7 +310,7 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
             return true;
         }
         this.insertIngredient(itemStack);
-        itemStack.shrink(1);
+        ItemUtils.consume(itemStack, user, 1);
         ItemUtils.returnIngredientContainers(user, this.input);
         return true;
     }

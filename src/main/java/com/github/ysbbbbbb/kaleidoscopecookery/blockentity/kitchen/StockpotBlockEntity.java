@@ -42,7 +42,6 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -232,7 +231,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
         // 第一种情况，放上盖子
         if (!hasLid && stack.is(ModItems.STOCKPOT_LID)) {
-            this.setLidItem(stack.split(1));
+            this.setLidItem(ItemUtils.separate(stack, user, 1));
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, true));
             user.playSound(SoundEvents.LANTERN_PLACE, 0.5F, 0.5F);
@@ -371,8 +370,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
                 this.refresh();
 
                 ItemStack container = soupBase.getReturnContainer(level, user, bucket);
-                if (user instanceof Player player && !player.isCreative())
-                    bucket.shrink(1);
+                ItemUtils.consume(bucket, user, 1);
                 ItemUtils.getItemToLivingEntity(user, container);
                 return true;
             }
@@ -398,8 +396,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
             ItemStack container = soupBase.getReturnSoupBase(level, user, bucket);
             restoreSoupBaseComponents(sourceSoupBase, container);
-            if (user instanceof Player player && !player.isCreative())
-                bucket.shrink(1);
+            ItemUtils.consume(bucket, user, 1);
             ItemUtils.getItemToLivingEntity(user, container);
             return true;
         }
@@ -458,7 +455,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (level.isClientSide) {
                 return true;
             }
-            ItemStack ingredient = itemStack.split(1);
+            ItemStack ingredient = ItemUtils.separate(itemStack, user, 1);
             this.inputs.set(i, ingredient);
             ItemUtils.returnIngredientContainers(user, ingredient);
             level.playSound(null, user.getX(), user.getY() + 0.5, user.getZ(),
@@ -535,7 +532,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             return false;
         }
         if (!carrier.isEmpty()) {
-            stack.shrink(1);
+            ItemUtils.consume(stack, user, 1);
         }
 
         ItemStack resultCopy = this.result.copyWithCount(1);

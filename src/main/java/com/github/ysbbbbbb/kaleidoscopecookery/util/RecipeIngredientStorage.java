@@ -132,7 +132,8 @@ public final class RecipeIngredientStorage {
                 }
             }
 
-            if (remaining.isEmpty() && commit) {
+            // 创造模式仍检查材料是否齐全，但回滚取料以保留背包及容器内的物品。
+            if (remaining.isEmpty() && commit && !player.getAbilities().instabuild) {
                 transaction.commit();
             }
         }

@@ -15,6 +15,7 @@ import net.minecraft.world.item.*;
 //import net.minecraftforge.items.IItemHandler;
 //import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemUtils {
     public static void getItemToLivingEntity(LivingEntity entity, ItemStack stack) {
@@ -93,6 +94,21 @@ public class ItemUtils {
         return true;
     }
 
+    /** 1.20.1 没有 ItemStack.consume，创造玩家保留物品，自动化和其他实体照常消耗。 */
+    public static void consume(ItemStack stack, @Nullable LivingEntity user, int count) {
+        if (!(user instanceof Player player && player.getAbilities().instabuild)) {
+            stack.shrink(count);
+        }
+    }
+
+    /** 放入创造玩家物品的副本，避免与手中物品共享 NBT 或修改原堆叠。 */
+    public static ItemStack separate(ItemStack stack, @Nullable LivingEntity user, int count) {
+        if (user instanceof Player player && player.getAbilities().instabuild) {
+            return stack.copyWithCount(Math.min(count, stack.getCount()));
+        }
+        return stack.split(count);
+    }
+
     public static boolean consumeIngredientContainers(LivingEntity user, ItemStack ingredient) {
         ItemStack containers = getIngredientContainerStack(ingredient);
         if (containers.isEmpty()) {
@@ -107,7 +123,7 @@ public class ItemUtils {
             return false;
         }
         if (!user.level().isClientSide) {
-            held.shrink(containers.getCount());
+            consume(held, user, containers.getCount());
         }
         return true;
     }
