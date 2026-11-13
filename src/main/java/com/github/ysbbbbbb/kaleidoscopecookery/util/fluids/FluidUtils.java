@@ -81,8 +81,10 @@ public class FluidUtils {
         }
 
         SoundEvent sound = FluidVariantAttributes.getEmptySound(resource);
-        if (sound != null) {
-            user.playSound(sound);
+        if (sound != null && !user.isSilent()) {
+            // 流体交互在服务端执行，广播时不能排除操作玩家。
+            user.level().playSound(null, user.getX(), user.getY(), user.getZ(),
+                    sound, user.getSoundSource(), 1.0F, 1.0F);
         }
         return true;
     }
@@ -137,8 +139,10 @@ public class FluidUtils {
         }
 
         SoundEvent sound = FluidVariantAttributes.getFillSound(resource);
-        if (sound != null) {
-            user.playSound(sound);
+        if (sound != null && !user.isSilent()) {
+            // 流体交互在服务端执行，广播时不能排除操作玩家。
+            user.level().playSound(null, user.getX(), user.getY(), user.getZ(),
+                    sound, user.getSoundSource(), 1.0F, 1.0F);
         }
         return true;
     }
