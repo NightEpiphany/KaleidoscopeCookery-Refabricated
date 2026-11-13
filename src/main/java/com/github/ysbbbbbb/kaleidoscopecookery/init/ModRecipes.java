@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.*;
+import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -44,6 +45,20 @@ public final class ModRecipes {
     public static final RecipeBookCategory TEAPOT_CATEGORY = new RecipeBookCategory();
     public static final RecipeBookCategory BAMBOO_TRAY_CATEGORY = new RecipeBookCategory();
 
+    private static void syncRecipes() {
+        // 投料交互需要在客户端匹配配方，避免继续执行食材自身的右键使用逻辑。
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.POT_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.FLEX_POT_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.CHOPPING_BOARD_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.STOCKPOT_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.FLEX_STOCKPOT_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.STEAMER_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.MILLSTONE_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.TEAPOT_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.RICE_BOWL_SERIALIZER);
+        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.BAMBOO_TRAY_SERIALIZER);
+    }
+
     public static void registerRecipes() {
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "pot"), POT_SERIALIZER);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "flex_pot"), FLEX_POT_SERIALIZER);
@@ -76,6 +91,8 @@ public final class ModRecipes {
         Registry.register(BuiltInRegistries.RECIPE_BOOK_CATEGORY, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "millstone"), MILLSTONE_CATEGORY);
         Registry.register(BuiltInRegistries.RECIPE_BOOK_CATEGORY, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "teapot"), TEAPOT_CATEGORY);
         Registry.register(BuiltInRegistries.RECIPE_BOOK_CATEGORY, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "bamboo_tray"), BAMBOO_TRAY_CATEGORY);
+
+        syncRecipes();
     }
 
     private static <T extends Recipe<?>> RecipeType<T> simple(final Identifier id) {

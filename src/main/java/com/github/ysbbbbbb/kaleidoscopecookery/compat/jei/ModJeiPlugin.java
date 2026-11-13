@@ -5,14 +5,12 @@ import com.github.ysbbbbbb.kaleidoscopecookery.compat.jei.category.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.RiceBowlRecipeMaker;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.recipes.ModRecipesLibrary;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -60,19 +58,6 @@ public class ModJeiPlugin implements IModPlugin {
         registration.addCraftingStation(SteamerRecipeCategory.TYPE, ModItems.STEAMER.getDefaultInstance());
         registration.addCraftingStation(TeapotRecipeCategory.TYPE, ModItems.TEAPOT.getDefaultInstance());
         registration.addCraftingStation(BambooTrayRecipeCategory.TYPE, ModItems.BAMBOO_TRAY.getDefaultInstance());
-    }
-
-    public static void syncRecipes() {
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.POT_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.FLEX_POT_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.CHOPPING_BOARD_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.STOCKPOT_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.FLEX_STOCKPOT_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.STEAMER_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.MILLSTONE_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.TEAPOT_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.RICE_BOWL_SERIALIZER);
-        RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.BAMBOO_TRAY_SERIALIZER);
     }
 
     @Override
