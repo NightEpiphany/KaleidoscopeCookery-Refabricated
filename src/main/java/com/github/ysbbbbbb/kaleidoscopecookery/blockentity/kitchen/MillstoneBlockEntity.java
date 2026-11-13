@@ -178,7 +178,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                         continue;
                     }
                     ItemStack stack = handler.extractItem(i, MAX_INPUT_COUNT, true);
-                    if (this.onPutItem(level, stack)) {
+                    if (this.onPutItem(level, null, stack)) {
                         handler.extractItem(i, MAX_INPUT_COUNT, false);
                         return;
                     }
@@ -198,7 +198,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 }
                 int countCanInsert = Math.min(stack.getCount(), MAX_INPUT_COUNT);
                 ItemStack stackToInsert = stack.copyWithCount(countCanInsert);
-                if (this.onPutItem(level, stackToInsert)) {
+                if (this.onPutItem(level, null, stackToInsert)) {
                     stack.shrink(countCanInsert);
                     if (stack.isEmpty()) {
                         itemEntity.discard();
@@ -263,7 +263,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     }
 
     @Override
-    public boolean onPutItem(Level level, ItemStack putOnItem) {
+    public boolean onPutItem(Level level, @Nullable final LivingEntity user, ItemStack putOnItem) {
         // 先清空输出槽才可以
         if (!this.isOutputEmpty()) {
             return false;
@@ -275,7 +275,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         if (level instanceof ServerLevel serverLevel) {
             SimpleInput container = new SimpleInput(List.of(putOnItem));
             return this.matchRecipe(container, serverLevel).map(_ -> {
-                this.input = putOnItem.split(MAX_INPUT_COUNT);
+                this.input = ItemUtils.separate(putOnItem, user, MAX_INPUT_COUNT);
                 this.progress = Math.max(Math.round(this.rotSpeedTick), 1);
                 this.refresh();
                 SoundEvents.STONE.hitSound().ifPresent(sound -> level.playSound(null, this.worldPosition,

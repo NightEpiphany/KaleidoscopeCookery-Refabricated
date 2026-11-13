@@ -328,7 +328,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
         // 第一种情况，放上盖子
         if (!hasLid && stack.is(ModItems.STOCKPOT_LID)) {
-            this.setLidItem(stack.split(1));
+            this.setLidItem(ItemUtils.separate(stack, user, 1));
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, true));
             SoundEvents.LANTERN.placeSound().ifPresent(sound -> user.playSound(sound, 0.5F, 0.5F));
@@ -456,8 +456,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
                 this.refresh();
 
                 ItemStack container = soupBase.getReturnContainer(level, user, bucket);
-                if (user instanceof Player player && !player.isCreative())
-                    bucket.shrink(1);
+                bucket.consume(1, user);
                 ItemUtils.getItemToLivingEntity(user, container);
                 return true;
             }
@@ -482,8 +481,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
             ItemStack container = soupBase.getReturnSoupBase(level, user, bucket);
             restoreSoupBaseComponents(sourceSoupBase, container);
-            if (user instanceof Player player && !player.isCreative())
-                bucket.shrink(1);
+            bucket.consume(1, user);
             ItemUtils.getItemToLivingEntity(user, container);
             return true;
         }
@@ -599,7 +597,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             return true;
         }
         if (!carrier.isEmpty() && carrier.items().anyMatch(s -> s.is(TagMod.INGREDIENT_CONTAINER)))
-            stack.shrink(1);
+            stack.consume(1, user);
 
         ItemStack resultCopy = this.result.copyWithCount(1);
         ItemUtils.getItemToLivingEntity(user, resultCopy);

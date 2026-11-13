@@ -183,7 +183,7 @@ public class MillstoneBlock extends HorizontalDirectionalBlock implements Entity
             return InteractionResult.PASS;
         }
         ItemStack mainHandItem = player.getMainHandItem();
-        if (millstone.onPutItem(level, mainHandItem)) {
+        if (millstone.onPutItem(level, player, mainHandItem)) {
             return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);

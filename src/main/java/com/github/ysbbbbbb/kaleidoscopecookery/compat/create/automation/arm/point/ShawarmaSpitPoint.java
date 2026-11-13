@@ -38,7 +38,7 @@ public class ShawarmaSpitPoint extends ArmInteractionPoint {
                     ItemStack remainder = stack.copy();
                     ItemStack toInsert = remainder.split(8);
                     if (!simulate) {
-                        spit.onPutCookingItem(level,toInsert);
+                        spit.onPutCookingItem(level, null, toInsert);
                     }
                     return remainder;
                 }

@@ -106,8 +106,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
                         .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
                         .setValue(FACING, state.getValue(FACING)));
                 SoundEvents.DECORATED_POT.placeSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
-                if (!player.isCreative())
-                    itemInHand.shrink(1);
+                itemInHand.consume(1, player);
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.CONSUME;
@@ -120,8 +119,7 @@ public class EmptyCupBlock extends HorizontalDirectionalBlock implements SimpleW
             if (count < MAX_COUNT) {
                 level.setBlockAndUpdate(pos, state.setValue(CUP_COUNT, count + 1));
                 SoundEvents.DECORATED_POT.placeSound().ifPresent(sound -> level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F));
-                if (!player.isCreative())
-                    itemInHand.shrink(1);
+                itemInHand.consume(1, player);
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.CONSUME;

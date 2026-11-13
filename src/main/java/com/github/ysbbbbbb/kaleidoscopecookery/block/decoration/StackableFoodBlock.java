@@ -94,9 +94,7 @@ public class StackableFoodBlock extends HorizontalDirectionalBlock implements Si
                         (soundType.volume() + 1) / 2f,
                         soundType.pitch() * 0.8f
                 ));
-                if (!player.isCreative()) {
-                    itemInHand.shrink(1);
-                }
+                itemInHand.consume(1, player);
                 return InteractionResult.SUCCESS;
             }
         }

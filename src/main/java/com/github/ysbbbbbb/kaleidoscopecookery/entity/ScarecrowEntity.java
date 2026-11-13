@@ -132,16 +132,9 @@ public class ScarecrowEntity extends LivingEntity {
         if (!(itemInHand.getItem() instanceof BlockItem blockItem) || !(blockItem.getBlock() instanceof SkullBlock)) {
             return InteractionResult.PASS;
         }
-
-        if (player.getAbilities().instabuild && headItem.isEmpty()) {
-            this.setItemSlot(EquipmentSlot.HEAD, itemInHand.copyWithCount(1));
-            this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
-            ModTrigger.EVENT.trigger(player, ModEventTriggerType.PLACE_HEAD_ON_SCARECROW);
-            return InteractionResult.SUCCESS;
-        }
-        if (!itemInHand.isEmpty() && itemInHand.getCount() > 1) {
+        if (!itemInHand.isEmpty() && (itemInHand.getCount() > 1 || (player.hasInfiniteMaterials() && headItem.isEmpty()))) {
             if (headItem.isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, itemInHand.split(1));
+                this.setItemSlot(EquipmentSlot.HEAD, ItemUtils.separate(itemInHand, player, 1));
                 this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
                 ModTrigger.EVENT.trigger(player, ModEventTriggerType.PLACE_HEAD_ON_SCARECROW);
                 return InteractionResult.SUCCESS;
@@ -189,13 +182,9 @@ public class ScarecrowEntity extends LivingEntity {
 
     private boolean swapHand(InteractionHand hand, Player player, ItemStack itemInHand) {
         ItemStack scarecrowStack = this.getItemInHand(hand);
-        if (player.getAbilities().instabuild && scarecrowStack.isEmpty() && !itemInHand.isEmpty()) {
-            this.setItemInHand(hand, itemInHand.copyWithCount(1));
-            return true;
-        }
-        if (!itemInHand.isEmpty() && itemInHand.getCount() > 1) {
+        if (!itemInHand.isEmpty() && (itemInHand.getCount() > 1 || (player.hasInfiniteMaterials() && scarecrowStack.isEmpty()))) {
             if (scarecrowStack.isEmpty()) {
-                this.setItemInHand(hand, itemInHand.split(1));
+                this.setItemInHand(hand, ItemUtils.separate(itemInHand, player, 1));
                 return true;
             }
             return false;

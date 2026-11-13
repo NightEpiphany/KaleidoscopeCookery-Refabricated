@@ -101,9 +101,7 @@ public class OilPotBlock extends HorizontalDirectionalBlock implements SimpleWat
             }
             int addOilCount = Math.min(needOilCount, mainHandItem.getCount());
             oilPot.setOilCount(currentOilCount + addOilCount);
-            if (!player.isCreative()) {
-                mainHandItem.shrink(addOilCount);
-            }
+            mainHandItem.consume(addOilCount, player);
             SoundEvents.LANTERN.hitSound().ifPresent(sound -> player.playSound(sound, 1.0F, player.getRandom().nextFloat() * 0.2F + 0.4F));
             return InteractionResult.SUCCESS;
         }

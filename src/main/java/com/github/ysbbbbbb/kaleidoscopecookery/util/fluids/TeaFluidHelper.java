@@ -129,18 +129,10 @@ public final class TeaFluidHelper {
         if (fluidId == null) {
             return false;
         }
-        if (user instanceof Player player && player.isCreative()) {
-            Item containerItem = ItemUtils.getContainerItem(stack);
-            if (containerItem != Items.AIR) {
-                ItemUtils.giveItemToPlayer(player, new ItemStack(containerItem));
-            }
-        } else {
-            Item containerItem = ItemUtils.getContainerItem(stack);
-            stack.shrink(1);
-            if (containerItem != Items.AIR) {
-                ItemUtils.getItemToLivingEntity(user, new ItemStack(containerItem));
-            }
-        }
+        Item containerItem = ItemUtils.getContainerItem(stack);
+        stack.consume(1, user);
+        if (containerItem != Items.AIR)
+            ItemUtils.getItemToLivingEntity(user, new ItemStack(containerItem));
         playEmptySound(user, fluidId);
         return true;
     }
@@ -161,12 +153,9 @@ public final class TeaFluidHelper {
         if (containerItem == Items.AIR || !emptyContainer.is(containerItem)) {
             return false;
         }
-        if (user instanceof Player player && player.isCreative()) {
-            ItemUtils.giveItemToPlayer(player, filledContainer.copy());
-        } else {
-            emptyContainer.shrink(1);
-            ItemUtils.getItemToLivingEntity(user, filledContainer.copy());
-        }
+        emptyContainer.consume(1, user);
+        ItemUtils.getItemToLivingEntity(user, filledContainer.copy());
+
         playFillSound(user, id);
         return true;
     }

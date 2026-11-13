@@ -344,7 +344,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
             if (itemstack.isEmpty()) {
                 this.cookingTime[i] = cookTime;
                 this.cookingProgress[i] = 0;
-                this.items.set(i, food.split(1));
+                this.items.set(i, ItemUtils.separate(food, user, 1));
                 added = true;
             }
         }
