@@ -174,9 +174,7 @@ public class BambooTrayBlockEntity extends BaseBlockEntity implements WorldlyCon
         if (moved <= 0) {
             return false;
         }
-        if (!(user instanceof Player player && player.getAbilities().instabuild)) {
-            held.shrink(moved);
-        }
+        held.consume(moved, user);
         user.playSound(SoundEvents.ITEM_FRAME_ADD_ITEM, 1.0F, 1.0F);
         this.refresh();
         return true;

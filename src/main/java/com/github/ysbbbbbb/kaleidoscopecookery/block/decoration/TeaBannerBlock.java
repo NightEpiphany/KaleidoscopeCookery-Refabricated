@@ -78,9 +78,7 @@ public class TeaBannerBlock extends FaceAttachedHorizontalDirectionalBlock imple
             }
             if (!level.isClientSide()) {
                 teaBanner.setColor(dyeColor);
-                if (!player.getAbilities().instabuild) {
-                    heldStack.shrink(1);
-                }
+                heldStack.consume(1, player);
                 level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
             return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
@@ -92,9 +90,7 @@ public class TeaBannerBlock extends FaceAttachedHorizontalDirectionalBlock imple
             }
             if (!level.isClientSide()) {
                 ItemStack previousPattern = teaBanner.setPatternItem(heldStack.copyWithCount(1));
-                if (!player.getAbilities().instabuild) {
-                    heldStack.shrink(1);
-                }
+                heldStack.consume(1, player);
                 if (!previousPattern.isEmpty()) {
                     popResource(level, pos, previousPattern);
                 }

@@ -1,6 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.compat.jei.ModJeiPlugin;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.ConfigGetter;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.GeneralConfig;
 import com.github.ysbbbbbb.kaleidoscopecookery.event.ExtraLootTableDrop;
@@ -45,7 +44,5 @@ public final class KaleidoscopeCookery implements ModInitializer {
         NetworkHandler.init();
         // 注册额外的战利品表事件
         ExtraLootTableDrop.register();
-        if (FabricLoader.getInstance().isModLoaded("jei"))
-            ModJeiPlugin.syncRecipes();
     }
 }

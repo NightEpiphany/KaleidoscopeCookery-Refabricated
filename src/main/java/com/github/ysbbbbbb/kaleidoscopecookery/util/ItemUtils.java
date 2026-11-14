@@ -23,6 +23,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jspecify.annotations.Nullable;
 
 public class ItemUtils {
     public static void getItemToLivingEntity(LivingEntity entity, ItemStack stack) {
@@ -201,6 +202,13 @@ public class ItemUtils {
         return true;
     }
 
+    public static ItemStack separate(ItemStack stack, @Nullable final LivingEntity user, int count) {
+        if (user == null || !user.hasInfiniteMaterials()) {
+            return stack.split(count);
+        }
+        return stack.copyWithCount(Math.min(count, stack.getCount()));
+    }
+
     public static boolean consumeIngredientContainers(LivingEntity user, ItemStack ingredient) {
         ItemStack containers = getIngredientContainerStack(ingredient);
         if (containers.isEmpty()) {
@@ -215,7 +223,7 @@ public class ItemUtils {
             return false;
         }
         if (!user.level().isClientSide()) {
-            held.shrink(containers.getCount());
+            held.consume(containers.getCount(), user);
         }
         return true;
     }

@@ -308,8 +308,13 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
     }
 
     public Optional<RecipeHolder<SteamerRecipe>> getSteamerRecipe(Level level, ItemStack stack) {
-        if (this.items.stream().noneMatch(ItemStack::isEmpty) || level.isClientSide()) {
+        int endIndex = this.getBlockState().getValue(SteamerBlock.HALF) ? 4 : 8;
+        if (this.items.subList(0, endIndex).stream().noneMatch(ItemStack::isEmpty)) {
             return Optional.empty();
+        }
+        if (level.isClientSide()) {
+            return level.recipeAccess().getSynchronizedRecipes()
+                    .getFirstMatch(ModRecipes.STEAMER_RECIPE, new SingleRecipeInput(stack), level);
         }
         return this.quickCheck.getRecipeFor(new SingleRecipeInput(stack), (ServerLevel) level);
     }
@@ -333,6 +338,10 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         if (cookTime <= 0) {
             return false;
         }
+        if (level.isClientSide()) {
+            // 匹配成功即消费这次交互，避免客户端开始食用或拉面团。
+            return true;
+        }
 
         boolean added = false;
         boolean half = this.getBlockState().getValue(SteamerBlock.HALF);
@@ -344,7 +353,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
             if (itemstack.isEmpty()) {
                 this.cookingTime[i] = cookTime;
                 this.cookingProgress[i] = 0;
-                this.items.set(i, food.split(1));
+                this.items.set(i, ItemUtils.separate(food, user, 1));
                 added = true;
             }
         }
