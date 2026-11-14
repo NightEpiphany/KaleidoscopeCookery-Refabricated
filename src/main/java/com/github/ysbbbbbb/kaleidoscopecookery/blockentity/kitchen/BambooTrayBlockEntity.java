@@ -73,6 +73,10 @@ public class BambooTrayBlockEntity extends BaseBlockEntity implements WorldlyCon
             return;
         }
 
+        if (tray.isEmpty()) {
+            return;
+        }
+
         boolean wetting = level.isRainingAt(pos.above()) || hasWaterDripstone(level, pos);
         boolean drying = !level.isRaining() && hasDryingExposure(level, pos);
         if (!wetting && !drying) {
@@ -132,13 +136,9 @@ public class BambooTrayBlockEntity extends BaseBlockEntity implements WorldlyCon
         }
     }
 
-    @SuppressWarnings("unchecked")
     private static List<RecipeHolder<BambooTrayRecipe>> getRecipes(
             net.minecraft.world.item.crafting.RecipeManager recipeManager) {
-        return recipeManager.getRecipes().stream()
-                .filter(holder -> holder.value().getType() == ModRecipes.BAMBOO_TRAY_RECIPE)
-                .map(holder -> (RecipeHolder<BambooTrayRecipe>) (RecipeHolder<?>) holder)
-                .toList();
+        return List.copyOf(recipeManager.recipes.byType(ModRecipes.BAMBOO_TRAY_RECIPE));
     }
 
     private static boolean hasDryingExposure(Level level, BlockPos pos) {
