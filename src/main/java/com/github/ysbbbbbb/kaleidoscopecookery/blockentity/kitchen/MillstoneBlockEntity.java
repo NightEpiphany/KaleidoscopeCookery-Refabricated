@@ -302,7 +302,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             this.progress = Math.max(Math.round(this.rotSpeedTick), 1);
             this.refresh();
             level.playSound(null, this.worldPosition,
-                    SoundEvents.BUNDLE_INSERT, SoundSource.BLOCKS, 1.0f, 1.0f);
+                    SoundEvents.BUNDLE_INSERT, SoundSource.BLOCKS, 1.0f,
+                    level.random.nextFloat() * 0.2f + 0.9f);
             level.playSound(null, this.worldPosition,
                     SoundEvents.STONE_HIT, SoundSource.BLOCKS, 0.8f,
                     level.random.nextFloat() * 0.2f + 0.9f);
@@ -326,7 +327,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         this.input = ItemStack.EMPTY;
         this.progress = 0;
         this.refresh();
-        level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_REMOVE_ONE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_REMOVE_ONE, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.2f + 0.9f);
         ItemUtils.getItemToLivingEntity(user, taken);
         return true;
     }
