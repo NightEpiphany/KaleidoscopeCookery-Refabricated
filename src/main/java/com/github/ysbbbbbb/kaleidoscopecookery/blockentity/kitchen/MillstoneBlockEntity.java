@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone {
     public static final int MAX_INPUT_COUNT = 8;
     private static final int OUTPUT_SLOT_COUNT = 4;
@@ -178,7 +179,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                         continue;
                     }
                     ItemStack stack = handler.extractItem(i, MAX_INPUT_COUNT, true);
-                    if (this.onPutItem(level, null, stack)) {
+                    if (this.onPutItem(level, stack)) {
                         handler.extractItem(i, MAX_INPUT_COUNT, false);
                         return;
                     }
@@ -198,7 +199,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 }
                 int countCanInsert = Math.min(stack.getCount(), MAX_INPUT_COUNT);
                 ItemStack stackToInsert = stack.copyWithCount(countCanInsert);
-                if (this.onPutItem(level, null, stackToInsert)) {
+                if (this.onPutItem(level, stackToInsert)) {
                     stack.shrink(countCanInsert);
                     if (stack.isEmpty()) {
                         itemEntity.discard();
@@ -260,6 +261,11 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 this.refresh();
             });
         }
+    }
+
+    @Override
+    public boolean onPutItem(Level level, ItemStack putOnItem) {
+        return onPutItem(level, null, putOnItem);
     }
 
     @Override

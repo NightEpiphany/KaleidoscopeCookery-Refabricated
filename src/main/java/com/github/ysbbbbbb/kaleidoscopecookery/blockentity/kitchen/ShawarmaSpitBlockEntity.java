@@ -43,6 +43,11 @@ public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarm
     }
 
     @Override
+    public boolean onPutCookingItem(Level level, ItemStack cookingItem) {
+        return onPutCookingItem(level, null, cookingItem);
+    }
+
+    @Override
     public boolean onPutCookingItem(Level level, @Nullable final LivingEntity entity, ItemStack itemStack) {
         // 先判断能否放入物品
         if (!this.cookingItem.isEmpty() || !this.cookedItem.isEmpty()) {

@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public interface ITeapot {
+public interface ITeapot extends IKaleidoscopeBlockEntity {
     /**
      * 放入原料阶段，此时可以取出素材
      */

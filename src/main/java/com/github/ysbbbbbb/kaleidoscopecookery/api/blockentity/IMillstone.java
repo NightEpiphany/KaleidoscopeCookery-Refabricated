@@ -13,11 +13,22 @@ public interface IMillstone extends IKaleidoscopeBlockEntity {
      * 放置物品到石磨上
      *
      * @param level     使用者所在的世界
+     * @param putOnItem 打算放置的物品
+     * @return 放置是否成功
+     */
+    boolean onPutItem(Level level, ItemStack putOnItem);
+
+    /**
+     * 放置物品到石磨上，创造模式玩家不消耗物品；自动化可传入 null。
+     *
+     * @param level     使用者所在的世界
      * @param user      使用者实体
      * @param putOnItem 打算放置的物品
      * @return 放置是否成功
      */
-    boolean onPutItem(Level level, @Nullable final LivingEntity user, ItemStack putOnItem);
+    default boolean onPutItem(Level level, @Nullable final LivingEntity user, ItemStack putOnItem) {
+        return onPutItem(level, putOnItem);
+    }
 
     /**
      * 取回石磨中全部尚未加工完成的原材料，并重置加工进度
