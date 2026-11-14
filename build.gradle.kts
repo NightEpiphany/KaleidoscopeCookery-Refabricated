@@ -67,6 +67,10 @@ dependencies {
 	implementation ("maven.modrinth:kaleidoscope-tavern-refabricated:${providers.gradleProperty("kaleidoscope_tavern_version").get()}-fabric+mc${providers.gradleProperty("minecraft_version").get()}")
 	// Mezz config
 	implementation("maven.modrinth:7tEfOcA7:yfBlgV6q")
+	// Everycomp
+	implementation("maven.modrinth:eiktJyw1:UjFO8ir4")
+	// Moonlight
+	implementation("maven.modrinth:twkfQtEc:Z4zBrgxb")
 	implementation("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
 	implementation("maven.modrinth:EsAfCjCV:zLlqqiTA")
 }
