@@ -333,6 +333,7 @@ public final class ModBlocks {
                 .instrument(NoteBlockInstrument.BASS)
                 .strength(2.0F, 3.0F)
                 .sound(soundType)
+                .noOcclusion()
                 .ignitedByLava());
     }
 
