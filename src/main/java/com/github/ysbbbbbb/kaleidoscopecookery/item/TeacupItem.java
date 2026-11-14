@@ -74,9 +74,7 @@ public class TeacupItem extends BlockItem implements IHasContainer {
             serverPlayer.awardStat(Stats.ITEM_USED.get(this));
         }
         this.addTeaEffect(level, entity);
-        if (entity instanceof Player player && !player.isCreative()) {
-            stack.shrink(1);
-        }
+        stack.consume(1, entity);
         return returnContainerToEntity(stack, level, entity);
     }
 

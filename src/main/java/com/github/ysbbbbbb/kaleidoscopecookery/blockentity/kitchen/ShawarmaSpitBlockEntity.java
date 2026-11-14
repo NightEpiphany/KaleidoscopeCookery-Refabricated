@@ -21,6 +21,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarmaSpit {
     private static final int MAX_ITEMS = 8;
@@ -40,6 +41,11 @@ public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarm
 
     @Override
     public boolean onPutCookingItem(Level level, ItemStack itemStack) {
+        return this.onPutCookingItem(level, null, itemStack);
+    }
+
+    @Override
+    public boolean onPutCookingItem(Level level, @Nullable final LivingEntity user, ItemStack itemStack) {
         // 先判断能否放入物品
         if (!this.cookingItem.isEmpty() || !this.cookedItem.isEmpty()) {
             return false;
@@ -48,7 +54,7 @@ public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarm
         SingleRecipeInput singleRecipeInput = new SingleRecipeInput(itemStack);
         return this.quickCheck.getRecipeFor(singleRecipeInput, level).map(recipe -> {
             // 如果找到了配方，则设置正在烹饪的物品和烹饪时间
-            this.cookingItem = itemStack.split(MAX_ITEMS);
+            this.cookingItem = ItemUtils.separate(itemStack, user, MAX_ITEMS);
             this.cookedItem = recipe.value().assemble(singleRecipeInput, level.registryAccess());
             this.cookedItem.setCount(this.cookingItem.getCount());
             this.cookTime = recipe.value().getCookingTime();

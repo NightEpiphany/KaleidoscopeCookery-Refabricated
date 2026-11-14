@@ -91,7 +91,7 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof IShawarmaSpit shawarmaSpit) {
             ItemStack heldItem = player.getItemInHand(hand);
-            if (shawarmaSpit.onPutCookingItem(level, heldItem)) {
+            if (shawarmaSpit.onPutCookingItem(level, player, heldItem)) {
                 return ItemInteractionResult.SUCCESS;
             } else if (shawarmaSpit.onTakeCookedItem(level, player)) {
                 return ItemInteractionResult.SUCCESS;

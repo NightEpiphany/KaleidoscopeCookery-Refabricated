@@ -86,7 +86,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
             this.modelId = recipe.getModelId();
             this.maxCutCount = recipe.getCutCount();
             this.currentCutCount = 0;
-            this.currentCutStack = putOnItem.split(1);
+            this.currentCutStack = ItemUtils.separate(putOnItem, user, 1);
             this.results = recipe.getResults();
             this.refresh();
             level.playSound(null, this.worldPosition,

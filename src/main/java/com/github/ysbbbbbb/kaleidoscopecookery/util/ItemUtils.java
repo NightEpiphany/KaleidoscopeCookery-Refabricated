@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemUtils {
     public static void getItemToLivingEntity(LivingEntity entity, ItemStack stack) {
@@ -116,6 +117,14 @@ public class ItemUtils {
         return stack;
     }
 
+    /** 放入创造玩家物品的副本，避免与手中物品共享 NBT 或修改原堆叠。 */
+    public static ItemStack separate(ItemStack stack, @Nullable LivingEntity user, int count) {
+        if (user instanceof Player player && player.getAbilities().instabuild) {
+            return stack.copyWithCount(Math.min(count, stack.getCount()));
+        }
+        return stack.split(count);
+    }
+
     public static ItemStack insertItemStacked(IItemHandler inventory, ItemStack stack, boolean simulate) {
         if (inventory != null && !stack.isEmpty()) {
             if (!stack.isStackable()) {
@@ -200,6 +209,7 @@ public class ItemUtils {
         return true;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean consumeIngredientContainers(LivingEntity user, ItemStack ingredient) {
         ItemStack containers = getIngredientContainerStack(ingredient);
         if (containers.isEmpty()) {
@@ -214,7 +224,7 @@ public class ItemUtils {
             return false;
         }
         if (!user.level().isClientSide) {
-            held.shrink(containers.getCount());
+            held.consume(containers.getCount(), user);
         }
         return true;
     }

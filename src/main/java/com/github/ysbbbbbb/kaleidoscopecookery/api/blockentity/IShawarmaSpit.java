@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public interface IShawarmaSpit {
     /**
@@ -22,4 +23,11 @@ public interface IShawarmaSpit {
      * @return 是否成功取出
      */
     boolean onTakeCookedItem(Level level, LivingEntity user);
+
+    /**
+     * 放置烹饪物品，创造模式玩家不消耗物品；自动化可传入 null。
+     */
+    default boolean onPutCookingItem(Level level, @Nullable final LivingEntity user, ItemStack cookingItem) {
+        return onPutCookingItem(level, cookingItem);
+    }
 }

@@ -44,8 +44,10 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
         renderItems(steamer, poseStack, buffer, packedLight, packedOverlay);
     }
 
+    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     private void renderItems(SteamerBlockEntity steamer, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         NonNullList<ItemStack> items = steamer.getItems();
+        int rotation = steamer.getBlockState().getValue(SteamerBlock.FACING).get2DDataValue() * 90;
         for (int i = 0; i < items.size(); i++) {
             ItemStack stack = items.get(i);
             if (stack.isEmpty()) {
@@ -62,6 +64,8 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
             double z = ((i / 2) % 2) * 0.3 + 0.35;
             poseStack.pushPose();
             poseStack.translate(x, y, z);
+            // 只改变物品朝向，保留各槽位的位置及替换模型原有的摆放方式。
+            poseStack.mulPose(Axis.YN.rotationDegrees(rotation));
             if (!hasCustom) {
                 poseStack.mulPose(Axis.XN.rotationDegrees(90));
             } else {
