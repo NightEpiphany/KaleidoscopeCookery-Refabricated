@@ -18,6 +18,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 
+@SuppressWarnings("UnstableApiUsage")
 public class KaleidoscopeCookeryModule extends EveryCompatModule {
     SimpleEntrySet<WoodType, CookStoolBlock> cookStools;
     SimpleEntrySet<WoodType, ChairBlock> chairs;

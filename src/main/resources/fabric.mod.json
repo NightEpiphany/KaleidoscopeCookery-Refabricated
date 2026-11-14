@@ -26,7 +26,8 @@
     "rei_client": ["com.github.ysbbbbbb.kaleidoscopecookery.compat.rei.ModREIClientPlugin"],
     "jade": ["com.github.ysbbbbbb.kaleidoscopecookery.compat.jade.ModPlugin"],
     "emi": ["com.github.ysbbbbbb.kaleidoscopecookery.compat.emi.ModEmiPlugin"],
-    "appleskin": ["com.github.ysbbbbbb.kaleidoscopecookery.compat.appleskin.AppleSkinCompat"]
+    "appleskin": ["com.github.ysbbbbbb.kaleidoscopecookery.compat.appleskin.AppleSkinCompat"],
+    "everycomp": ["com.github.ysbbbbbb.kaleidoscopecookery.compat.everycomp.EveryCompatCompat"]
   },
   "mixins": ["kaleidoscope_cookery.mixins.json"],
   "accessWidener": "kaleidoscope_cookery.accessWidener",
