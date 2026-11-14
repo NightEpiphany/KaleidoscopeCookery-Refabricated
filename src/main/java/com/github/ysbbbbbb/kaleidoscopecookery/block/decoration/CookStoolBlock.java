@@ -46,6 +46,7 @@ public class CookStoolBlock extends HorizontalDirectionalBlock implements Simple
                 .instrument(NoteBlockInstrument.BASS)
                 .strength(2.0F, 3.0F)
                 .sound(soundType)
+                .noOcclusion()
                 .ignitedByLava());
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.SOUTH)

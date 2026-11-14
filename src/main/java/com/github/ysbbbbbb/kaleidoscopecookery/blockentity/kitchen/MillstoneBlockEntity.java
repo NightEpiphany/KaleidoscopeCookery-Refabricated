@@ -502,7 +502,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     public float getProgressPercent() {
         float total = Math.max(this.rotSpeedTick, 1);
-        return (total - this.progress) / total;
+        float percent = (total - this.progress) / total;
+        return Float.isFinite(percent) ? Mth.clamp(percent, 0f, 1f) : 0f;
     }
 
     /**
