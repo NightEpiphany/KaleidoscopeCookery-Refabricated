@@ -18,7 +18,7 @@ public interface IShawarmaSpit {
     /**
      * 放置烹饪物品，创造模式玩家不消耗物品；自动化可传入 null。
      */
-    default boolean onPutCookingItem(Level level, @Nullable LivingEntity user, ItemStack cookingItem) {
+    default boolean onPutCookingItem(Level level, @Nullable final LivingEntity user, ItemStack cookingItem) {
         return onPutCookingItem(level, cookingItem);
     }
 
