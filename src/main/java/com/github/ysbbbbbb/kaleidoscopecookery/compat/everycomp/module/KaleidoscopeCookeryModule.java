@@ -16,6 +16,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 
 public final class KaleidoscopeCookeryModule extends EveryCompatModule {
     public SimpleEntrySet<WoodType, CookStoolBlock> cookStools;
@@ -27,7 +29,12 @@ public final class KaleidoscopeCookeryModule extends EveryCompatModule {
 
         cookStools = SimpleEntrySet.builder(WoodType.class, "", "cook_stool",
                         () -> (CookStoolBlock) ModBlocks.COOK_STOOL_OAK, () -> VanillaWoodTypes.OAK,
-                        (w, p) -> new CookStoolBlock(p.sound(w.getSound())))
+                        (w, p) -> new CookStoolBlock(p
+                                .sound(w.getSound())
+                                .noOcclusion()
+                                .mapColor(MapColor.WOOD)
+                                .instrument(NoteBlockInstrument.BASS)
+                                .ignitedByLava()))
                 .addCustomItem((_, block, p) -> new BlockItem(block, p))
                 .includeModelsBlock(Identifier.tryParse("kaleidoscope_cookery:block/cook_stool/oak"))
                 .addTexture(Identifier.tryParse("kaleidoscope_cookery:block/cook_stool/oak"), PaletteStrategies.STRIPPED_LOG_SIDE_STANDARD)
@@ -41,7 +48,12 @@ public final class KaleidoscopeCookeryModule extends EveryCompatModule {
 
         chairs = SimpleEntrySet.builder(WoodType.class, "", "chair",
                         () -> (ChairBlock) ModBlocks.CHAIR_OAK, () -> VanillaWoodTypes.OAK,
-                        (w, p) -> new ChairBlock(p.sound(w.getSound())))
+                        (w, p) -> new ChairBlock(p
+                                .sound(w.getSound())
+                                .noOcclusion()
+                                .mapColor(MapColor.WOOD)
+                                .instrument(NoteBlockInstrument.BASS)
+                                .ignitedByLava()))
                 .addCustomItem((_, block, p) -> new BlockItem(block, p))
                 .addTile(() -> ModBlocks.CHAIR_BE)
                 .includeModelsBlock(Identifier.tryParse("kaleidoscope_cookery:block/chair/oak"))
@@ -57,7 +69,12 @@ public final class KaleidoscopeCookeryModule extends EveryCompatModule {
 
         tables = SimpleEntrySet.builder(WoodType.class, "", "table",
                         () -> (TableBlock) ModBlocks.TABLE_OAK, () -> VanillaWoodTypes.OAK,
-                        (w, p) -> new TableBlock(p.sound(w.getSound())))
+                        (w, p) -> new TableBlock(p
+                                .sound(w.getSound())
+                                .noOcclusion()
+                                .mapColor(MapColor.WOOD)
+                                .instrument(NoteBlockInstrument.BASS)
+                                .ignitedByLava()))
                 .addCustomItem((_, block, p) -> new BlockItem(block, p))
                 .addTile(() -> ModBlocks.TABLE_BE)
                 .includeModelsBlock(Identifier.tryParse("kaleidoscope_cookery:block/table/oak"))

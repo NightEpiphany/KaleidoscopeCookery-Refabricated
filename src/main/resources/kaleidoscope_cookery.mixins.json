@@ -10,6 +10,7 @@
     "BlockMixin",
     "CropBlockMixin",
     "DataComponentHolderMixin",
+    "EntityMixin",
     "FallingBlockEntityMixin",
     "FarmBlockMixin",
     "FishingHookMixin",
