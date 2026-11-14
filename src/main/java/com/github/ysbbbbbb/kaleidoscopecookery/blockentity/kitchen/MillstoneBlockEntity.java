@@ -18,6 +18,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.IItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.ItemStackHandler;
 import net.fabricmc.fabric.impl.serialization.SpecialCodecs;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -137,9 +138,9 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         if (bindEntity == null) {
             // 必须距离磨盘足够近才可以（5 格）
             if (serverLevel.getEntity(entityId) instanceof LivingEntity mob
-                && mob.isAlive()
-                && mob.distanceToSqr(center) < maxDistanceSqr
-                && this.canBindEntity(mob)) {
+                    && mob.isAlive()
+                    && mob.distanceToSqr(center) < maxDistanceSqr
+                    && this.canBindEntity(mob)) {
                 this.bindEntity(mob);
             } else {
                 this.entityId = Util.NIL_UUID;
@@ -149,8 +150,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 return;
             }
         } else if (!bindEntity.isAlive()
-                   || bindEntity.distanceToSqr(center) >= maxDistanceSqr
-                   || bindEntity.isInWall()) {
+                || bindEntity.distanceToSqr(center) >= maxDistanceSqr
+                || bindEntity.isInWall()) {
             this.entityId = Util.NIL_UUID;
             this.bindRef = null;
             this.cacheRot = rot;
@@ -178,9 +179,13 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                     if (stackInSlot.isEmpty()) {
                         continue;
                     }
-                    ItemStack stack = handler.extractItem(i, MAX_INPUT_COUNT, true);
+                    int countCanInsert = Math.min(stackInSlot.getCount(), MAX_INPUT_COUNT - this.input.getCount());
+                    if (countCanInsert <= 0) {
+                        continue;
+                    }
+                    ItemStack stack = handler.extractItem(i, countCanInsert, true);
                     if (this.onPutItem(level, stack)) {
-                        handler.extractItem(i, MAX_INPUT_COUNT, false);
+                        handler.extractItem(i, countCanInsert, false);
                         return;
                     }
                 }
@@ -197,7 +202,10 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 if (stack.isEmpty()) {
                     continue;
                 }
-                int countCanInsert = Math.min(stack.getCount(), MAX_INPUT_COUNT);
+                int countCanInsert = Math.min(stack.getCount(), MAX_INPUT_COUNT - this.input.getCount());
+                if (countCanInsert <= 0) {
+                    continue;
+                }
                 ItemStack stackToInsert = stack.copyWithCount(countCanInsert);
                 if (this.onPutItem(level, stackToInsert)) {
                     stack.shrink(countCanInsert);
@@ -281,10 +289,10 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             return false;
         }
         if (level instanceof ServerLevel serverLevel) {
-            level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_INSERT,  SoundSource.BLOCKS, 1.0F,
+            level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_INSERT, SoundSource.BLOCKS, 1.0F,
                     level.getRandom().nextFloat() * 0.2f + 0.9f);
             SimpleInput container = new SimpleInput(List.of(putOnItem));
-            return this.matchRecipe(container, serverLevel).map(_ -> {
+            return this.matchRecipe(container, serverLevel).map(recipe -> {
                 ItemStack inserted = ItemUtils.separate(putOnItem, user, MAX_INPUT_COUNT - this.input.getCount());
                 if (this.input.isEmpty()) {
                     this.input = inserted;
@@ -318,7 +326,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         this.input = ItemStack.EMPTY;
         this.progress = 0;
         this.refresh();
-        level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_REMOVE_ONE,  SoundSource.BLOCKS, 1.0F,
+        level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_REMOVE_ONE, SoundSource.BLOCKS, 1.0F,
                 level.getRandom().nextFloat() * 0.2f + 0.9f);
         ItemUtils.getItemToLivingEntity(user, taken);
         return true;
@@ -391,7 +399,6 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         if (this.level == null || this.level.isClientSide() || !entity.isAlive() || !this.canBindEntity(entity)) {
             return;
         }
-        // Preserve the 26.2 handling of passengers when binding.
         if (entity.getControllingPassenger() != null) {
             entity.ejectPassengers();
         }
@@ -408,6 +415,21 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     public boolean isBoundTo(LivingEntity entity) {
         return this.entityId.equals(entity.getUUID());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Nullable
+    public static MillstoneBlockEntity findBoundMillstone(LivingEntity entity) {
+        BlockPos origin = entity.blockPosition();
+        Level level = entity.level();
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-5, -2, -5), origin.offset(5, 2, 5))) {
+            if (level.hasChunkAt(pos)
+                    && level.getBlockEntity(pos) instanceof MillstoneBlockEntity millstone
+                    && millstone.isBoundTo(entity)) {
+                return millstone;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -520,7 +542,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     public float getProgressPercent() {
         float total = Math.max(this.rotSpeedTick, 1);
-        return (total - this.progress) / total;
+        float percent = (total - this.progress) / total;
+        return Float.isFinite(percent) ? Math.clamp(percent, 0f, 1f) : 0f;
     }
 
     /**

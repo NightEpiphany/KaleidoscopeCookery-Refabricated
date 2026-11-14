@@ -25,6 +25,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -70,6 +71,10 @@ public class BambooTrayBlockEntity extends BaseBlockEntity implements WorldlyCon
 
         long offset = pos.getX() + pos.getY() + pos.getZ();
         if ((level.getGameTime() + offset) % 19 != 0) {
+            return;
+        }
+
+        if (tray.isEmpty()) {
             return;
         }
 
@@ -132,13 +137,9 @@ public class BambooTrayBlockEntity extends BaseBlockEntity implements WorldlyCon
         }
     }
 
-    @SuppressWarnings("unchecked")
     private static List<RecipeHolder<BambooTrayRecipe>> getRecipes(
-            net.minecraft.world.item.crafting.RecipeManager recipeManager) {
-        return recipeManager.getRecipes().stream()
-                .filter(holder -> holder.value().getType() == ModRecipes.BAMBOO_TRAY_RECIPE)
-                .map(holder -> (RecipeHolder<BambooTrayRecipe>) (RecipeHolder<?>) holder)
-                .toList();
+            RecipeManager recipeManager) {
+        return List.copyOf(recipeManager.recipes.byType(ModRecipes.BAMBOO_TRAY_RECIPE));
     }
 
     private static boolean hasDryingExposure(Level level, BlockPos pos) {
