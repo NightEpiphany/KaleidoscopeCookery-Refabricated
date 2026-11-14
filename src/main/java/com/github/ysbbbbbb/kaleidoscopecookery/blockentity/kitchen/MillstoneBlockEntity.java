@@ -265,17 +265,25 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     @Override
     public boolean onPutItem(Level level, @Nullable final LivingEntity user, ItemStack putOnItem) {
         // 先清空输出槽才可以
-        if (!this.isOutputEmpty()) {
+        if (putOnItem.isEmpty() || !this.isOutputEmpty()) {
             return false;
         }
-        // 正在工作中，不能放入
-        if (this.progress > 0 && !this.input.isEmpty()) {
+        // 有原料时，仅静止且未满的石磨可以继续放入同类物品
+        if (!this.input.isEmpty() && (this.hasEntity()
+                || this.input.getCount() >= MAX_INPUT_COUNT
+                || !ItemStack.isSameItemSameComponents(this.input, putOnItem))) {
             return false;
         }
         if (level instanceof ServerLevel serverLevel) {
+            level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_INSERT,  SoundSource.BLOCKS, 1.0F, 1.0F);
             SimpleInput container = new SimpleInput(List.of(putOnItem));
             return this.matchRecipe(container, serverLevel).map(_ -> {
-                this.input = ItemUtils.separate(putOnItem, user, MAX_INPUT_COUNT);
+                ItemStack inserted = ItemUtils.separate(putOnItem, user, MAX_INPUT_COUNT - this.input.getCount());
+                if (this.input.isEmpty()) {
+                    this.input = inserted;
+                } else {
+                    this.input.grow(inserted.getCount());
+                }
                 this.progress = Math.max(Math.round(this.rotSpeedTick), 1);
                 this.refresh();
                 SoundEvents.STONE.hitSound().ifPresent(sound -> level.playSound(null, this.worldPosition,
@@ -285,6 +293,26 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             }).orElse(false);
         }
         return false;
+    }
+
+    @Override
+    public boolean onTakeOut(Level level, LivingEntity user) {
+        if (this.input.isEmpty()) {
+            return false;
+        }
+        // 客户端先拦截此次交互，避免取回原料时同时触发副手物品
+        if (level.isClientSide()) {
+            return true;
+        }
+        if (!(level instanceof ServerLevel)) {
+            return false;
+        }
+        ItemStack taken = this.input.copyAndClear();
+        this.input = ItemStack.EMPTY;
+        this.progress = 0;
+        this.refresh();
+        ItemUtils.getItemToLivingEntity(user, taken);
+        return true;
     }
 
     public void onPutItemForPonder(ItemStack putOnItem) {

@@ -519,7 +519,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (level.isClientSide()) {
                 return true;
             }
-            ItemStack ingredient = itemStack.split(1);
+            ItemStack ingredient = ItemUtils.separate(itemStack, user, 1);
             this.inputs.set(i, ingredient);
             ItemUtils.returnIngredientContainers(user, ingredient);
             level.playSound(null, user.getX(), user.getY() + 0.5, user.getZ(),
