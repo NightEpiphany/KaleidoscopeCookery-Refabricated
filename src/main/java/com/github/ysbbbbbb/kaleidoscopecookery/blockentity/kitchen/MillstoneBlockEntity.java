@@ -138,9 +138,9 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         if (bindEntity == null) {
             // 必须距离磨盘足够近才可以（5 格）
             if (serverLevel.getEntity(entityId) instanceof LivingEntity mob
-                && mob.isAlive()
-                && mob.distanceToSqr(center) < maxDistanceSqr
-                && this.canBindEntity(mob)) {
+                    && mob.isAlive()
+                    && mob.distanceToSqr(center) < maxDistanceSqr
+                    && this.canBindEntity(mob)) {
                 this.bindEntity(mob);
             } else {
                 this.entityId = Util.NIL_UUID;
@@ -150,8 +150,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 return;
             }
         } else if (!bindEntity.isAlive()
-                   || bindEntity.distanceToSqr(center) >= maxDistanceSqr
-                   || bindEntity.isInWall()) {
+                || bindEntity.distanceToSqr(center) >= maxDistanceSqr
+                || bindEntity.isInWall()) {
             this.entityId = Util.NIL_UUID;
             this.bindRef = null;
             this.cacheRot = rot;
@@ -399,7 +399,6 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         if (this.level == null || this.level.isClientSide() || !entity.isAlive() || !this.canBindEntity(entity)) {
             return;
         }
-        // Preserve the 26.2 handling of passengers when binding.
         if (entity.getControllingPassenger() != null) {
             entity.ejectPassengers();
         }
@@ -416,6 +415,21 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     public boolean isBoundTo(LivingEntity entity) {
         return this.entityId.equals(entity.getUUID());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Nullable
+    public static MillstoneBlockEntity findBoundMillstone(LivingEntity entity) {
+        BlockPos origin = entity.blockPosition();
+        Level level = entity.level();
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-5, -2, -5), origin.offset(5, 2, 5))) {
+            if (level.hasChunkAt(pos)
+                    && level.getBlockEntity(pos) instanceof MillstoneBlockEntity millstone
+                    && millstone.isBoundTo(entity)) {
+                return millstone;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -528,7 +542,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     public float getProgressPercent() {
         float total = Math.max(this.rotSpeedTick, 1);
-        return (total - this.progress) / total;
+        float percent = (total - this.progress) / total;
+        return Float.isFinite(percent) ? Math.clamp(percent, 0f, 1f) : 0f;
     }
 
     /**
