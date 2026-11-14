@@ -289,7 +289,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             return false;
         }
         if (level instanceof ServerLevel serverLevel) {
-            level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_INSERT, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_INSERT, SoundSource.BLOCKS, 1.0F,
+                    level.getRandom().nextFloat() * 0.2f + 0.9f);
             SimpleInput container = new SimpleInput(List.of(putOnItem));
             return this.matchRecipe(container, serverLevel).map(recipe -> {
                 ItemStack inserted = ItemUtils.separate(putOnItem, user, MAX_INPUT_COUNT - this.input.getCount());
@@ -325,7 +326,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         this.input = ItemStack.EMPTY;
         this.progress = 0;
         this.refresh();
-        level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_REMOVE_ONE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_REMOVE_ONE, SoundSource.BLOCKS, 1.0F,
+                level.getRandom().nextFloat() * 0.2f + 0.9f);
         ItemUtils.getItemToLivingEntity(user, taken);
         return true;
     }
