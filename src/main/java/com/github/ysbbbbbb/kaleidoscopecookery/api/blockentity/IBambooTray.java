@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 /**
  * 竹匾交互接口，方便其他模组中的实体放入、取出物品。
  */
-public interface IBambooTray {
+public interface IBambooTray extends IKaleidoscopeBlockEntity {
     /**
      * 将物品放入指定位置。
      *

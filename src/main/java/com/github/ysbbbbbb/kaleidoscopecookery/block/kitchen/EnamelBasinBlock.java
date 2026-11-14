@@ -107,8 +107,7 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
             int needCount = MAX_OIL_COUNT - value;
             int consumeCount = Math.min(needCount, mainHandItem.getCount());
             level.playSound(player, pos, SoundEvents.HONEY_BLOCK_BREAK, SoundSource.BLOCKS, 0.8f, 0.8f);
-            if (!player.isCreative())
-                mainHandItem.shrink(consumeCount);
+            mainHandItem.consume(consumeCount, player);
             level.setBlockAndUpdate(pos, state.setValue(OIL_COUNT, value + consumeCount));
             return InteractionResult.SUCCESS;
         }

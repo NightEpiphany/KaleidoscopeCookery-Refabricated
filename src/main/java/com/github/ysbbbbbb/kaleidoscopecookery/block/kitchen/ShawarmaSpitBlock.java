@@ -88,7 +88,7 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
         BlockEntity blockEntity = level.getBlockEntity(pos);
         boolean isLocal = BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace().equals(KaleidoscopeCookery.MOD_ID);
         if (blockEntity instanceof ShawarmaSpitBlockEntity shawarmaSpit) {
-            if (!stack.isEmpty() && shawarmaSpit.onPutCookingItem(level, stack)) {
+            if (!stack.isEmpty() && shawarmaSpit.onPutCookingItem(level, player, stack)) {
                 return InteractionResult.SUCCESS;
             } else if (isLocal && shawarmaSpit.onTakeCookedItem(level, player, stack)) {
                 return InteractionResult.SUCCESS;

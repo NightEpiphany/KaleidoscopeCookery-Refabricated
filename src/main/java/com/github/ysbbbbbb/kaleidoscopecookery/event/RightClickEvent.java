@@ -66,8 +66,8 @@ public class RightClickEvent {
                         SoundEvents.PARROT_EAT, chicken.getSoundSource(),
                         1.0F, 1.0F + (serverLevel.getRandom().nextFloat() - serverLevel.getRandom().nextFloat()) * 0.2F);
             }
-            if (!player.isCreative())
-                player.getMainHandItem().shrink(1);
+            if (!player.getMainHandItem().isEmpty())
+                player.getMainHandItem().consume(1, player);
             ModTrigger.EVENT.trigger(player, ModEventTriggerType.USE_CATERPILLAR_FEED_CHICKEN);
             return InteractionResult.SUCCESS;
         }

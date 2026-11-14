@@ -58,8 +58,7 @@ public class ScarecrowItem extends WithTooltipsItem {
                 scarecrow.gameEvent(GameEvent.ENTITY_PLACE, context.getPlayer());
                 ModTrigger.EVENT.trigger(context.getPlayer(), ModEventTriggerType.PLACE_SCARECROW);
             }
-            if (context.getPlayer() == null || !context.getPlayer().isCreative())
-                stack.shrink(1);
+            stack.consume(1, placeContext.getPlayer());
             return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;

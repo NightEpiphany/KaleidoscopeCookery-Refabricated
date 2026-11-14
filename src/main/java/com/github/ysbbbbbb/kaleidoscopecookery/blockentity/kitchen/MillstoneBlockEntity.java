@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone {
     public static final int MAX_INPUT_COUNT = 8;
     private static final int OUTPUT_SLOT_COUNT = 4;
@@ -178,9 +179,13 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                     if (stackInSlot.isEmpty()) {
                         continue;
                     }
-                    ItemStack stack = handler.extractItem(i, MAX_INPUT_COUNT, true);
+                    int countCanInsert = Math.min(stackInSlot.getCount(), MAX_INPUT_COUNT - this.input.getCount());
+                    if (countCanInsert <= 0) {
+                        continue;
+                    }
+                    ItemStack stack = handler.extractItem(i, countCanInsert, true);
                     if (this.onPutItem(level, stack)) {
-                        handler.extractItem(i, MAX_INPUT_COUNT, false);
+                        handler.extractItem(i, countCanInsert, false);
                         return;
                     }
                 }
@@ -197,7 +202,10 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 if (stack.isEmpty()) {
                     continue;
                 }
-                int countCanInsert = Math.min(stack.getCount(), MAX_INPUT_COUNT);
+                int countCanInsert = Math.min(stack.getCount(), MAX_INPUT_COUNT - this.input.getCount());
+                if (countCanInsert <= 0) {
+                    continue;
+                }
                 ItemStack stackToInsert = stack.copyWithCount(countCanInsert);
                 if (this.onPutItem(level, stackToInsert)) {
                     stack.shrink(countCanInsert);
@@ -265,18 +273,31 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     @Override
     public boolean onPutItem(Level level, ItemStack putOnItem) {
+        return onPutItem(level, null, putOnItem);
+    }
+
+    @Override
+    public boolean onPutItem(Level level, @Nullable final LivingEntity user, ItemStack putOnItem) {
         // 先清空输出槽才可以
-        if (!this.isOutputEmpty()) {
+        if (putOnItem.isEmpty() || !this.isOutputEmpty()) {
             return false;
         }
-        // 正在工作中，不能放入
-        if (this.progress > 0 && !this.input.isEmpty()) {
+        // 有原料时，仅静止且未满的石磨可以继续放入同类物品
+        if (!this.input.isEmpty() && (this.hasEntity()
+                || this.input.getCount() >= MAX_INPUT_COUNT
+                || !ItemStack.isSameItemSameComponents(this.input, putOnItem))) {
             return false;
         }
         if (level instanceof ServerLevel serverLevel) {
+            level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_INSERT, SoundSource.BLOCKS, 1.0F, 1.0F);
             SimpleInput container = new SimpleInput(List.of(putOnItem));
             return this.matchRecipe(container, serverLevel).map(recipe -> {
-                this.input = putOnItem.split(MAX_INPUT_COUNT);
+                ItemStack inserted = ItemUtils.separate(putOnItem, user, MAX_INPUT_COUNT - this.input.getCount());
+                if (this.input.isEmpty()) {
+                    this.input = inserted;
+                } else {
+                    this.input.grow(inserted.getCount());
+                }
                 this.progress = Math.max(Math.round(this.rotSpeedTick), 1);
                 this.refresh();
                 level.playSound(null, this.worldPosition,
@@ -286,6 +307,27 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             }).orElse(false);
         }
         return false;
+    }
+
+    @Override
+    public boolean onTakeOut(Level level, LivingEntity user) {
+        if (this.input.isEmpty()) {
+            return false;
+        }
+        // 客户端先拦截此次交互，避免取回原料时同时触发副手物品
+        if (level.isClientSide()) {
+            return true;
+        }
+        if (!(level instanceof ServerLevel)) {
+            return false;
+        }
+        ItemStack taken = this.input.copyAndClear();
+        this.input = ItemStack.EMPTY;
+        this.progress = 0;
+        this.refresh();
+        level.playSound(null, this.getBlockPos(), SoundEvents.BUNDLE_REMOVE_ONE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        ItemUtils.getItemToLivingEntity(user, taken);
+        return true;
     }
 
     public void onPutItemForPonder(ClientLevel level, ItemStack putOnItem) {
@@ -375,7 +417,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     }
 
     @Override
-    public void fillCrashReportCategory(net.minecraft.CrashReportCategory category) {
+    public void fillCrashReportCategory(net.minecraft.@NonNull CrashReportCategory category) {
         super.fillCrashReportCategory(category);
         category.setDetail("Cookery millstone bound entity", () -> entityId.toString());
         category.setDetail("Cookery millstone rotation", () -> "period=" + rotSpeedTick + ", offset=" + cacheRot);

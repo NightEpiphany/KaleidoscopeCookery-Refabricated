@@ -40,6 +40,7 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
         int posLong = (int) blockEntity.getBlockPos().asLong();
         blockEntityRenderState.items = new ArrayList<>();
         blockEntityRenderState.hasLid = blockEntity.getBlockState().getValue(SteamerBlock.HAS_LID);
+        blockEntityRenderState.facing = blockEntity.getBlockState().getValue(SteamerBlock.FACING);
         for (var index = 0; index < blockEntity.getItems().size(); index++) {
             ItemStackRenderState itemStackRenderState = new ItemStackRenderState();
             ItemStack itemStack = blockEntity.getItems().get(index);
@@ -54,6 +55,7 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
         return new SteamerBlockEntityRenderState();
     }
 
+    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     @Override
     public void submit(@NonNull SteamerBlockEntityRenderState blockEntityRenderState, @NonNull PoseStack poseStack, @NonNull SubmitNodeCollector submitNodeCollector, @NonNull CameraRenderState cameraRenderState) {
         ClientLevel level = Minecraft.getInstance().level;
@@ -76,8 +78,19 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
             double z = ((i / 2) % 2) * 0.3 + 0.35;
             poseStack.pushPose();
             poseStack.translate(x, y, z);
-            poseStack.mulPose(Axis.XN.rotationDegrees(90));
-
+            switch (blockEntityRenderState.facing) {
+                case SOUTH -> poseStack.mulPose(Axis.XN.rotationDegrees(90));
+                case NORTH ->  poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                case EAST ->  {
+                    poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(90));
+                }
+                case WEST ->  {
+                    poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                    poseStack.mulPose(Axis.ZN.rotationDegrees(90));
+                }
+                default -> {}
+            }
             poseStack.scale(0.5F, 0.5F, 0.5F);
             stack.submit(poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();

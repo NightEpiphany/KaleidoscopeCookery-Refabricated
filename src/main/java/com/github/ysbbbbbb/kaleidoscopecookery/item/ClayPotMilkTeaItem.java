@@ -64,7 +64,7 @@ public class ClayPotMilkTeaItem extends WithTooltipsBlockItem implements IHasCon
         if (entity instanceof Player player && player.isCreative()) {
             return stack;
         }
-        stack.shrink(1);
+        stack.consume(1, entity);
         return returnContainerToEntity(stack, level, entity);
     }
 
