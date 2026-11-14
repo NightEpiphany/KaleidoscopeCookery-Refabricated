@@ -37,9 +37,7 @@ public record ThrowBaoziMessage() implements CustomPacketPayload, ServerPlayNetw
         baozi.setItem(stack.copyWithCount(1));
         baozi.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 1.5F, 1);
         level.addFreshEntity(baozi);
-        if (!player.isCreative())
-            stack.shrink(1);
-
+        stack.consume(1, player);
     }
 
     @Override

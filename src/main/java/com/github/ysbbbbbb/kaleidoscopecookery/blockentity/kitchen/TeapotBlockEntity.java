@@ -341,7 +341,7 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
             this.input = itemStack.copyWithCount(count);
             this.currentTick = INGREDIENT_TIME;
             this.refresh();
-            itemStack.shrink(count);
+            itemStack.consume(count, user);
             return true;
         }
 

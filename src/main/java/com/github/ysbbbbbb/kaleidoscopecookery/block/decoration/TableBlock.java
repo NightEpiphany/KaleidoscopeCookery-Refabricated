@@ -108,7 +108,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
 
         // 玩家手有物品，并且可以放入物品时
         if (!handEmpty && tableIndex < (tableItems.size() - 1)) {
-            ItemStack split = itemInHand.split(1);
+            ItemStack split = ItemUtils.separate(itemInHand, player, 1);
             if (tableItem.isEmpty()) {
                 tableItems.set(tableIndex, split);
             } else {
@@ -137,8 +137,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
                 level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
                 tableBlockEntity.setColor(dyeColor);
                 tableBlockEntity.refresh();
-                if (!player.isCreative())
-                    itemInHand.shrink(1);
+                itemInHand.consume(1, player);
                 return InteractionResult.SUCCESS;
             }
         }
@@ -154,8 +153,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
             tableBlockEntity.setColor(dyeColor);
             tableBlockEntity.refresh();
             level.setBlockAndUpdate(pos, state.setValue(HAS_CARPET, true));
-            if (!player.isCreative())
-                itemInHand.shrink(1);
+            itemInHand.consume(1, player);
             return InteractionResult.SUCCESS;
         }
 

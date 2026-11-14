@@ -84,6 +84,11 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
             return false;
         }
         SingleRecipeInput container = new SingleRecipeInput(putOnItem);
+        if (level.isClientSide()) {
+            // 客户端只预测交互结果，物品和方块实体数据由服务端修改。
+            return level.recipeAccess().getSynchronizedRecipes()
+                    .getFirstMatch(ModRecipes.CHOPPING_BOARD_RECIPE, container, level).isPresent();
+        }
         if (level instanceof ServerLevel serverLevel) {
             Optional<RecipeHolder<ChoppingBoardRecipe>> recipeOptional = serverLevel.recipeAccess()
                     .getRecipeFor(ModRecipes.CHOPPING_BOARD_RECIPE, container, level);
@@ -92,7 +97,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
                 this.modelId = recipe.getModelId();
                 this.maxCutCount = recipe.getCutCount();
                 this.currentCutCount = 0;
-                this.currentCutStack = putOnItem.split(1);
+                this.currentCutStack = ItemUtils.separate(putOnItem, user, 1);
                 this.results = recipe.getResults().stream().map(ItemStackTemplate::create).toList();
                 this.refresh();
                 level.playSound(null, this.worldPosition,

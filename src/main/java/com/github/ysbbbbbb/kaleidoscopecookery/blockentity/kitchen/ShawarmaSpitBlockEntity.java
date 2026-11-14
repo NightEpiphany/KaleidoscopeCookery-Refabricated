@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarmaSpit {
     private static final int MAX_ITEMS = 8;
@@ -42,7 +43,12 @@ public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarm
     }
 
     @Override
-    public boolean onPutCookingItem(Level level, ItemStack itemStack) {
+    public boolean onPutCookingItem(Level level, ItemStack cookingItem) {
+        return onPutCookingItem(level, null, cookingItem);
+    }
+
+    @Override
+    public boolean onPutCookingItem(Level level, @Nullable final LivingEntity entity, ItemStack itemStack) {
         // 先判断能否放入物品
         if (!this.cookingItem.isEmpty() || !this.cookedItem.isEmpty()) {
             return false;
@@ -52,7 +58,7 @@ public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarm
             SingleRecipeInput singleRecipeInput = new SingleRecipeInput(itemStack);
             return this.quickCheck.getRecipeFor(singleRecipeInput, serverLevel).map(recipe -> {
                 // 如果找到了配方，则设置正在烹饪的物品和烹饪时间
-                this.cookingItem = itemStack.split(MAX_ITEMS);
+                this.cookingItem = ItemUtils.separate(itemStack, entity, MAX_ITEMS);
                 this.cookedItem = recipe.value().assemble(singleRecipeInput);
                 this.cookedItem.setCount(this.cookingItem.getCount());
                 this.cookTime = recipe.value().cookingTime();
@@ -73,7 +79,7 @@ public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarm
     }
 
     @Override
-    public boolean onTakeCookedItem(Level level, LivingEntity entity, ItemStack mainHandItem) {
+    public boolean onTakeCookedItem(Level level, final LivingEntity entity, ItemStack mainHandItem) {
 
         // 如果有烹饪完成的物品，则将其取出
         if (this.cookTime <= 0 && !this.cookedItem.isEmpty()) {

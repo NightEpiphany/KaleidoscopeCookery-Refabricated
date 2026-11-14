@@ -1,6 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.compat.jei.ModJeiPlugin;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.ConfigGetter;
 import com.github.ysbbbbbb.kaleidoscopecookery.config.GeneralConfig;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
@@ -42,8 +41,5 @@ public final class KaleidoscopeCookery implements ModInitializer {
         ModDataComponents.registerDataComponents();
         CommonRegistry.init();
         NetworkHandler.init();
-        // 注册额外的战利品表事件
-        if (FabricLoader.getInstance().isModLoaded("jei"))
-            ModJeiPlugin.syncRecipes();
     }
 }
