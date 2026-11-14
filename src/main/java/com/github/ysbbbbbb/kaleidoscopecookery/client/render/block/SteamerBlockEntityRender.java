@@ -78,19 +78,8 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
             double z = ((i / 2) % 2) * 0.3 + 0.35;
             poseStack.pushPose();
             poseStack.translate(x, y, z);
-            switch (blockEntityRenderState.facing) {
-                case SOUTH -> poseStack.rotateDegrees(Axis.XN, 90);
-                case NORTH ->  poseStack.rotateDegrees(Axis.XP, 90);
-                case EAST ->  {
-                    poseStack.rotateDegrees(Axis.XP, 90);
-                    poseStack.rotateDegrees(Axis.ZP, 90);
-                }
-                case WEST ->  {
-                    poseStack.rotateDegrees(Axis.XP, 90);
-                    poseStack.rotateDegrees(Axis.ZN, 90);
-                }
-                default -> {}
-            }
+            poseStack.rotateDegrees(Axis.YN, blockEntityRenderState.facing.get2DDataValue() * 90f);
+            poseStack.rotateDegrees(Axis.XN, 90);
             poseStack.scale(0.5F, 0.5F, 0.5F);
             stack.submit(poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
