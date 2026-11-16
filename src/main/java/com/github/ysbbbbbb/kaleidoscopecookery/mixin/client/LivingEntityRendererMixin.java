@@ -38,7 +38,9 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
         boolean inBin = entity instanceof Player
                 && entity.getVehicle() instanceof SitEntity sitEntity
                 && sitEntity.getSitType() == SitEntity.TRASH_CAN;
-        state.setData(IN_BIN, inBin);
+        if (inBin || state.getDataOrDefault(IN_BIN, false)) {
+            state.setData(IN_BIN, inBin);
+        }
     }
 
     @Inject(

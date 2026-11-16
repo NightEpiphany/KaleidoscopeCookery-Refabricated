@@ -72,13 +72,16 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
     @Override
     public void extractRenderState(@NonNull StockpotBlockEntity blockEntity, @NonNull StockpotBlockEntityRenderState blockEntityRenderState, float f, @NonNull Vec3 vec3, ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, blockEntityRenderState, f, vec3, crumblingOverlay);
+        blockEntityRenderState.hasLid = blockEntity.getBlockState().getValue(StockpotBlock.HAS_LID);
+        if (blockEntityRenderState.hasLid) {
+            return;
+        }
         int posLong = (int) blockEntity.getBlockPos().asLong();
         blockEntityRenderState.seed = blockEntity.hashCode();
         blockEntityRenderState.soupBaseID = blockEntity.getSoupBaseId();
-        blockEntityRenderState.items = new ArrayList<>();
-        blockEntityRenderState.randomSeeds = new ArrayList<>();
+        blockEntityRenderState.items = new ArrayList<>(blockEntity.getInputs().size());
+        blockEntityRenderState.randomSeeds = new ArrayList<>(blockEntity.getInputs().size());
         blockEntityRenderState.status = blockEntity.getStatus();
-        blockEntityRenderState.hasLid = blockEntity.getBlockState().getValue(StockpotBlock.HAS_LID);
         blockEntityRenderState.hasLiquidIngredients = blockEntity.liquidMerged();
         for (var index = 0; index < blockEntity.getInputs().size(); index++) {
             ItemStackRenderState itemStackRenderState = new ItemStackRenderState();
