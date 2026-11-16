@@ -71,6 +71,12 @@ dependencies {
 	implementation("maven.modrinth:eiktJyw1:UjFO8ir4")
 	// Moonlight
 	implementation("maven.modrinth:twkfQtEc:Z4zBrgxb")
+	// BOP
+	implementation("maven.modrinth:HXF82T3G:8MVwdPgG")
+	// Glitch core
+	implementation("maven.modrinth:s3dmwKy5:WNtSATXw")
+	// Terra blender
+	implementation("maven.modrinth:kkmrDlKT:NIXt6lha")
 	implementation("eu.pb4:trinkets:${providers.gradleProperty("trinkets_version").get()}")
 	implementation("maven.modrinth:EsAfCjCV:zLlqqiTA")
 }
