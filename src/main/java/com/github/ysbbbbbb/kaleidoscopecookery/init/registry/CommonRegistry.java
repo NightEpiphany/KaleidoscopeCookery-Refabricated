@@ -2,10 +2,6 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.PlateBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.BambooTrayDispenseBehavior;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.ChoppingBoardDispenseBehavior;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.OilPotDispenseBehavior;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.TeapotDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.drink.TeacupBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteOneByTwoBlock;
@@ -23,7 +19,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.datamap.resources.MillstoneBindab
 import com.github.ysbbbbbb.kaleidoscopecookery.event.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.event.effect.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDispenseBehaviors;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModVillager;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.PlateBlockItem;
@@ -43,7 +39,6 @@ import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -66,8 +61,8 @@ public final class CommonRegistry {
         registerFoodBiteBlocks();
         registerServerEvents();
         addVillagerGift();
-        addDispenserBehavior();
         storageRegister();
+        ModDispenseBehaviors.registerDispenseBehaviors();
     }
 
     public static void storageRegister() {
@@ -223,10 +218,4 @@ public final class CommonRegistry {
         AutomationCompat.init();
     }
 
-    private static void addDispenserBehavior() {
-        DispenserBlock.registerBehavior(ModItems.OIL_POT, new OilPotDispenseBehavior());
-        DispenserBlock.registerBehavior(ModItems.BAMBOO_TRAY, new BambooTrayDispenseBehavior());
-        DispenserBlock.registerBehavior(ModItems.TEAPOT, new TeapotDispenseBehavior());
-        ChoppingBoardDispenseBehavior.register();
-    }
 }

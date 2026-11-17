@@ -60,11 +60,13 @@ public final class ModItems {
     public static final Item SHAWARMA_SPIT = registerItemViaBlockWithDesc(ModBlockItemIds.SHAWARMA_SPIT, ModBlocks.SHAWARMA_SPIT, "shawarma_spit");
     public static final Item MILLSTONE = registerItemViaBlockWithDesc(ModBlockItemIds.MILLSTONE, ModBlocks.MILLSTONE, "millstone");
     public static final Item STEAMER = registerItemViaBlock(ModBlockItemIds.STEAMER, ModBlocks.STEAMER, SteamerItem::new);
-    public static final Item OIL_POT = registerItemViaBlock(ModBlockItemIds.OIL_POT, ModBlocks.OIL_POT, OilPotItem::new);
+    public static final Item OIL_POT = registerItemViaBlock(ModBlockItemIds.OIL_POT, ModBlocks.OIL_POT, OilPotItem::new, new Item.Properties().dispensed(ModDispenseBehaviors.OIL_POT));
     public static final Item TRASH_CAN = registerItemViaBlockWithDesc(ModBlockItemIds.TRASH_CAN, ModBlocks.TRASH_CAN, "trash_can");
-    public static final Item TEAPOT = registerItemViaBlock(ModBlockItemIds.TEAPOT, ModBlocks.TEAPOT, TeapotItem::new);
+    public static final Item TEAPOT = registerItemViaBlock(ModBlockItemIds.TEAPOT, ModBlocks.TEAPOT, TeapotItem::new, new Item.Properties().dispensed(ModDispenseBehaviors.TEAPOT));
     public static final Item EMPTY_CUP = registerItemViaBlock(ModBlockItemIds.EMPTY_CUP, ModBlocks.EMPTY_CUP, EmptyCupItem::new);
-    public static final Item BAMBOO_TRAY = registerItemViaBlockWithDesc(ModBlockItemIds.BAMBOO_TRAY, ModBlocks.BAMBOO_TRAY, "bamboo_tray");
+    public static final Item BAMBOO_TRAY = registerItemViaBlock(ModBlockItemIds.BAMBOO_TRAY, ModBlocks.BAMBOO_TRAY,
+            (block, properties) -> new WithTooltipsBlockItem(block, properties, "bamboo_tray"),
+            new Item.Properties().dispensed(ModDispenseBehaviors.BAMBOO_TRAY));
     public static final Item TEA_BANNER = registerItemViaBlock(ModBlockItemIds.TEA_BANNER, ModBlocks.TEA_BANNER, TeaBannerItem::new);
     public static final Item LONG_BENCH = registerItemViaBlock(ModBlockItemIds.LONG_BENCH, ModBlocks.LONG_BENCH);
     public static final Item RED_LANTERN = registerItemViaBlock(ModBlockItemIds.RED_LANTERN, ModBlocks.RED_LANTERN);
@@ -75,11 +77,11 @@ public final class ModItems {
     public static final Item COLD_CUT_HAM_SLICES = registerItemViaBlock(ModBlockItemIds.COLD_CUT_HAM_SLICES, ModBlocks.COLD_CUT_HAM_SLICES, (block, properties) -> new LiftBlockItem(block, properties, "cold_cut_ham_slices"), new Item.Properties());
 
     // Tools
-    public static final Item COPPER_KITCHEN_KNIFE = registerItem(ModItemIds.COPPER_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.COPPER, 2.5F, -2.4F), new Item.Properties());
-    public static final Item IRON_KITCHEN_KNIFE = registerItem(ModItemIds.IRON_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.IRON, 3.0F, -2.4F), new Item.Properties());
-    public static final Item GOLD_KITCHEN_KNIFE = registerItem(ModItemIds.GOLD_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.GOLD, 3.0F, -2.3F), new Item.Properties());
-    public static final Item DIAMOND_KITCHEN_KNIFE = registerItem(ModItemIds.DIAMOND_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.DIAMOND, 3.0F, -2.5F), new Item.Properties());
-    public static final Item NETHERITE_KITCHEN_KNIFE = registerItem(ModItemIds.NETHERITE_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.NETHERITE, 3.0F, -2.5F), new Item.Properties());
+    public static final Item COPPER_KITCHEN_KNIFE = registerItem(ModItemIds.COPPER_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.COPPER, 2.5F, -2.4F), new Item.Properties().dispensed(ModDispenseBehaviors.CHOPPING_BOARD_KNIFE));
+    public static final Item IRON_KITCHEN_KNIFE = registerItem(ModItemIds.IRON_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.IRON, 3.0F, -2.4F), new Item.Properties().dispensed(ModDispenseBehaviors.CHOPPING_BOARD_KNIFE));
+    public static final Item GOLD_KITCHEN_KNIFE = registerItem(ModItemIds.GOLD_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.GOLD, 3.0F, -2.3F), new Item.Properties().dispensed(ModDispenseBehaviors.CHOPPING_BOARD_KNIFE));
+    public static final Item DIAMOND_KITCHEN_KNIFE = registerItem(ModItemIds.DIAMOND_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.DIAMOND, 3.0F, -2.5F), new Item.Properties().dispensed(ModDispenseBehaviors.CHOPPING_BOARD_KNIFE));
+    public static final Item NETHERITE_KITCHEN_KNIFE = registerItem(ModItemIds.NETHERITE_KITCHEN_KNIFE, p -> new KitchenKnifeItem(p, ToolMaterial.NETHERITE, 3.0F, -2.5F), new Item.Properties().dispensed(ModDispenseBehaviors.CHOPPING_BOARD_KNIFE));
     public static final Item SICKLE = registerItem(ModItemIds.SICKLE, SickleItem::new, new Item.Properties());
 
     // Special items
@@ -181,7 +183,7 @@ public final class ModItems {
     public static final Item SAMSA = registerItem(ModItemIds.SAMSA, p -> new FoodWithEffectsItem(p, ModFoods.SAMSA, ModConsumables.SAMSA));
     public static final Item MEAT_PIE = registerItem(ModItemIds.MEAT_PIE, p -> new FoodWithEffectsItem(p, ModFoods.MEAT_PIE, ModConsumables.MEAT_PIE));
     public static final Item DUMPLING = registerItem(ModItemIds.DUMPLING, p -> new Item(p.food(ModFoods.DUMPLING, ModConsumables.DUMPLING)));
-    public static final Item RAW_DOUGH = registerItem(ModItemIds.RAW_DOUGH, RawDoughItem::new);
+    public static final Item RAW_DOUGH = registerItem(ModItemIds.RAW_DOUGH, RawDoughItem::new, new Item.Properties().dispensed(ModDispenseBehaviors.CHOPPING_BOARD_INGREDIENT));
     public static final Item FLOUR = registerItem(ModItemIds.FLOUR, FlourItem::new);
     public static final Item RAW_NOODLES = registerItem(ModItemIds.RAW_NOODLES);
     public static final Item STUFFED_DOUGH_FOOD = registerItem(ModItemIds.STUFFED_DOUGH_FOOD);
