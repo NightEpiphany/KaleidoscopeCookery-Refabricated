@@ -116,6 +116,7 @@ public final class ClientRegistry {
         ModelLayerRegistry.registerModelLayer(PatternModel.LAYER_LOCATION, PatternModel::createBodyLayer);
     }
 
+    @SuppressWarnings("NullableProblems")
     private static <T extends BlockEntity, S extends BlockEntityRenderState> void register(final BlockEntityType<? extends T> type, final BlockEntityRendererProvider<T, S> renderer) {
         Registry.register(BuiltInClientRegistries.BLOCK_ENTITY_RENDERER,
                 ResourceKey.create(ClientRegistries.BLOCK_ENTITY_RENDERER, Objects.requireNonNull(

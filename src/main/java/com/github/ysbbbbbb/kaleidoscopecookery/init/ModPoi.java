@@ -1,7 +1,10 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
@@ -10,9 +13,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Set;
 
-import static com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModPoiTypeIds.*;
-
 public final class ModPoi {
+
+    public static final ResourceKey<PoiType> STOVE_KEY = createKey("stove");
+    public static final ResourceKey<PoiType> POT_KEY = createKey("pot");
+    public static final ResourceKey<PoiType> STOCKPOT_KEY = createKey("stockpot");
+    public static final ResourceKey<PoiType> CHOPPING_BOARD_KEY = createKey("chopping_board");
 
     public static final Holder<PoiType> STOVE = registerPoiType(STOVE_KEY, ModBlocks.STOVE);
     public static final Holder<PoiType> POT = registerPoiType(POT_KEY, ModBlocks.POT);
@@ -25,6 +31,10 @@ public final class ModPoi {
 
     private static Set<BlockState> getBlockStates(final Block block) {
         return ImmutableSet.copyOf(block.getStateDefinition().getPossibleStates());
+    }
+
+    public static ResourceKey<PoiType> createKey(String name) {
+        return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, name));
     }
 
     public static void registerPoiTypes() {

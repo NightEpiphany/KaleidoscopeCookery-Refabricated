@@ -29,6 +29,7 @@
   "client": [
     "client.CameraMixin",
     "client.ConditionalItemModelPropertiesMixin",
+    "client.CuboidItemModelMixin",
     "client.HumanoidModelMixin",
     "client.ItemModelsMixin",
     "client.LeftClickMixin",
