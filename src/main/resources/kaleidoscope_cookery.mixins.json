@@ -30,6 +30,7 @@
   ],
   "client": [
     "client.CameraMixin",
+    "client.CuboidItemModelMixin",
     "client.HumanoidModelMixin",
     "client.LeftClickMixin",
     "client.LivingEntityRendererMixin"
