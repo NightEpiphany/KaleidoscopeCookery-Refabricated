@@ -36,23 +36,23 @@ public class FluidSoupBaseRender implements ISoupBaseRender {
     public void renderWhenPutIngredient(StockpotBlockEntityRenderState stockpot, float partialTick, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight, int packedOverlay, float soupHeight, @NonNull CameraRenderState cameraRenderState) {
         if (stockpot.hasLiquidIngredients) {
             TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().atlasManager.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "stockpot/default_preparing_soup")));
-            ISoupBaseRender.renderSurface(sprite, 0xFFFFFFFF, poseStack, packedLight, soupHeight);
+            ISoupBaseRender.renderSurface(sprite, 0xFFFFFFFF, poseStack, submitNodeCollector, packedLight, soupHeight);
         }else
-            ISoupBaseRender.renderSurface(getStillFluidSprite(fluid), getFluidColor(fluid), poseStack, packedLight, soupHeight);
+            ISoupBaseRender.renderSurface(getStillFluidSprite(fluid), getFluidColor(fluid), poseStack, submitNodeCollector, packedLight, soupHeight);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void renderWhenCooking(StockpotBlockEntityRenderState stockpot, float partialTick, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight, int packedOverlay, Identifier cookingTexture, float soupHeight, @NonNull CameraRenderState cameraRenderState) {
         TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().atlasManager.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, cookingTexture));
-        ISoupBaseRender.renderSurface(sprite, 0xFFFFFFFF, poseStack, packedLight, soupHeight);
+        ISoupBaseRender.renderSurface(sprite, 0xFFFFFFFF, poseStack, submitNodeCollector, packedLight, soupHeight);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void renderWhenFinished(StockpotBlockEntityRenderState stockpot, float partialTick, PoseStack poseStack, SubmitNodeCollector buffer, int packedLight, int packedOverlay, Identifier finishedTexture, float soupHeight, @NonNull CameraRenderState cameraRenderState) {
         TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().atlasManager.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, finishedTexture));
-        ISoupBaseRender.renderSurface(sprite, 0xFFFFFFFF, poseStack, packedLight, soupHeight);
+        ISoupBaseRender.renderSurface(sprite, 0xFFFFFFFF, poseStack, buffer, packedLight, soupHeight);
     }
     @SuppressWarnings("all")
     private TextureAtlasSprite getStillFluidSprite(Fluid fluid) {

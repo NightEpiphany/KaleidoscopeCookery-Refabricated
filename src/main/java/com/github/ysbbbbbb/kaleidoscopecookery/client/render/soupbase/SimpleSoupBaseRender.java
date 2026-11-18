@@ -27,16 +27,16 @@ public class SimpleSoupBaseRender implements ISoupBaseRender {
 
     @Override
     public void renderWhenPutIngredient(StockpotBlockEntityRenderState stockpot, float partialTick, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight, int packedOverlay, float soupHeight, @NonNull CameraRenderState cameraRenderState) {
-        ISoupBaseRender.renderSurface(this.getSprite(this.soupBaseTexture), 0xFFFFFFFF, poseStack, packedLight, soupHeight);
+        ISoupBaseRender.renderSurface(this.getSprite(this.soupBaseTexture), 0xFFFFFFFF, poseStack, submitNodeCollector, packedLight, soupHeight);
     }
 
     @Override
     public void renderWhenCooking(StockpotBlockEntityRenderState stockpot, float partialTick, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight, int packedOverlay, Identifier cookingTexture, float soupHeight, @NonNull CameraRenderState cameraRenderState) {
-        ISoupBaseRender.renderSurface(this.getSprite(cookingTexture), 0xFFFFFFFF, poseStack, packedLight, soupHeight);
+        ISoupBaseRender.renderSurface(this.getSprite(cookingTexture), 0xFFFFFFFF, poseStack, submitNodeCollector, packedLight, soupHeight);
     }
 
     @Override
     public void renderWhenFinished(StockpotBlockEntityRenderState stockpot, float partialTick, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight, int packedOverlay, Identifier finishedTexture, float soupHeight, @NonNull CameraRenderState cameraRenderState) {
-        ISoupBaseRender.renderSurface(this.getSprite(finishedTexture), 0xFFFFFFFF, poseStack, packedLight, soupHeight);
+        ISoupBaseRender.renderSurface(this.getSprite(finishedTexture), 0xFFFFFFFF, poseStack, submitNodeCollector, packedLight, soupHeight);
     }
 }
