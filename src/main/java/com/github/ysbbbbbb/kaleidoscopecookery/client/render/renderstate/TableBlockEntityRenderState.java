@@ -11,7 +11,7 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class TableBlockEntityRenderState extends BlockEntityRenderState {
-    public List<ItemStackRenderState> items = Collections.emptyList();
+    public List<TableItemStackRenderState> items = Collections.emptyList();
     public boolean hasCarpet = false;
     public Direction.Axis axis = Direction.Axis.X;
     public ItemStackRenderState carpetModel = new ItemStackRenderState();
