@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 
 public class StockpotRecipeBuilder implements RecipeBuilder {
     private static final String NAME = "stockpot";
-    private final List<Ingredient> ingredients = Lists.newArrayList();
+    private final List<Ingredient> ingredients = Lists.newArrayListWithCapacity(9);
     private ItemStack result = ItemStack.EMPTY;
     private int time = StockpotRecipeSerializer.DEFAULT_TIME;
     private Ingredient carrier = StockpotRecipeSerializer.DEFAULT_CARRIER;
@@ -36,6 +36,7 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
     private ResourceLocation finishedTexture = StockpotVisuals.DEFAULT_FINISHED_TEXTURE;
     private int cookingBubbleColor = StockpotVisuals.DEFAULT_COOKING_BUBBLE_COLOR;
     private int finishedBubbleColor = StockpotVisuals.DEFAULT_FINISHED_BUBBLE_COLOR;
+    private boolean syrup = false;
 
     public static StockpotRecipeBuilder builder() {
         return new StockpotRecipeBuilder();
@@ -88,6 +89,11 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
 
     public StockpotRecipeBuilder setCarrier(ItemLike carrier) {
         this.carrier = Ingredient.of(carrier);
+        return this;
+    }
+
+    public StockpotRecipeBuilder setSyrup() {
+        this.syrup = true;
         return this;
     }
 
@@ -148,7 +154,8 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
     @Override
     public void save(Consumer<FinishedRecipe> recipeOutput, @NonNull ResourceLocation id) {
         recipeOutput.accept(new StockpotFinishedRecipe(id, this.ingredients, this.soupBase, this.result,
-                this.time, this.carrier, this.cookingTexture, this.finishedTexture, this.cookingBubbleColor, this.finishedBubbleColor));
+                this.time, this.carrier, this.cookingTexture, this.finishedTexture,
+                this.cookingBubbleColor, this.finishedBubbleColor, this.syrup));
     }
 
     public static class StockpotFinishedRecipe implements FinishedRecipe {
@@ -162,10 +169,11 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
         private final ResourceLocation finishedTexture;
         private final int cookingBubbleColor;
         private final int finishedBubbleColor;
+        private final boolean syrup;
 
         public StockpotFinishedRecipe(ResourceLocation id, List<Ingredient> ingredients, ResourceLocation soupBase, ItemStack result,
                                       int time, Ingredient carrier, ResourceLocation cookingTexture, ResourceLocation finishedTexture,
-                                      int cookingBubbleColor, int finishedBubbleColor) {
+                                      int cookingBubbleColor, int finishedBubbleColor, boolean syrup) {
             this.id = id;
             this.ingredients = ingredients;
             this.soupBase = soupBase;
@@ -176,6 +184,7 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
             this.finishedTexture = finishedTexture;
             this.cookingBubbleColor = cookingBubbleColor;
             this.finishedBubbleColor = finishedBubbleColor;
+            this.syrup = syrup;
         }
 
         @Override
@@ -199,6 +208,9 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
             json.addProperty("finished_texture", this.finishedTexture.toString());
             json.addProperty("cooking_bubble_color", this.cookingBubbleColor);
             json.addProperty("finished_bubble_color", this.finishedBubbleColor);
+            if (this.syrup) {
+                json.addProperty("syrup", true);
+            }
         }
 
         @Override

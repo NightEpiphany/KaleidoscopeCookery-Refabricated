@@ -10,6 +10,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> consumer) {
+        addSugarSyrupRecipes(consumer);
+
         StockpotRecipeBuilder.builder()
                 .addInput(TagCommon.SEEDS_RICE, TagCommon.SEEDS_RICE, TagCommon.SEEDS_RICE)
                 .setFinishedTexture(modLoc("stockpot/rice_finished"))
@@ -189,5 +192,26 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
             }
         }
 
+    }
+
+    private void addSugarSyrupRecipes(Consumer<FinishedRecipe> consumer) {
+        addSugarSyrupRecipe(consumer, ModItems.GLOW_BERRY_SKEWER, ModItems.CANDIED_GLOW_BERRY_SKEWER, "glow_berry");
+        addSugarSyrupRecipe(consumer, ModItems.SWEET_BERRY_SKEWER, ModItems.CANDIED_SWEET_BERRY_SKEWER, "sweet_berry");
+        addSugarSyrupRecipe(consumer, ModItems.CHORUS_FRUIT_SKEWER, ModItems.CANDIED_CHORUS_FRUIT_SKEWER, "chorus_fruit");
+        addSugarSyrupRecipe(consumer, ModItems.APPLE_SKEWER, ModItems.CANDIED_APPLE_SKEWER, "apple");
+        addSugarSyrupRecipe(consumer, ModItems.CATERPILLAR_SKEWER, ModItems.CANDIED_CATERPILLAR_SKEWER, "caterpillar");
+    }
+
+    private void addSugarSyrupRecipe(Consumer<FinishedRecipe> consumer, ItemLike skewer, ItemLike result, String name) {
+        for (int count = 1; count <= 9; count++) {
+            StockpotRecipeBuilder.builder()
+                    .addInput((Object[]) this.getItemsWithCount(Items.SUGAR, count))
+                    .setCarrier(skewer)
+                    .setResult(result.asItem(), 1)
+                    .setFinishedTexture(modLoc("stockpot/sugar_syrup_finished"))
+                    .setFinishedBubbleColor(0xD9A441)
+                    .setSyrup()
+                    .save(consumer, "sugar_syrup_" + name + "_" + count);
+        }
     }
 }

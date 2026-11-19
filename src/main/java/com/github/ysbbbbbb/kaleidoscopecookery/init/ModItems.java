@@ -9,6 +9,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.*;
 
 public final class ModItems {
@@ -139,6 +140,20 @@ public final class ModItems {
     public static final Item FRESH_TEA_LEAVES = new Item(new Item.Properties());
     public static final Item DRIED_TEA_LEAVES = new Item(new Item.Properties());
     public static final Item CATERPILLAR = new WithTooltipsItem(new Item.Properties().food(ModFoods.CATERPILLAR), "caterpillar");
+
+    // 果串
+    public static final Item GLOW_BERRY_SKEWER = new Item(new Item.Properties().food(ModFoods.BERRY_SKEWER));
+    public static final Item SWEET_BERRY_SKEWER = new Item(new Item.Properties().food(ModFoods.BERRY_SKEWER));
+    public static final Item CHORUS_FRUIT_SKEWER = new Item(new Item.Properties().food(ModFoods.FRUIT_SKEWER));
+    public static final Item APPLE_SKEWER = new Item(new Item.Properties().food(ModFoods.FRUIT_SKEWER));
+    public static final Item CATERPILLAR_SKEWER = new Item(new Item.Properties().food(ModFoods.CATERPILLAR_SKEWER));
+
+    // 裹糖果串
+    public static final Item CANDIED_GLOW_BERRY_SKEWER = new CandiedSkewerItem(ModFoods.CANDIED_GLOW_BERRY_SKEWER, MobEffects.GLOWING, 5 * 20);
+    public static final Item CANDIED_SWEET_BERRY_SKEWER = new CandiedSkewerItem(ModFoods.CANDIED_SWEET_BERRY_SKEWER);
+    public static final Item CANDIED_CHORUS_FRUIT_SKEWER = new CandiedSkewerItem(ModFoods.CANDIED_FRUIT_SKEWER);
+    public static final Item CANDIED_APPLE_SKEWER = new CandiedSkewerItem(ModFoods.CANDIED_FRUIT_SKEWER);
+    public static final Item CANDIED_CATERPILLAR_SKEWER = new CandiedSkewerItem(ModFoods.CANDIED_CATERPILLAR_SKEWER, MobEffects.CONFUSION, 15 * 20);
 
     // 面类食材
     public static final Item RAW_DOUGH = new RawDoughItem();
@@ -335,6 +350,18 @@ public final class ModItems {
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "fresh_tea_leaves"), FRESH_TEA_LEAVES);
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "dried_tea_leaves"), DRIED_TEA_LEAVES);
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "caterpillar"), CATERPILLAR);
+
+        // 果串与裹糖果串
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "glow_berry_skewer"), GLOW_BERRY_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "sweet_berry_skewer"), SWEET_BERRY_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "chorus_fruit_skewer"), CHORUS_FRUIT_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "apple_skewer"), APPLE_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "caterpillar_skewer"), CATERPILLAR_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "candied_glow_berry_skewer"), CANDIED_GLOW_BERRY_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "candied_sweet_berry_skewer"), CANDIED_SWEET_BERRY_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "candied_chorus_fruit_skewer"), CANDIED_CHORUS_FRUIT_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "candied_apple_skewer"), CANDIED_APPLE_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "candied_caterpillar_skewer"), CANDIED_CATERPILLAR_SKEWER);
 
         // 面类食材
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "raw_dough"), RAW_DOUGH);

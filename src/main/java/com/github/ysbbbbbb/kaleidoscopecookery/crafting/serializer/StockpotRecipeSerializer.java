@@ -29,19 +29,20 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
     public static StockpotRecipe getEmptyRecipe() {
         return new StockpotRecipe(
                 EMPTY_ID,
-                Lists.newArrayList(),
+                List.of(),
                 DEFAULT_SOUP_BASE,
                 ItemStack.EMPTY,
                 DEFAULT_TIME,
                 DEFAULT_CARRIER,
-                StockpotVisuals.DEFAULT
+                StockpotVisuals.DEFAULT,
+                false
         );
     }
 
     @Override
     public @NotNull StockpotRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
         JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
-        List<Ingredient> inputs = Lists.newArrayList();
+        List<Ingredient> inputs = Lists.newArrayListWithCapacity(ingredients.size());
         for (JsonElement e : ingredients) {
             inputs.add(Ingredient.fromJson(e));
         }
@@ -83,14 +84,15 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
                 cookingTexture, finishedTexture,
                 cookingBubbleColor, finishedBubbleColor
         );
+        boolean syrup = GsonHelper.getAsBoolean(json, "syrup", false);
 
-        return new StockpotRecipe(recipeId, inputs, soupBase, result, time, carrier, visuals);
+        return new StockpotRecipe(recipeId, inputs, soupBase, result, time, carrier, visuals, syrup);
     }
 
     @Override
     public @NotNull StockpotRecipe fromNetwork(@NotNull ResourceLocation recipeId, FriendlyByteBuf buf) {
         int ingredientsSize = buf.readVarInt();
-        List<Ingredient> inputs = Lists.newArrayList();
+        List<Ingredient> inputs = Lists.newArrayListWithCapacity(ingredientsSize);
         for (int i = 0; i < ingredientsSize; i++) {
             inputs.add(Ingredient.fromNetwork(buf));
         }
@@ -102,13 +104,14 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
         ResourceLocation finishedTexture = buf.readResourceLocation();
         int cookingBubbleColor = buf.readVarInt();
         int finishedBubbleColor = buf.readVarInt();
+        boolean syrup = buf.readBoolean();
         StockpotVisuals visuals = new StockpotVisuals(
                 cookingTexture, finishedTexture,
                 cookingBubbleColor, finishedBubbleColor
         );
         return new StockpotRecipe(
                 recipeId, inputs, soupBase, result,
-                time, carrier, visuals
+                time, carrier, visuals, syrup
         );
     }
 
@@ -125,6 +128,7 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
         buffer.writeResourceLocation(visuals.finishedTexture());
         buffer.writeVarInt(visuals.cookingBubbleColor());
         buffer.writeVarInt(visuals.finishedBubbleColor());
+        buffer.writeBoolean(recipe.syrup());
     }
 
     @Override

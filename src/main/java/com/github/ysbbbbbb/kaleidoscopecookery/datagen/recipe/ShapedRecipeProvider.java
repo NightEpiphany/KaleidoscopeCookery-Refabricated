@@ -314,6 +314,20 @@ public class ShapedRecipeProvider extends ModRecipeProvider {
                 .define('C', Items.COMPOSTER)
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
+
+        // 果串
+        addFruitSkewerRecipe(consumer, ModItems.GLOW_BERRY_SKEWER, Items.GLOW_BERRIES);
+        addFruitSkewerRecipe(consumer, ModItems.SWEET_BERRY_SKEWER, Items.SWEET_BERRIES);
+        addFruitSkewerRecipe(consumer, ModItems.CHORUS_FRUIT_SKEWER, Items.CHORUS_FRUIT);
+        addFruitSkewerRecipe(consumer, ModItems.APPLE_SKEWER, Items.APPLE);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, ModItems.CATERPILLAR_SKEWER)
+                .pattern("C")
+                .pattern("S")
+                .define('C', ModItems.CATERPILLAR)
+                .define('S', Items.STICK)
+                .unlockedBy("has_caterpillar", has(ModItems.CATERPILLAR))
+                .save(consumer);
     }
 
     private ShapedRecipeBuilder addTeaBagRecipe(ItemLike result, ItemLike center) {
@@ -324,5 +338,16 @@ public class ShapedRecipeProvider extends ModRecipeProvider {
                 .define('L', ModItems.DRIED_TEA_LEAVES)
                 .define('C', center)
                 .unlockedBy("has_dried_tea_leaves", has(ModItems.DRIED_TEA_LEAVES));
+    }
+
+    private void addFruitSkewerRecipe(Consumer<FinishedRecipe> consumer, ItemLike result, ItemLike fruit) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, result)
+                .pattern("F")
+                .pattern("F")
+                .pattern("S")
+                .define('F', fruit)
+                .define('S', Items.STICK)
+                .unlockedBy("has_fruit", has(fruit))
+                .save(consumer);
     }
 }

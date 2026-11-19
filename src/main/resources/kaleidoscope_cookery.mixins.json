@@ -17,6 +17,7 @@
     "LivingEntityMixin",
     "MobBucketItemMixin",
     "MobMixin",
+    "PlayerMixin",
     "PowderSnowBlockMixin",
     "VillagerMixin"
   ],
