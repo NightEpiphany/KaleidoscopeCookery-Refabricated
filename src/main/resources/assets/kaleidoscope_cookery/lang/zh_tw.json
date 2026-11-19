@@ -71,6 +71,8 @@
   "tooltip.kaleidoscope_cookery.model_display": "你不應該擁有這個物品...",
   "resourcePack.kaleidoscope_eating_animation": "森羅物語：進食動畫",
   "resourcePack.kaleidoscope_classic_texture": "森羅物語：經典材質",
+  "block.kaleidoscope_cookery.kitchen_shelf": "廚架",
+  "subtitles.kaleidoscope_cookery.block.kitchen_shelf": "廚架發射物品",
 
 
   "item_group.kaleidoscope_cookery.cookery_main.name": "森羅物語：廚房",
@@ -152,7 +154,7 @@
   "block.kaleidoscope_cookery.spicy_rabbit_head": "麻辣兔頭",
   "block.kaleidoscope_cookery.stuffed_tiger_skin_pepper": "虎皮青椒釀肉",
   "block.kaleidoscope_cookery.warped_fungus_pot_soup": "詭異菌瓦罐湯",
-  "block.kaleidoscope_cookery.end_style_sashimi": "末地風味刺身",
+  "block.kaleidoscope_cookery.end_style_sashimi": "终界風味刺身",
   "block.kaleidoscope_cookery.desert_style_sashimi": "沙漠風味刺身",
   "block.kaleidoscope_cookery.tundra_style_sashimi": "苔原風味刺身",
   "block.kaleidoscope_cookery.cold_style_sashimi": "寒帶風味刺身",
@@ -385,7 +387,7 @@
   "tooltip.kaleidoscope_cookery.samsa.maxim": "新疆傳統麵食",
   "tooltip.kaleidoscope_cookery.cold_style_sashimi.maxim": "一盤凜冽脆爽的刺身",
   "tooltip.kaleidoscope_cookery.mantou.maxim": "白白胖胖的饃饃",
-  "tooltip.kaleidoscope_cookery.chorus_fried_egg.maxim": "香噴噴的末地風味",
+  "tooltip.kaleidoscope_cookery.chorus_fried_egg.maxim": "香噴噴的终界風味",
   "tooltip.kaleidoscope_cookery.tundra_style_sashimi.maxim": "一盤苔香清鮮的刺身",
   "tooltip.kaleidoscope_cookery.fondant_spider_eye.maxim": "用糖衣包裹恐懼，甜蜜的黑暗料理",
   "tooltip.kaleidoscope_cookery.pork_bone_soup.maxim": "香氣四溢的十全大補湯",
