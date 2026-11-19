@@ -39,7 +39,6 @@ public class SteamerItem extends WithTooltipsBlockItem {
 
     @Override
     protected boolean placeBlock(@NonNull BlockPlaceContext context, @NonNull BlockState state) {
-        if (context.getLevel().getBlockState(context.getClickedPos()).is(BlockTags.REPLACEABLE)) return super.placeBlock(context, state);
         // 蒸笼只能从顶面放置，物品始终只代表一层。
         return context.getClickedFace() == Direction.UP && super.placeBlock(context, state);
     }
