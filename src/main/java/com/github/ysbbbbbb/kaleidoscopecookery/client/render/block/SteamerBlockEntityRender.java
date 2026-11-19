@@ -67,9 +67,11 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
             // 只改变物品朝向，保留各槽位的位置及替换模型原有的摆放方式。
             poseStack.mulPose(Axis.YN.rotationDegrees(rotation));
             if (!hasCustom) {
+                poseStack.mulPose(Axis.ZP.rotationDegrees(-35));
                 poseStack.mulPose(Axis.XN.rotationDegrees(90));
             } else {
                 poseStack.translate(0, 0.4375, 0.4375);
+                poseStack.mulPose(Axis.ZP.rotationDegrees(-35));
             }
             poseStack.scale(0.5F, 0.5F, 0.5F);
             itemRenderer.render(stack, ItemDisplayContext.FIXED,

@@ -57,6 +57,7 @@ public final class CommonRegistry {
         addDispenserBehavior();
         fuelRegister();
         ItemStorage.SIDED.registerForBlockEntity((teapot, side) -> teapot.getInputStorage(), ModBlocks.TEAPOT_BE);
+        ItemStorage.SIDED.registerForBlockEntity((shelf, side) -> shelf.getItemStorage(), ModBlocks.KITCHEN_SHELF_BE);
         ItemStorage.SIDED.registerForBlockEntity(
                 (millstone, side) -> side == Direction.UP ? millstone.getInputStorage() : null, ModBlocks.MILLSTONE_BE);
         ItemStorage.SIDED.registerForBlockEntity(BambooTrayBlockEntity::getStorage, ModBlocks.BAMBOO_TRAY_BE);

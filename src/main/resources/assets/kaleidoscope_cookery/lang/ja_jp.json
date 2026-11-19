@@ -71,6 +71,8 @@
   "tooltip.kaleidoscope_cookery.model_display": "あなたはこのアイテムを持つべきではない...",
   "resourcePack.kaleidoscope_eating_animation": "森羅物語：食事アニメーション",
   "resourcePack.kaleidoscope_classic_texture": "森羅物語：クラシックテクスチャ",
+  "block.kaleidoscope_cookery.kitchen_shelf": "キッチン棚",
+  "subtitles.kaleidoscope_cookery.block.kitchen_shelf": "キッチン棚ディスペンス",
 
 
   "item_group.kaleidoscope_cookery.cookery_main.name": "森羅物語キッチン",

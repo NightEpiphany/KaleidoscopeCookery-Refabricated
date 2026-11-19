@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.client.init.registry;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.FlatulenceEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.PotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TrashCanOverlay;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.SteamerOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.MillstoneModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.TeapotModel;
@@ -81,6 +82,7 @@ public final class ClientRegistry {
         FlatulenceEvent.register();
         PotOverlayEvent.register();
         TrashCanOverlay.register();
+        SteamerOverlay.register();
         HudRenderCallback.EVENT.register(new TeapotOverlay()::render);
     }
 
@@ -90,6 +92,7 @@ public final class ClientRegistry {
         BlockEntityRenderers.register(ModBlocks.CHOPPING_BOARD_BE, ChoppingBoardBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.STOCKPOT_BE, StockpotBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.KITCHENWARE_RACKS_BE, KitchenwareRacksBlockEntityRender::new);
+        BlockEntityRenderers.register(ModBlocks.KITCHEN_SHELF_BE, KitchenShelfBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.CHAIR_BE, ChairBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.TABLE_BE, TableBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.SHAWARMA_SPIT_BE, ShawarmaSpitBlockEntityRender::new);

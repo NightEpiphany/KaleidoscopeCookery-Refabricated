@@ -7,6 +7,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
@@ -54,6 +55,15 @@ public class DecorationRecipeProvider extends ModRecipeProvider {
         addTable(ModItems.TABLE_JUNGLE, Blocks.JUNGLE_FENCE, Blocks.JUNGLE_SLAB).save(consumer);
         addTable(ModItems.TABLE_MANGROVE, Blocks.MANGROVE_FENCE, Blocks.MANGROVE_SLAB).save(consumer);
         addTable(ModItems.TABLE_WARPED, Blocks.WARPED_FENCE, Blocks.WARPED_SLAB).save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.KITCHEN_SHELF)
+                .pattern(" B ")
+                .pattern("BCB")
+                .pattern(" B ")
+                .define('B', Blocks.BARREL)
+                .define('C', Items.DISPENSER)
+                .unlockedBy("has_barrel", has(Blocks.BARREL))
+                .save(consumer);
     }
 
     private ShapedRecipeBuilder addCookStool(Item result, Block wood) {

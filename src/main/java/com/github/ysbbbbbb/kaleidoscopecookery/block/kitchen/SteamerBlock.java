@@ -263,8 +263,18 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
     }
 
     @Override
+    public @NotNull BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()
+                && level.getBlockEntity(pos) instanceof SteamerBlockEntity steamer
+                && steamer.getStoreSize() > 0) {
+            dropResources(state, level, pos, steamer, player, player.getMainHandItem());
+        }
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
     public @NotNull List<ItemStack> getDrops(BlockState state, LootParams.Builder lootParamsBuilder) {
-        BlockEntity parameter = lootParamsBuilder.getParameter(LootContextParams.BLOCK_ENTITY);
+        BlockEntity parameter = lootParamsBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (parameter instanceof SteamerBlockEntity steamer && steamer.getLevel() != null) {
             return steamer.dropAsItem(steamer.getLevel());
         }
