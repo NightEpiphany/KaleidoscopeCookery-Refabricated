@@ -1,11 +1,13 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.SteamerBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.SteamerBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.inventory.tooltip.ItemContainerTooltip;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsBlockItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.neo.ItemStackHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,16 +17,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+
+import java.util.Optional;
 
 public class SteamerItem extends WithTooltipsBlockItem {
     private static final int NONE = 0;
@@ -36,26 +41,32 @@ public class SteamerItem extends WithTooltipsBlockItem {
 
     @Override
     protected boolean placeBlock(BlockPlaceContext context, @NonNull BlockState state) {
-        Level level = context.getLevel();
-        Direction face = context.getClickedFace();
-        BlockPos clickedPos = context.getClickedPos();
-        // 点击顶部才能放置
-        if (face != Direction.UP) {
+        // 蒸笼只能从顶面放置，物品始终只代表一层。
+        return context.getClickedFace() == Direction.UP && super.placeBlock(context, state);
+    }
+
+    @Override
+    protected boolean updateCustomBlockEntityTag(@NonNull BlockPos pos, @NonNull Level level, @Nullable Player player,
+                                                 @NonNull ItemStack stack, @NonNull BlockState state) {
+        if (level.isClientSide() || !(level.getBlockEntity(pos) instanceof SteamerBlockEntity steamer)) {
             return false;
         }
-        BlockEntity blockEntity = level.getBlockEntity(clickedPos);
-        ItemStack stack = context.getItemInHand();
-        if (stack.is(this) && stack.getCount() == 1) {
-            if (blockEntity instanceof SteamerBlockEntity steamer)
-                steamer.mergeItem(stack, context.getLevel());
-            else {
-                CompoundTag data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(ModBlocks.STEAMER_BE, new CompoundTag())).copyTagWithoutId();
-                NonNullList<ItemStack> items = NonNullList.withSize(8, ItemStack.EMPTY);
-                ContainerHelper.loadAllItems(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), data), items);
-                if (!items.get(4).isEmpty()) { return context.getLevel().setBlock(context.getClickedPos(), state.setValue(SteamerBlock.HALF, false), 11); }
-            }
+        steamer.loadItem(stack, level);
+        return true;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public @NonNull Optional<TooltipComponent> getTooltipImage(@NonNull ItemStack stack) {
+        ClientLevel level = Minecraft.getInstance().level;
+        TypedEntityData<?> blockEntityData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (level == null || blockEntityData == null || !blockEntityData.contains(SteamerBlockEntity.ITEMS_TAG)) {
+            return Optional.empty();
         }
-        return super.placeBlock(context, state);
+        NonNullList<ItemStack> items = NonNullList.withSize(4, ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(),
+                blockEntityData.copyTagWithoutId()), items);
+        return Optional.of(new ItemContainerTooltip(new ItemStackHandler(items)));
     }
 
     @Override
@@ -72,11 +83,12 @@ public class SteamerItem extends WithTooltipsBlockItem {
     public static float getTexture(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
         CompoundTag data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(ModBlocks.STEAMER_BE, new CompoundTag())).copyTagWithoutId();
         if (stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
-            NonNullList<ItemStack> items = NonNullList.withSize(8, ItemStack.EMPTY);
+            NonNullList<ItemStack> items = NonNullList.withSize(4, ItemStack.EMPTY);
             if (level != null) {
                 ContainerHelper.loadAllItems(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), data), items);
-                if (!items.getFirst().isEmpty() || !items.get(4).isEmpty())
+                if (items.stream().anyMatch(item -> !item.isEmpty())) {
                     return HAS;
+                }
             }
         }
         return NONE;

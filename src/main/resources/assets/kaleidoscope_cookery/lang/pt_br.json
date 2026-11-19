@@ -71,6 +71,8 @@
   "tooltip.kaleidoscope_cookery.model_display": "Você não deveria ter este item...",
   "resourcePack.kaleidoscope_eating_animation": "Mori no Monogatari: Animação de comer",
   "resourcePack.kaleidoscope_classic_texture": "Mori no Monogatari: Texturas clássicas",
+  "block.kaleidoscope_cookery.kitchen_shelf": "Prateleira de Cozinha",
+  "subtitles.kaleidoscope_cookery.block.kitchen_shelf": "Prateleira de Cozinha Dispensa",
 
 
   "item_group.kaleidoscope_cookery.cookery_main.name": "Kaleidoscope: Culinária",

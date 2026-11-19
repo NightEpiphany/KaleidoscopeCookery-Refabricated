@@ -71,6 +71,8 @@
   "tooltip.kaleidoscope_cookery.model_display": "No deberías tener este objeto...",
   "resourcePack.kaleidoscope_eating_animation": "Mori no Monogatari: Animación de comida",
   "resourcePack.kaleidoscope_classic_texture": "Mori no Monogatari: Texturas clásicas",
+  "block.kaleidoscope_cookery.kitchen_shelf": "Estante de cocina",
+  "subtitles.kaleidoscope_cookery.block.kitchen_shelf": "Estante de cocina dispensador",
 
 
   "item_group.kaleidoscope_cookery.cookery_main.name": "Kaleidoscope: Cocina",
