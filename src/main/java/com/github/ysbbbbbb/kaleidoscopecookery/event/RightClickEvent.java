@@ -2,9 +2,11 @@ package com.github.ysbbbbbb.kaleidoscopecookery.event;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
@@ -14,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -44,6 +47,16 @@ public class RightClickEvent {
         if (player.isSecondaryUseActive() && hand == InteractionHand.MAIN_HAND
             && blockEntity instanceof FruitBasketBlockEntity fruitBasketBlock) {
             fruitBasketBlock.takeOut(player);
+            return InteractionResult.SUCCESS;
+        }
+        ItemStack itemInHand = player.getItemInHand(hand);
+        // 厨架潜行存入物品
+        if (!player.isSpectator() && player.isSecondaryUseActive() && hand == InteractionHand.MAIN_HAND
+                && !itemInHand.isEmpty() && !itemInHand.is(ModItems.KITCHEN_SHELF)
+                && blockEntity instanceof KitchenShelfBlockEntity shelf) {
+            if (!level.isClientSide() && shelf.interact(player, true)) {
+                SoundEvents.WOOD.hitSound().ifPresent(sound -> level.playSound(null, pos, sound.value(), SoundSource.BLOCKS, 1.0F, 1.0F));
+            }
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

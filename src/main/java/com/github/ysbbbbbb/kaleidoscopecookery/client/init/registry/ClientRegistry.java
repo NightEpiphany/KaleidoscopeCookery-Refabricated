@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.client.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.FlatulenceEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.PotOverlayEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.SteamerOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TeapotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TrashCanOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.init.ModClientTooltip;
@@ -88,6 +89,7 @@ public final class ClientRegistry {
         PotOverlayEvent.register();
         TeapotOverlayEvent.register();
         TrashCanOverlay.register();
+        SteamerOverlay.register();
     }
 
     private static void registerBlockEntityRenderers() {
@@ -96,6 +98,7 @@ public final class ClientRegistry {
         register(ModBlocks.CHOPPING_BOARD_BE, ChoppingBoardBlockEntityRender::new);
         register(ModBlocks.STOCKPOT_BE, StockpotBlockEntityRender::new);
         register(ModBlocks.KITCHENWARE_RACKS_BE, KitchenwareRacksBlockEntityRender::new);
+        register(ModBlocks.KITCHEN_SHELF_BE, KitchenShelfBlockEntityRender::new);
         register(ModBlocks.CHAIR_BE, ChairBlockEntityRender::new);
         register(ModBlocks.TABLE_BE, TableBlockEntityRender::new);
         register(ModBlocks.SHAWARMA_SPIT_BE, ShawarmaSpitBlockEntityRender::new);

@@ -14,6 +14,7 @@ public final class ModBlockItemIds {
     public static final BlockItemId CHOPPING_BOARD = id("chopping_board", "chopping_board");
     public static final BlockItemId ENAMEL_BASIN = id("enamel_basin", "enamel_basin");
     public static final BlockItemId KITCHENWARE_RACKS = id("kitchenware_racks", "kitchenware_racks");
+    public static final BlockItemId KITCHEN_SHELF = id("kitchen_shelf", "kitchen_shelf");
     public static final BlockItemId CHILI_RISTRA = id("chili_ristra", "chili_ristra");
     public static final BlockItemId STRUNG_MUSHROOMS = id("strung_mushrooms", "strung_mushrooms");
     public static final BlockItemId STRAW_BLOCK = id("straw_block", "straw_block");

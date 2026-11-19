@@ -12,6 +12,7 @@ public final class ModSounds {
     public static final SoundEvent BLOCK_STOCKPOT = SoundEvent.createFixedRangeEvent(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.stockpot"), 16.0F);
     public static final SoundEvent BLOCK_TEAPOT_PROCESSING = SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.teapot.processing"));
     public static final SoundEvent TRASH_CAN = SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.trash_can"));
+    public static final SoundEvent BLOCK_KITCHEN_SHELF = SoundEvent.createFixedRangeEvent(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.kitchen_shelf"), 16.0F);
     public static final SoundEvent BLOCK_PADDY = SoundEvent.createFixedRangeEvent(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.paddy"), 16.0F);
     public static final SoundEvent ENTITY_FART = SoundEvent.createFixedRangeEvent(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "entity.fart"), 16.0F);
     public static final SoundEvent ITEM_DOUGH_TRANSFORM = SoundEvent.createFixedRangeEvent(Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "item.dough_transform"), 16.0F);
@@ -22,6 +23,7 @@ public final class ModSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.stockpot"), BLOCK_STOCKPOT);
         Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.teapot.processing"), BLOCK_TEAPOT_PROCESSING);
         Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.trash_can"), TRASH_CAN);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.kitchen_shelf"), BLOCK_KITCHEN_SHELF);
         Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "block.paddy"), BLOCK_PADDY);
         Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "entity.fart"), ENTITY_FART);
         Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "item.dough_transform"), ITEM_DOUGH_TRANSFORM);

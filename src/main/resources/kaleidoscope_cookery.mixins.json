@@ -7,6 +7,7 @@
   "mixins": [
     "AbstractArrowMixin",
     "AbstractHurtingProjectileMixin",
+    "BlockItemMixin",
     "BlockMixin",
     "CropBlockMixin",
     "DataComponentHolderMixin",

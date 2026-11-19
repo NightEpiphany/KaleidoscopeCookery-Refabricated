@@ -93,6 +93,12 @@ public final class ModBlocks {
             .sound(BlockSoundSets.WOOD)
             .ignitedByLava());
 
+    public static final Block KITCHEN_SHELF = commonReg(ModBlockItemIds.KITCHEN_SHELF.block(), KitchenShelfBlock::new, BlockBehaviour.Properties.of()
+            .mapColor(MapColor.WOOD)
+            .strength(2.0F)
+            .sound(BlockSoundSets.WOOD)
+            .noOcclusion());
+
     public static final Block CHILI_RISTRA = commonReg(ModBlockItemIds.CHILI_RISTRA.block(), ChiliRistraBlock::new, BlockBehaviour.Properties.of()
             .mapColor(MapColor.COLOR_RED)
             .noCollision()
@@ -264,6 +270,7 @@ public final class ModBlocks {
     public static final BlockEntityType<FruitBasketBlockEntity> FRUIT_BASKET_BE = FabricBlockEntityTypeBuilder.create(FruitBasketBlockEntity::new, FRUIT_BASKET).build();
     public static final BlockEntityType<ChoppingBoardBlockEntity> CHOPPING_BOARD_BE = FabricBlockEntityTypeBuilder.create(ChoppingBoardBlockEntity::new, CHOPPING_BOARD).build();
     public static final BlockEntityType<KitchenwareRacksBlockEntity> KITCHENWARE_RACKS_BE = FabricBlockEntityTypeBuilder.create(KitchenwareRacksBlockEntity::new, KITCHENWARE_RACKS).build();
+    public static final BlockEntityType<KitchenShelfBlockEntity> KITCHEN_SHELF_BE = FabricBlockEntityTypeBuilder.create(KitchenShelfBlockEntity::new, KITCHEN_SHELF).build();
     public static final BlockEntityType<ShawarmaSpitBlockEntity> SHAWARMA_SPIT_BE = FabricBlockEntityTypeBuilder.create(ShawarmaSpitBlockEntity::new, SHAWARMA_SPIT).build();
     public static final BlockEntityType<SteamerBlockEntity> STEAMER_BE = FabricBlockEntityTypeBuilder.create(SteamerBlockEntity::new, STEAMER).build();
     public static final BlockEntityType<MillstoneBlockEntity> MILLSTONE_BE = FabricBlockEntityTypeBuilder.create(MillstoneBlockEntity::new, MILLSTONE).build();
@@ -295,6 +302,7 @@ public final class ModBlocks {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "fruit_basket"), FRUIT_BASKET_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "chopping_board"), CHOPPING_BOARD_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "kitchenware_racks"), KITCHENWARE_RACKS_BE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "kitchen_shelf"), KITCHEN_SHELF_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "shawarma_spit"), SHAWARMA_SPIT_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "chair"), CHAIR_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "table"), TABLE_BE);

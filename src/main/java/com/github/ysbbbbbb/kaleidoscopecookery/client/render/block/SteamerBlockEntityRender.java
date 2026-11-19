@@ -38,7 +38,7 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
     public void extractRenderState(@NonNull SteamerBlockEntity blockEntity, @NonNull SteamerBlockEntityRenderState blockEntityRenderState, float f, @NonNull Vec3 vec3, ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, blockEntityRenderState, f, vec3, crumblingOverlay);
         int posLong = (int) blockEntity.getBlockPos().asLong();
-        blockEntityRenderState.items = new ArrayList<>();
+        blockEntityRenderState.items = new ArrayList<>(blockEntity.getItems().size());
         blockEntityRenderState.hasLid = blockEntity.getBlockState().getValue(SteamerBlock.HAS_LID);
         blockEntityRenderState.facing = blockEntity.getBlockState().getValue(SteamerBlock.FACING);
         for (var index = 0; index < blockEntity.getItems().size(); index++) {
@@ -79,6 +79,7 @@ public class SteamerBlockEntityRender implements BlockEntityRenderer<SteamerBloc
             poseStack.pushPose();
             poseStack.translate(x, y, z);
             poseStack.rotateDegrees(Axis.YN, blockEntityRenderState.facing.get2DDataValue() * 90f);
+            poseStack.rotateDegrees(Axis.ZP, -35);
             poseStack.rotateDegrees(Axis.XN, 90);
             poseStack.scale(0.5F, 0.5F, 0.5F);
             stack.submit(poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);

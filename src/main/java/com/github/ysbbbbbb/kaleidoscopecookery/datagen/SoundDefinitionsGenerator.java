@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricSoundsProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +19,9 @@ public class SoundDefinitionsGenerator extends FabricSoundsProvider {
 
     @Override
     protected void configure(HolderLookup.@NonNull Provider registries, @NonNull SoundExporter exporter) {
+        exporter.add(ModSounds.BLOCK_KITCHEN_SHELF, definition(ModSounds.BLOCK_KITCHEN_SHELF, "block.kitchen_shelf")
+                .sound(sound("block/kitchen_shelf")));
+
         SoundTypeBuilder stockpotSound = definition(ModSounds.BLOCK_STOCKPOT, "block.stockpot");
         for (int i = 0; i < 7; i++) {
             stockpotSound.sound(sound("block/stockpot/stockpot_" + i));
@@ -60,7 +64,7 @@ public class SoundDefinitionsGenerator extends FabricSoundsProvider {
                 .sound(sound("item/dough_transform")));
     }
 
-    private static SoundTypeBuilder definition(net.minecraft.sounds.SoundEvent soundEvent, String subtitle) {
+    private static SoundTypeBuilder definition(SoundEvent soundEvent, String subtitle) {
         return SoundTypeBuilder.of(soundEvent).subtitle("subtitles.%s.%s".formatted(KaleidoscopeCookery.MOD_ID, subtitle));
     }
 
