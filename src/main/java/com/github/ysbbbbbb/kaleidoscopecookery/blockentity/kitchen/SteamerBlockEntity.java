@@ -10,12 +10,10 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
-import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -35,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,51 +117,26 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         }
     }
 
-    // 合并物品，仅在放置时调用
-    public void mergeItem(ItemStack stack) {
-        CompoundTag data = stack.getOrCreateTagElement(BlockItem.BLOCK_ENTITY_TAG);
-
-        NonNullList<ItemStack> merge = NonNullList.withSize(8, ItemStack.EMPTY);
-        int[] mergeCookingProgress = new int[8];
-        int[] mergeCookingTime = new int[8];
-
-        // 先尝试把物品里的数据 0-3 取出，放到 4-7
-        if (data.contains(ITEMS_TAG, Tag.TAG_LIST)) {
-            NonNullList<ItemStack> itemsInStack = NonNullList.withSize(4, ItemStack.EMPTY);
-            ContainerHelper.loadAllItems(data, itemsInStack);
-            for (int i = 0; i < 4; i++) {
-                merge.set(i + 4, itemsInStack.get(i));
-            }
+    // 只读物品中的单层数据，避免创造模式下污染玩家手持物品。
+    public void loadItem(ItemStack stack) {
+        int offset = getBlockState().getValue(SteamerBlock.HALF) ? 0 : 4;
+        CompoundTag data = BlockItem.getBlockEntityData(stack);
+        NonNullList<ItemStack> incoming = NonNullList.withSize(4, ItemStack.EMPTY);
+        int[] progress = data == null ? new int[0] : data.getIntArray(COOKING_PROGRESS_TAG);
+        int[] times = data == null ? new int[0] : data.getIntArray(COOKING_TIME_TAG);
+        if (data != null) {
+            ContainerHelper.loadAllItems(data, incoming);
         }
-        if (data.contains(COOKING_PROGRESS_TAG, Tag.TAG_INT_ARRAY)) {
-            int[] times = data.getIntArray(COOKING_PROGRESS_TAG);
-            int length = Math.min(mergeCookingProgress.length - 4, times.length);
-            System.arraycopy(times, 0, mergeCookingProgress, 4, length);
-        }
-        if (data.contains(COOKING_TIME_TAG, Tag.TAG_INT_ARRAY)) {
-            int[] times = data.getIntArray(COOKING_TIME_TAG);
-            int length = Math.min(mergeCookingTime.length - 4, times.length);
-            System.arraycopy(times, 0, mergeCookingTime, 4, length);
-        }
-
-        // 接着把自己的数据放到 0-3
         for (int i = 0; i < 4; i++) {
-            merge.set(i, this.items.get(i));
-            mergeCookingProgress[i] = this.cookingProgress[i];
-            mergeCookingTime[i] = this.cookingTime[i];
+            this.items.set(offset + i, incoming.get(i));
+            this.cookingProgress[offset + i] = i < progress.length ? progress[i] : 0;
+            this.cookingTime[offset + i] = i < times.length ? times[i] : 0;
         }
-
-        // 写进 data
-        ContainerHelper.saveAllItems(data, merge, false);
-        data.putIntArray(COOKING_PROGRESS_TAG, mergeCookingProgress);
-        data.putIntArray(COOKING_TIME_TAG, mergeCookingTime);
-
-        // 写回物品
-        BlockItem.setBlockEntityData(stack, this.getType(), data);
+        this.refresh();
     }
 
     public List<ItemStack> dropAsItem() {
-        List<ItemStack> drops = Lists.newArrayList();
+        List<ItemStack> drops = new ArrayList<>(2);
         // 先看看是单层还是双层
         boolean half = this.getBlockState().getValue(SteamerBlock.HALF);
         // 全为空？那么直接返回
@@ -293,7 +267,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
                     pos.getX() + 0.5 + random.nextDouble() / 1.25 * (random.nextBoolean() ? 1 : -1),
                     pos.getY() + yOffset + random.nextDouble() / 2,
                     pos.getZ() + 0.5 + random.nextDouble() / 1.25 * (random.nextBoolean() ? 1 : -1),
-                    1, 0, 0, 0, 0.05);
+                    2, 0, 0, 0, 0.05);
         }
     }
 
@@ -404,6 +378,10 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
 
     public NonNullList<ItemStack> getItems() {
         return items;
+    }
+
+    public int getStoreSize() {
+        return items.stream().filter(s -> !s.isEmpty()).toList().size();
     }
 
     @Override
