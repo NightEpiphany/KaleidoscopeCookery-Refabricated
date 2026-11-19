@@ -55,6 +55,7 @@ public final class ModItems {
     public static final Item CHOPPING_BOARD = registerItemViaBlockWithDesc(ModBlocks.CHOPPING_BOARD, "chopping_board");
     public static final Item ENAMEL_BASIN = registerItemViaBlockWithDesc(ModBlocks.ENAMEL_BASIN, "enamel_basin");
     public static final Item KITCHENWARE_RACKS = registerItemViaBlockWithDesc(ModBlocks.KITCHENWARE_RACKS, "kitchenware_racks");
+    public static final Item KITCHEN_SHELF = registerItemViaBlock(ModBlocks.KITCHEN_SHELF);
     public static final Item CHILI_RISTRA = registerItemViaBlock(ModBlocks.CHILI_RISTRA);
     public static final Item STRUNG_MUSHROOMS = registerItemViaBlock(ModBlocks.STRUNG_MUSHROOMS);
     public static final Item STRAW_BLOCK = registerItemViaBlock(ModBlocks.STRAW_BLOCK);

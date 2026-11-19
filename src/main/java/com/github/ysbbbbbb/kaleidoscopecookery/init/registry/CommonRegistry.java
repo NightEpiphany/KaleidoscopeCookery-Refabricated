@@ -65,6 +65,7 @@ public final class CommonRegistry {
     public static void storageRegister() {
         ItemStorage.SIDED.registerForBlockEntity(BambooTrayBlockEntity::getStorage, ModBlocks.BAMBOO_TRAY_BE);
         ItemStorage.SIDED.registerForBlockEntity((teapot, _) -> teapot.getIngredientStorage(), ModBlocks.TEAPOT_BE);
+        ItemStorage.SIDED.registerForBlockEntity((shelf, _) -> shelf.getItemStorage(), ModBlocks.KITCHEN_SHELF_BE);
     }
 
     public static void registerDataListeners() {

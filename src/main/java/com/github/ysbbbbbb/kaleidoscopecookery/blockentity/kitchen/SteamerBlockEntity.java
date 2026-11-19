@@ -12,7 +12,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.PortHelper;
-import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -42,6 +42,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NonNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,7 +100,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
             tag1.putIntArray(COOKING_TIME_TAG, firstCookingTime);
         }
 
-        PortHelper.saveAllItems(tag2, first, false, level.registryAccess());
+        PortHelper.saveAllItems(tag2, second, false, level.registryAccess());
         if (!tag2.isEmpty()) {
             tag2.putIntArray(COOKING_PROGRESS_TAG, secondCookingProgress);
             tag2.putIntArray(COOKING_TIME_TAG, secondCookingTime);
@@ -126,51 +128,25 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         }
     }
 
-    // 合并物品，仅在放置时调用
-    public void mergeItem(ItemStack stack, Level level) {
+    // 只读物品中的单层数据，避免创造模式下污染玩家手持物品。
+    public void loadItem(ItemStack stack, Level level) {
+        int offset = getBlockState().getValue(SteamerBlock.HALF) ? 0 : 4;
         CompoundTag data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(ModBlocks.STEAMER_BE, new CompoundTag())).copyTagWithoutId();
-
-        NonNullList<ItemStack> merge = NonNullList.withSize(8, ItemStack.EMPTY);
-        int[] mergeCookingProgress = new int[8];
-        int[] mergeCookingTime = new int[8];
         ValueInput valueInput = TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), data);
-        // 先尝试把物品里的数据 0-3 取出，放到 4-7
-        if (data.getList(ITEMS_TAG).isPresent()) {
-            NonNullList<ItemStack> itemsInStack = NonNullList.withSize(4, ItemStack.EMPTY);
-            ContainerHelper.loadAllItems(valueInput, itemsInStack);
-            for (int i = 0; i < 4; i++) {
-                merge.set(i + 4, itemsInStack.get(i));
-            }
-        }
-        if (data.getList(COOKING_PROGRESS_TAG).isPresent()) {
-            int[] times = data.getIntArray(COOKING_PROGRESS_TAG).orElse(new int[0]);
-            int length = Math.min(mergeCookingProgress.length - 4, times.length);
-            System.arraycopy(times, 0, mergeCookingProgress, 4, length);
-        }
-        if (data.getList(COOKING_TIME_TAG).isPresent()) {
-            int[] times = data.getIntArray(COOKING_TIME_TAG).orElse(new int[0]);
-            int length = Math.min(mergeCookingTime.length - 4, times.length);
-            System.arraycopy(times, 0, mergeCookingTime, 4, length);
-        }
-
-        // 接着把自己的数据放到 0-3
+        NonNullList<ItemStack> incoming = NonNullList.withSize(4, ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(valueInput, incoming);
+        int[] progress = valueInput.getIntArray(COOKING_PROGRESS_TAG).orElse(new int[0]);
+        int[] times = readCookingTime(valueInput);
         for (int i = 0; i < 4; i++) {
-            merge.set(i, this.items.get(i));
-            mergeCookingProgress[i] = this.cookingProgress[i];
-            mergeCookingTime[i] = this.cookingTime[i];
+            this.items.set(offset + i, incoming.get(i));
+            this.cookingProgress[offset + i] = i < progress.length ? progress[i] : 0;
+            this.cookingTime[offset + i] = i < times.length ? times[i] : 0;
         }
-
-        // 写进 data
-        PortHelper.saveAllItems(data, merge, false, level.registryAccess());
-        data.putIntArray(COOKING_PROGRESS_TAG, mergeCookingProgress);
-        data.putIntArray(COOKING_TIME_TAG, mergeCookingTime);
-
-        // 写回物品
-        PortHelper.setBlockEntityData(stack, this.getType(), data, level);
+        this.refresh();
     }
 
     public List<ItemStack> dropAsItem(Level level) {
-        List<ItemStack> drops = Lists.newArrayList();
+        List<ItemStack> drops = new ArrayList<>(2);
         // 先看看是单层还是双层
         boolean half = this.getBlockState().getValue(SteamerBlock.HALF);
         // 全为空？那么直接返回
@@ -303,7 +279,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
                     pos.getX() + 0.5 + random.nextDouble() / 1.25 * (random.nextBoolean() ? 1 : -1),
                     pos.getY() + yOffset + random.nextDouble() / 2,
                     pos.getZ() + 0.5 + random.nextDouble() / 1.25 * (random.nextBoolean() ? 1 : -1),
-                    1, 0, 0, 0, 0.05);
+                    2, 0, 0, 0, 0.05);
         }
     }
 
@@ -430,15 +406,15 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
     protected void loadAdditional(@NonNull ValueInput valueInput) {
         super.loadAdditional(valueInput);
         this.items.clear();
+        Arrays.fill(this.cookingProgress, 0);
+        Arrays.fill(this.cookingTime, 0);
         ContainerHelper.loadAllItems(valueInput, this.items);
         valueInput.getIntArray(COOKING_PROGRESS_TAG).ifPresent(times -> {
             int length = Math.min(this.cookingProgress.length, times.length);
             System.arraycopy(times, 0, this.cookingProgress, 0, length);
         });
-        valueInput.getIntArray(COOKING_TIME_TAG).ifPresent(times -> {
-            int length = Math.min(this.cookingTime.length, times.length);
-            System.arraycopy(times, 0, this.cookingTime, 0, length);
-        });
+        int[] times = readCookingTime(valueInput);
+        System.arraycopy(times, 0, this.cookingTime, 0, times.length);
     }
 
     @ServerThreadSafe
@@ -454,7 +430,22 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         return items;
     }
 
+    public int getStoreSize() {
+        int size = 0;
+        for (ItemStack stack : this.items) {
+            if (!stack.isEmpty()) {
+                size++;
+            }
+        }
+        return size;
+    }
 
+    private static int[] readCookingTime(ValueInput valueInput) {
+        // 同时兼容 NBT 整数数组和合成表 JSON 中的数值列表。
+        return valueInput.read(COOKING_TIME_TAG, Codec.INT_STREAM)
+                .map(times -> times.limit(8).toArray())
+                .orElseGet(() -> new int[0]);
+    }
 
     public int[] getCookingProgress() {
         return cookingProgress;

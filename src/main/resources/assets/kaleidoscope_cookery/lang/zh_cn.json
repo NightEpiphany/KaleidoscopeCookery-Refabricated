@@ -71,6 +71,8 @@
   "tooltip.kaleidoscope_cookery.model_display": "你不应该拥有这个物品...",
   "resourcePack.kaleidoscope_eating_animation": "森罗物语：进食动画",
   "resourcePack.kaleidoscope_classic_texture": "森罗物语：经典材质",
+  "block.kaleidoscope_cookery.kitchen_shelf": "厨架",
+  "subtitles.kaleidoscope_cookery.block.kitchen_shelf": "厨架发射物品",
 
 
   "item_group.kaleidoscope_cookery.cookery_main.name": "森罗物语：厨房",
