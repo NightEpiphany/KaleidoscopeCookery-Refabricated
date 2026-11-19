@@ -30,6 +30,7 @@ public final class ModCreativeTabs {
                 .displayItems((par, output) -> {
                     // 厨具与杂项
                     output.accept(ModItems.STOVE);
+                    output.accept(ModItems.KITCHEN_SHELF);
                     output.accept(ModItems.SHAWARMA_SPIT);
                     output.accept(ModItems.STRAW_BLOCK);
                     output.accept(ModItems.OIL_BLOCK);

@@ -71,6 +71,8 @@
   "tooltip.kaleidoscope_cookery.model_display": "당신은 이 아이템을 가지고 있으면 안 됩니다...",
   "resourcePack.kaleidoscope_eating_animation": "모리 모노가타리: 식사 애니메이션",
   "resourcePack.kaleidoscope_classic_texture": "모리 모노가타리: 클래식 텍스처",
+  "block.kaleidoscope_cookery.kitchen_shelf": "주방 선반",
+  "subtitles.kaleidoscope_cookery.block.kitchen_shelf": "주방 선반 배출",
 
 
   "item_group.kaleidoscope_cookery.cookery_main.name": "만화경 요리: 주방",

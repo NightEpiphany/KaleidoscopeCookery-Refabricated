@@ -97,6 +97,7 @@ public final class ClientRegistry {
         BlockEntityRenderers.register(ModBlocks.CHOPPING_BOARD_BE, ChoppingBoardBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.STOCKPOT_BE, StockpotBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.KITCHENWARE_RACKS_BE, KitchenwareRacksBlockEntityRender::new);
+        BlockEntityRenderers.register(ModBlocks.KITCHEN_SHELF_BE, KitchenShelfBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.CHAIR_BE, ChairBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.TABLE_BE, TableBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.SHAWARMA_SPIT_BE, ShawarmaSpitBlockEntityRender::new);

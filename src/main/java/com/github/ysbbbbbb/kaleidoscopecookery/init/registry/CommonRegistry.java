@@ -43,6 +43,7 @@ public final class CommonRegistry {
         registerCustomEventHandlers();
         registerFluidStorage();
         ItemStorage.SIDED.registerForBlockEntity((teapot, side) -> teapot.getInputStorage(), ModBlocks.TEAPOT_BE);
+        ItemStorage.SIDED.registerForBlockEntity((shelf, side) -> shelf.getItemStorage(), ModBlocks.KITCHEN_SHELF_BE);
         modCompat();
         addComposter();
         registerPlateBlocks();

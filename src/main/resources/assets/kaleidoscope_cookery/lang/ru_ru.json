@@ -71,6 +71,8 @@
   "tooltip.kaleidoscope_cookery.model_display": "У вас не должно быть этого предмета...",
   "resourcePack.kaleidoscope_eating_animation": "Синра Моногатари: Анимация еды",
   "resourcePack.kaleidoscope_classic_texture": "Синра Моногатари: Классические текстуры",
+  "block.kaleidoscope_cookery.kitchen_shelf": "Кухонная полка",
+  "subtitles.kaleidoscope_cookery.block.kitchen_shelf": "Полка на кухне раздает",
 
 
   "item_group.kaleidoscope_cookery.cookery_main.name": "Kaleidoscope: Кулинария",

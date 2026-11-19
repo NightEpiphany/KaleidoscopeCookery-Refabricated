@@ -31,6 +31,7 @@ public final class ModBlocks {
     public static final Block OIL_BLOCK = new OilBlock();
     public static final Block ENAMEL_BASIN = new EnamelBasinBlock();
     public static final Block KITCHENWARE_RACKS = new KitchenwareRacksBlock();
+    public static final Block KITCHEN_SHELF = new KitchenShelfBlock();
     public static final Block BAMBOO_TRAY = new BambooTrayBlock();
     public static final Block CHILI_RISTRA = new ChiliRistraBlock();
     public static final Block STRUNG_MUSHROOMS = new StrungMushroomsBlock();
@@ -126,6 +127,7 @@ public final class ModBlocks {
     public static final BlockEntityType<FruitBasketBlockEntity> FRUIT_BASKET_BE = BlockEntityType.Builder.of(FruitBasketBlockEntity::new, FRUIT_BASKET).build(null);
     public static final BlockEntityType<ChoppingBoardBlockEntity> CHOPPING_BOARD_BE = BlockEntityType.Builder.of(ChoppingBoardBlockEntity::new, CHOPPING_BOARD).build(null);
     public static final BlockEntityType<KitchenwareRacksBlockEntity> KITCHENWARE_RACKS_BE = BlockEntityType.Builder.of(KitchenwareRacksBlockEntity::new, KITCHENWARE_RACKS).build(null);
+    public static final BlockEntityType<KitchenShelfBlockEntity> KITCHEN_SHELF_BE = BlockEntityType.Builder.of(KitchenShelfBlockEntity::new, KITCHEN_SHELF).build(null);
     public static final BlockEntityType<ShawarmaSpitBlockEntity> SHAWARMA_SPIT_BE = BlockEntityType.Builder.of(ShawarmaSpitBlockEntity::new, SHAWARMA_SPIT).build(null);
     public static final BlockEntityType<FoodBiteThreeByThreeBlockEntity> FOOD_BITE_THREE_BY_THREE_BE = BlockEntityType.Builder.of(FoodBiteThreeByThreeBlockEntity::new, COLD_CUT_HAM_SLICES).build(null);
     public static final BlockEntityType<TeapotBlockEntity> TEAPOT_BE = BlockEntityType.Builder.of(TeapotBlockEntity::new, TEAPOT).build(null);
@@ -162,6 +164,7 @@ public final class ModBlocks {
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "oil_block"), OIL_BLOCK);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "enamel_basin"), ENAMEL_BASIN);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchenware_racks"), KITCHENWARE_RACKS);
+        Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchen_shelf"), KITCHEN_SHELF);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "bamboo_tray"), BAMBOO_TRAY);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "chili_ristra"), CHILI_RISTRA);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "strung_mushrooms"), STRUNG_MUSHROOMS);
@@ -240,6 +243,7 @@ public final class ModBlocks {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "fruit_basket"), FRUIT_BASKET_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "chopping_board"), CHOPPING_BOARD_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchenware_racks"), KITCHENWARE_RACKS_BE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchen_shelf"), KITCHEN_SHELF_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "shawarma_spit"), SHAWARMA_SPIT_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "chair"), CHAIR_BE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "table"), TABLE_BE);
