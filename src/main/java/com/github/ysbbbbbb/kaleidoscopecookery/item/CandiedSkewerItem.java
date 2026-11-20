@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsBlockItem;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -14,7 +15,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -33,7 +33,7 @@ import java.util.UUID;
 
 import static net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING;
 
-public class CandiedSkewerItem extends BlockItem {
+public class CandiedSkewerItem extends WithTooltipsBlockItem {
     private static final UUID KNOCKBACK_MODIFIER_UUID = UUID.fromString("d0190f53-13a1-4c8c-baa2-d3d0059911d4");
 
     private static final Multimap<Attribute, AttributeModifier> ATTRIBUTE_MODIFIERS = ImmutableMultimap.of(
@@ -56,14 +56,14 @@ public class CandiedSkewerItem extends BlockItem {
 
     public CandiedSkewerItem(Block uprightBlock, Block sideBlock, FoodProperties foodProperties,
                              @Nullable MobEffect attackEffect, int attackEffectDuration) {
-        super(uprightBlock, new Properties().food(foodProperties));
+        super(uprightBlock, new Properties().food(foodProperties), "");
         this.attackEffect = attackEffect;
         this.attackEffectDuration = attackEffectDuration;
         this.sideBlock = sideBlock;
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NonNull InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
         if (player == null || player.isSecondaryUseActive()) {
             return super.useOn(context);

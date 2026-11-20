@@ -8,32 +8,39 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 @SuppressWarnings("deprecation")
-public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
+public class CandiedSkewerBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape UPRIGHT_SHAPE_LITTLE = Block.box(0, 0, 0, 16, 20, 16);
     private static final VoxelShape UPRIGHT_SHAPE_HUGE = Block.box(-4, 0, -4, 20, 20, 20);
     private static final VoxelShape SIDE_SHAPE = Block.box(0, 0, 0, 16, 24, 16);
+
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     private final int maxCount;
     private final Supplier<Item> item;
@@ -56,10 +63,11 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
         this.upright = upright;
 
         StateDefinition.Builder<Block, BlockState> builder = new StateDefinition.Builder<>(this);
-        builder.add(FACING, countProperty);
+        builder.add(FACING, countProperty, WATERLOGGED);
         this.stateDefinition = builder.create(Block::defaultBlockState, BlockState::new);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
+                .setValue(WATERLOGGED, false)
                 .setValue(countProperty, 1));
     }
 
@@ -73,6 +81,15 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
 
     public Supplier<Item> getItem() {
         return item;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public @NonNull BlockState updateShape(@NonNull BlockState blockState, @NonNull Direction direction, @NonNull BlockState blockState2, @NonNull LevelAccessor levelAccessor, @NonNull BlockPos blockPos, @NonNull BlockPos blockPos2) {
+        if (blockState.getValue(WATERLOGGED)) {
+            levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
+        }
+        return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
     }
 
     @Override
@@ -126,6 +143,18 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
+    public @NotNull FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(@NonNull BlockPlaceContext context) {
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState()
+                .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+    }
+
+    @Override
     public @NonNull VoxelShape getShape(@NonNull BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull CollisionContext context) {
         if (!upright) {
             return SIDE_SHAPE;
@@ -135,6 +164,6 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, WATERLOGGED);
     }
 }

@@ -87,8 +87,8 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
         }
 
         Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
-        boolean left = isConnectable(level.getBlockState(pos.relative(facing.getCounterClockWise())));
-        boolean right = isConnectable(level.getBlockState(pos.relative(facing.getClockWise())));
+        boolean left = isConnectable(level.getBlockState(pos.relative(facing.getCounterClockWise())), facing);
+        boolean right = isConnectable(level.getBlockState(pos.relative(facing.getClockWise())), facing);
 
         Part part;
         if (left && right) {
@@ -103,8 +103,8 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
         return state.setValue(PART, part);
     }
 
-    private boolean isConnectable(BlockState state) {
-        return state.getBlock() == this && !state.getValue(SNEAK_PLACED);
+    private boolean isConnectable(BlockState state, Direction direction) {
+        return state.getBlock() == this && !state.getValue(SNEAK_PLACED) && state.getValue(BlockStateProperties.HORIZONTAL_FACING).equals(direction);
     }
 
     @SuppressWarnings("deprecation")

@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -41,6 +42,9 @@ public class SteamerItem extends WithTooltipsBlockItem {
 
     @Override
     protected boolean placeBlock(BlockPlaceContext context, @NotNull BlockState state) {
+        var target = context.getLevel().getBlockState(context.getClickedPos());
+        if (target.is(BlockTags.REPLACEABLE) && !target.isAir())
+            return super.placeBlock(context, state);
         // 蒸笼只能从顶面放置，物品始终只代表一层。
         return context.getClickedFace() == Direction.UP && super.placeBlock(context, state);
     }
