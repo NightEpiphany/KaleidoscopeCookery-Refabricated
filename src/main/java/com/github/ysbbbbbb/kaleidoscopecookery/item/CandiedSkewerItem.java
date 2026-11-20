@@ -14,17 +14,26 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.UUID;
 
-public class CandiedSkewerItem extends Item {
+import static net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING;
+
+public class CandiedSkewerItem extends BlockItem {
     private static final UUID KNOCKBACK_MODIFIER_UUID = UUID.fromString("d0190f53-13a1-4c8c-baa2-d3d0059911d4");
 
     private static final Multimap<Attribute, AttributeModifier> ATTRIBUTE_MODIFIERS = ImmutableMultimap.of(
@@ -39,15 +48,40 @@ public class CandiedSkewerItem extends Item {
 
     private final @Nullable MobEffect attackEffect;
     private final int attackEffectDuration;
+    private final Block sideBlock;
 
-    public CandiedSkewerItem(FoodProperties foodProperties) {
-        this(foodProperties, null, 0);
+    public CandiedSkewerItem(Block uprightBlock, Block sideBlock, FoodProperties foodProperties) {
+        this(uprightBlock, sideBlock, foodProperties, null, 0);
     }
 
-    public CandiedSkewerItem(FoodProperties foodProperties, @Nullable MobEffect attackEffect, int attackEffectDuration) {
-        super(new Properties().food(foodProperties));
+    public CandiedSkewerItem(Block uprightBlock, Block sideBlock, FoodProperties foodProperties,
+                             @Nullable MobEffect attackEffect, int attackEffectDuration) {
+        super(uprightBlock, new Properties().food(foodProperties));
         this.attackEffect = attackEffect;
         this.attackEffectDuration = attackEffectDuration;
+        this.sideBlock = sideBlock;
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
+        if (player == null || player.isSecondaryUseActive()) {
+            return super.useOn(context);
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    @Nullable
+    protected BlockState getPlacementState(BlockPlaceContext context) {
+        Direction face = context.getClickedFace();
+        if (face == Direction.UP) {
+            return getBlock().defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        }
+        if (face.getAxis().isHorizontal()) {
+            return sideBlock.defaultBlockState().setValue(FACING, face);
+        }
+        return null;
     }
 
     @Override
