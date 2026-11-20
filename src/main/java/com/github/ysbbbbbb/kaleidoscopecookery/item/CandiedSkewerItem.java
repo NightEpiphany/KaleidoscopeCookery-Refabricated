@@ -76,10 +76,12 @@ public class CandiedSkewerItem extends WithTooltipsBlockItem {
     protected BlockState getPlacementState(BlockPlaceContext context) {
         Direction face = context.getClickedFace();
         if (face == Direction.UP) {
-            return getBlock().defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+            BlockState state = getBlock().getStateForPlacement(context);
+            return state == null ? null : state.setValue(FACING, context.getHorizontalDirection().getOpposite());
         }
         if (face.getAxis().isHorizontal()) {
-            return sideBlock.defaultBlockState().setValue(FACING, face);
+            BlockState state = sideBlock.getStateForPlacement(context);
+            return state == null ? null : state.setValue(FACING, face);
         }
         return null;
     }
