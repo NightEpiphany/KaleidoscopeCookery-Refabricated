@@ -56,6 +56,7 @@
   "tooltip.kaleidoscope_cookery.teapot": "Una olla de cobre que te permite preparar té aromático.",
   "tooltip.kaleidoscope_cookery.trash_can": "Originalmente usado para desechar objetos, puede almacenar hasta 3 pilas. El jugador también puede saltar dentro para espiar.",
   "tooltip.kaleidoscope_cookery.oil_pot": "Contenedor de aceite que se puede usar con mecanismos de redstone.",
+  "tooltip.kaleidoscope_cookery.kitchen_shelf": "Un estante de madera que puede almacenar y mostrar objetos.",
   "block.kaleidoscope_cookery.long_bench": "banco largo",
   "block.kaleidoscope_cookery.red_lantern": "Linterna roja",
   "block.kaleidoscope_cookery.cook_stool_poplar": "Taburete de cocinera de álamo",

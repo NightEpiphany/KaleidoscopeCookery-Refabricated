@@ -56,6 +56,7 @@
   "tooltip.kaleidoscope_cookery.teapot": "一个可以用于煮茶的铜壶，支持液体装填",
   "tooltip.kaleidoscope_cookery.trash_can": "原本用于删除物品，支持缓存3组物品，玩家也可以跳进去隐匿身形",
   "tooltip.kaleidoscope_cookery.oil_pot": "存油的铁壶，可与红石机械交互",
+  "tooltip.kaleidoscope_cookery.kitchen_shelf": "一个可以存储并展示物品的木架",
   "block.kaleidoscope_cookery.long_bench": "长板凳",
   "block.kaleidoscope_cookery.red_lantern": "红灯笼",
   "block.kaleidoscope_cookery.cook_stool_poplar": "杨木厨娘凳",

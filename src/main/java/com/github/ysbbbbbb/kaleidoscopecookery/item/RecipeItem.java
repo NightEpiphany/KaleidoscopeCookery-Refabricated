@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ITeapot;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
@@ -165,25 +166,25 @@ public class RecipeItem extends WithTooltipsBlockItem {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (!context.getLevel().isClientSide) {
-            ItemStack itemInHand = context.getItemInHand();
-            BlockPos clickedPos = context.getClickedPos();
-            BlockEntity blockEntity = context.getLevel().getBlockEntity(clickedPos);
-            RecipeManager recipeManager = context.getLevel().getRecipeManager();
-            if (blockEntity == null) {
-                return super.useOn(context);
+        Level level = context.getLevel();
+        ItemStack itemInHand = context.getItemInHand();
+        BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
+        if (blockEntity instanceof KitchenShelfBlockEntity shelf && hasRecipe(itemInHand)) {
+            RecipeRecord record = getRecipe(itemInHand);
+            if (record != null && shelf.dispenseMatching(record.input())) {
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
-            Player player = context.getPlayer();
-            if (player == null) {
-                return super.useOn(context);
-            }
-            if (hasRecipe(itemInHand)) {
-                return this.onPutRecipe(blockEntity, player, itemInHand);
-            } else {
-                return this.onRecordRecipe(context.getLevel(), player, blockEntity, recipeManager, itemInHand);
-            }
+            return InteractionResult.PASS;
         }
-        return super.useOn(context);
+
+        Player player = context.getPlayer();
+        if (level.isClientSide || blockEntity == null || player == null) {
+            return super.useOn(context);
+        }
+        if (hasRecipe(itemInHand)) {
+            return this.onPutRecipe(blockEntity, player, itemInHand);
+        }
+        return this.onRecordRecipe(level, player, blockEntity, level.getRecipeManager(), itemInHand);
     }
 
     private InteractionResult onPutRecipe(BlockEntity blockEntity, Player player, ItemStack itemInHand) {

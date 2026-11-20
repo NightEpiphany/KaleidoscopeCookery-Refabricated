@@ -26,8 +26,8 @@ public final class ModItems {
     public static final Item STOCKPOT = new BlockItem(ModBlocks.STOCKPOT, new Item.Properties());
     public static final Item STOCKPOT_LID = new StockpotLidItem();
     public static final Item CHOPPING_BOARD = new BlockItem(ModBlocks.CHOPPING_BOARD, new Item.Properties());
-    public static final Item KITCHENWARE_RACKS = new BlockItem(ModBlocks.KITCHENWARE_RACKS, new Item.Properties());
-    public static final Item KITCHEN_SHELF = new BlockItem(ModBlocks.KITCHEN_SHELF, new Item.Properties());
+    public static final Item KITCHENWARE_RACKS = new WithTooltipsBlockItem(ModBlocks.KITCHENWARE_RACKS, new Item.Properties(), "kitchenware_racks");
+    public static final Item KITCHEN_SHELF = new WithTooltipsBlockItem(ModBlocks.KITCHEN_SHELF, new Item.Properties(), "kitchen_shelf");
     public static final Item BAMBOO_TRAY = new WithTooltipsBlockItem(ModBlocks.BAMBOO_TRAY, new Item.Properties(), "bamboo_tray");
     public static final Item SHAWARMA_SPIT = new BlockItem(ModBlocks.SHAWARMA_SPIT, new Item.Properties());
     public static final Item MILLSTONE = new BlockItem(ModBlocks.MILLSTONE, new Item.Properties());
@@ -142,11 +142,11 @@ public final class ModItems {
     public static final Item CATERPILLAR = new WithTooltipsItem(new Item.Properties().food(ModFoods.CATERPILLAR), "caterpillar");
 
     // 果串
-    public static final Item GLOW_BERRY_SKEWER = new Item(new Item.Properties().food(ModFoods.BERRY_SKEWER));
-    public static final Item SWEET_BERRY_SKEWER = new Item(new Item.Properties().food(ModFoods.BERRY_SKEWER));
-    public static final Item CHORUS_FRUIT_SKEWER = new Item(new Item.Properties().food(ModFoods.FRUIT_SKEWER));
-    public static final Item APPLE_SKEWER = new Item(new Item.Properties().food(ModFoods.FRUIT_SKEWER));
-    public static final Item CATERPILLAR_SKEWER = new Item(new Item.Properties().food(ModFoods.CATERPILLAR_SKEWER));
+    public static final Item GLOW_BERRY_SKEWER = new FruitSkewerItem(ModFoods.BERRY_SKEWER);
+    public static final Item SWEET_BERRY_SKEWER = new FruitSkewerItem(ModFoods.BERRY_SKEWER);
+    public static final Item CHORUS_FRUIT_SKEWER = new FruitSkewerItem(ModFoods.FRUIT_SKEWER);
+    public static final Item APPLE_SKEWER = new FruitSkewerItem(ModFoods.FRUIT_SKEWER);
+    public static final Item CATERPILLAR_SKEWER = new FruitSkewerItem(ModFoods.CATERPILLAR_SKEWER);
 
     // 裹糖果串
     public static final Item CANDIED_GLOW_BERRY_SKEWER = new CandiedSkewerItem(ModBlocks.CANDIED_GLOW_BERRY_SKEWER_UPRIGHT, ModBlocks.CANDIED_GLOW_BERRY_SKEWER_SIDE, ModFoods.CANDIED_GLOW_BERRY_SKEWER, MobEffects.GLOWING, 5 * 20);

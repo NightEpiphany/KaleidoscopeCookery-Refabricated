@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.item.IHasContainer;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.template.WithTooltipsBlockItem;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -15,7 +16,9 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -33,7 +36,7 @@ import java.util.UUID;
 
 import static net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING;
 
-public class CandiedSkewerItem extends WithTooltipsBlockItem {
+public class CandiedSkewerItem extends WithTooltipsBlockItem implements IHasContainer {
     private static final UUID KNOCKBACK_MODIFIER_UUID = UUID.fromString("d0190f53-13a1-4c8c-baa2-d3d0059911d4");
 
     private static final Multimap<Attribute, AttributeModifier> ATTRIBUTE_MODIFIERS = ImmutableMultimap.of(
@@ -105,5 +108,16 @@ public class CandiedSkewerItem extends WithTooltipsBlockItem {
             target.addEffect(new MobEffectInstance(this.attackEffect, this.attackEffectDuration), attacker);
         }
         return super.hurtEnemy(stack, target, attacker);
+    }
+
+    @Override
+    public @NonNull ItemStack finishUsingItem(@NonNull ItemStack stack, @NonNull Level level, @NonNull LivingEntity entity) {
+        ItemStack remaining = super.finishUsingItem(stack, level, entity);
+        return this.returnContainerToEntity(remaining, level, entity);
+    }
+
+    @Override
+    public Item getContainerItem() {
+        return Items.STICK;
     }
 }

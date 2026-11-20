@@ -6,6 +6,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.event.FlatulenceEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.PotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.TipOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TrashcanOverlayEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.KitchenShelfOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.SteamerOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.TeapotOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.init.*;
@@ -87,6 +88,7 @@ public final class ClientRegistry {
         TipOverlayEvent.register();
         TeapotOverlay.register();
         SteamerOverlay.register();
+        KitchenShelfOverlay.register();
         RenderPlayerEvent.register();
         ViewportEvent.register();
     }

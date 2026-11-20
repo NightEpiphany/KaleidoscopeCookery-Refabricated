@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -28,10 +29,15 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
@@ -107,6 +113,27 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
         return state.getBlock() == this && !state.getValue(SNEAK_PLACED) && state.getValue(BlockStateProperties.HORIZONTAL_FACING).equals(direction);
     }
 
+    public static List<BlockPos> getConnectedShelves(Level level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        if (!(state.getBlock() instanceof KitchenShelfBlock shelf) || state.getValue(SNEAK_PLACED)) {
+            return List.of(pos);
+        }
+
+        Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        Direction axis = facing.getClockWise();
+        Direction opposite = axis.getOpposite();
+        BlockPos start = pos;
+        while (shelf.isConnectable(level.getBlockState(start.relative(opposite)), facing)) {
+            start = start.relative(opposite);
+        }
+
+        List<BlockPos> group = new ArrayList<>();
+        for (BlockPos current = start; shelf.isConnectable(level.getBlockState(current), facing); current = current.relative(axis)) {
+            group.add(current);
+        }
+        return group;
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public @NotNull FluidState getFluidState(BlockState state) {
@@ -136,8 +163,17 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
 
     @Override
     public void tick(@NonNull BlockState state, ServerLevel level, @NonNull BlockPos pos, @NonNull RandomSource random) {
-        if (level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf) {
-            shelf.dispense(state);
+        List<BlockPos> group = getConnectedShelves(level, pos);
+        BlockPos poweredLeader = group.stream()
+                .filter(level::hasNeighborSignal)
+                .min(BlockPos::compareTo)
+                .orElse(null);
+        if (pos.equals(poweredLeader)) {
+            for (BlockPos shelfPos : group) {
+                if (level.getBlockEntity(shelfPos) instanceof KitchenShelfBlockEntity shelf) {
+                    shelf.dispense(level.getBlockState(shelfPos));
+                }
+            }
         }
     }
 
@@ -147,12 +183,15 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
         if (hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
+        ItemStack itemInHand = player.getItemInHand(hand);
+        if (itemInHand.is(ModItems.KITCHEN_SHELF)
+                || (itemInHand.getItem() instanceof RecipeItem && RecipeItem.hasRecipe(itemInHand))) {
+            return InteractionResult.PASS;
+        }
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        ItemStack itemInHand = player.getItemInHand(hand);
         if (level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf
-                && !itemInHand.is(ModItems.KITCHEN_SHELF)
                 && shelf.interact(player, player.isShiftKeyDown())) {
             level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 1.0F, 1.0F);
             return InteractionResult.CONSUME;
@@ -182,11 +221,18 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
     }
 
     @Override
-    public void onRemove(BlockState state, @NonNull Level level, @NonNull BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock()) && !level.isClientSide
-                && level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf) {
-            shelf.dropContents();
+    public @NonNull List<ItemStack> getDrops(@NonNull BlockState state, LootParams.@NonNull Builder params) {
+        List<ItemStack> drops = super.getDrops(state, params);
+        if (params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof KitchenShelfBlockEntity shelf) {
+            ItemStack stored = shelf.getStoredStack();
+            if (!stored.isEmpty()) {
+                drops = new ArrayList<>(drops);
+                ItemStack remaining = stored.copy();
+                while (!remaining.isEmpty()) {
+                    drops.add(remaining.split(stored.getMaxStackSize()));
+                }
+            }
         }
-        super.onRemove(state, level, pos, newState, isMoving);
+        return drops;
     }
 }
