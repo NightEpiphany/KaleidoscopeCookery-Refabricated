@@ -28,6 +28,31 @@ public interface ModFoods {
             .effect(new MobEffectInstance(CONFUSION, 200), 1F)
             .build();
 
+    // 果串
+    FoodProperties BERRY_SKEWER = new FoodProperties.Builder()
+            .nutrition(4).saturationModifier(0.1F).alwaysEdible().build();
+
+    FoodProperties FRUIT_SKEWER = new FoodProperties.Builder()
+            .nutrition(8).saturationModifier(0.3F).alwaysEdible().build();
+
+    FoodProperties CATERPILLAR_SKEWER = new FoodProperties.Builder()
+            .nutrition(18).saturationModifier(7F / 36F).alwaysEdible()
+            .effect(new MobEffectInstance(CONFUSION, 15 * 20), 1F).build();
+
+    // 裹糖果串
+    FoodProperties CANDIED_GLOW_BERRY_SKEWER = new FoodProperties.Builder()
+            .nutrition(10).saturationModifier(0.08F).alwaysEdible()
+            .effect(new MobEffectInstance(NIGHT_VISION, 20 * 20), 1F).build();
+
+    FoodProperties CANDIED_SWEET_BERRY_SKEWER = new FoodProperties.Builder()
+            .nutrition(10).saturationModifier(0.08F).alwaysEdible().build();
+
+    FoodProperties CANDIED_FRUIT_SKEWER = new FoodProperties.Builder()
+            .nutrition(16).saturationModifier(0.3F).alwaysEdible().build();
+
+    FoodProperties CANDIED_CATERPILLAR_SKEWER = new FoodProperties.Builder()
+            .nutrition(36).saturationModifier(7F / 36F).alwaysEdible().build();
+
     // 刺身
     FoodProperties SASHIMI = (new FoodProperties.Builder())
             .nutrition(1).saturationModifier(0.5F)

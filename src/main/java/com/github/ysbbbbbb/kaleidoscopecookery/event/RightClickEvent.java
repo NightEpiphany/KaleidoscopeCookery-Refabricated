@@ -6,6 +6,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfB
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.core.BlockPos;
@@ -40,6 +41,7 @@ public class RightClickEvent {
         // 厨架潜行存入物品
         if (!player.isSpectator() && player.isSecondaryUseActive() && hand == InteractionHand.MAIN_HAND
                 && !itemInHand.isEmpty() && !itemInHand.is(ModItems.KITCHEN_SHELF)
+                && !(itemInHand.getItem() instanceof RecipeItem && RecipeItem.hasRecipe(itemInHand))
                 && level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf) {
             if (!level.isClientSide && shelf.interact(player, true)) {
                 level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 1.0F, 1.0F);

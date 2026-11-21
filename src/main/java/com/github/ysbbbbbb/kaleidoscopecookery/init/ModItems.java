@@ -8,6 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.*;
 
 public final class ModItems {
@@ -21,7 +22,7 @@ public final class ModItems {
     public static final Item CHOPPING_BOARD = new BlockItem(ModBlocks.CHOPPING_BOARD, new Item.Properties());
     public static final Item ENAMEL_BASIN = new BlockItem(ModBlocks.ENAMEL_BASIN, new Item.Properties());
     public static final Item KITCHENWARE_RACKS = new WithTooltipsBlockItem(ModBlocks.KITCHENWARE_RACKS, "kitchenware_racks");
-    public static final Item KITCHEN_SHELF = new BlockItem(ModBlocks.KITCHEN_SHELF, new Item.Properties());
+    public static final Item KITCHEN_SHELF = new WithTooltipsBlockItem(ModBlocks.KITCHEN_SHELF, "kitchen_shelf");
     public static final Item CHILI_RISTRA = new BlockItem(ModBlocks.CHILI_RISTRA, new Item.Properties());
     public static final Item STRUNG_MUSHROOMS = new BlockItem(ModBlocks.STRUNG_MUSHROOMS, new Item.Properties());
     public static final Item STRAW_BLOCK = new BlockItem(ModBlocks.STRAW_BLOCK, new Item.Properties());
@@ -129,6 +130,24 @@ public final class ModItems {
     public static final Item LETTUCE = new Item(new Item.Properties().food(ModFoods.LETTUCE));
     public static final Item RICE_PANICLE = new Item(new Item.Properties());
     public static final Item CATERPILLAR = new WithTooltipsItem(new Item.Properties().food(ModFoods.CATERPILLAR), "caterpillar");
+
+    // Fruit skewers
+    public static final Item GLOW_BERRY_SKEWER = new FruitSkewerItem(ModFoods.BERRY_SKEWER);
+    public static final Item SWEET_BERRY_SKEWER = new FruitSkewerItem(ModFoods.BERRY_SKEWER);
+    public static final Item CHORUS_FRUIT_SKEWER = new FruitSkewerItem(ModFoods.FRUIT_SKEWER);
+    public static final Item APPLE_SKEWER = new FruitSkewerItem(ModFoods.FRUIT_SKEWER);
+    public static final Item CATERPILLAR_SKEWER = new FruitSkewerItem(ModFoods.CATERPILLAR_SKEWER);
+    public static final Item CANDIED_GLOW_BERRY_SKEWER = new CandiedSkewerItem("candied_glow_berry_skewer",
+            ModBlocks.CANDIED_GLOW_BERRY_SKEWER_UPRIGHT, ModBlocks.CANDIED_GLOW_BERRY_SKEWER_SIDE, ModFoods.CANDIED_GLOW_BERRY_SKEWER, MobEffects.GLOWING, 5 * 20);
+    public static final Item CANDIED_SWEET_BERRY_SKEWER = new CandiedSkewerItem("candied_sweet_berry_skewer",
+            ModBlocks.CANDIED_SWEET_BERRY_SKEWER_UPRIGHT, ModBlocks.CANDIED_SWEET_BERRY_SKEWER_SIDE, ModFoods.CANDIED_SWEET_BERRY_SKEWER);
+    public static final Item CANDIED_CHORUS_FRUIT_SKEWER = new CandiedSkewerItem("candied_chorus_fruit_skewer",
+            ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT, ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_SIDE, ModFoods.CANDIED_FRUIT_SKEWER);
+    public static final Item CANDIED_APPLE_SKEWER = new CandiedSkewerItem("candied_apple_skewer",
+            ModBlocks.CANDIED_APPLE_SKEWER_UPRIGHT, ModBlocks.CANDIED_APPLE_SKEWER_SIDE, ModFoods.CANDIED_FRUIT_SKEWER);
+    public static final Item CANDIED_CATERPILLAR_SKEWER = new CandiedSkewerItem("candied_caterpillar_skewer",
+            ModBlocks.CANDIED_CATERPILLAR_SKEWER_UPRIGHT, ModBlocks.CANDIED_CATERPILLAR_SKEWER_SIDE, ModFoods.CANDIED_CATERPILLAR_SKEWER, MobEffects.CONFUSION, 15 * 20);
+
     public static final Item FRIED_EGG = new Item(new Item.Properties().food(ModFoods.FRIED_EGG));
     public static final Item DONKEY_BURGER = new FoodWithEffectsItem(ModFoods.DONKEY_BURGER);
     public static final Item MANTOU = new FoodWithEffectsItem(ModFoods.MANTOU);
@@ -321,6 +340,19 @@ public final class ModItems {
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "lettuce"), LETTUCE);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "rice_panicle"), RICE_PANICLE);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "caterpillar"), CATERPILLAR);
+
+        // Fruit skewers
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "glow_berry_skewer"), GLOW_BERRY_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "sweet_berry_skewer"), SWEET_BERRY_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "chorus_fruit_skewer"), CHORUS_FRUIT_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "apple_skewer"), APPLE_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "caterpillar_skewer"), CATERPILLAR_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_glow_berry_skewer"), CANDIED_GLOW_BERRY_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_sweet_berry_skewer"), CANDIED_SWEET_BERRY_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_chorus_fruit_skewer"), CANDIED_CHORUS_FRUIT_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_apple_skewer"), CANDIED_APPLE_SKEWER);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_caterpillar_skewer"), CANDIED_CATERPILLAR_SKEWER);
+
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "fried_egg"), FRIED_EGG);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "donkey_burger"), DONKEY_BURGER);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "baozi"), BAOZI);

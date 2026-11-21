@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ITeapot;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
@@ -32,7 +33,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.CommonComponents;
@@ -131,22 +131,22 @@ public class RecipeItem extends WithTooltipsBlockItem {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
+        Level level = context.getLevel();
         ItemStack itemInHand = context.getItemInHand();
-        BlockPos clickedPos = context.getClickedPos();
-        BlockEntity blockEntity = context.getLevel().getBlockEntity(clickedPos);
-        RecipeManager recipeManager = context.getLevel().getRecipeManager();
-        if (blockEntity == null) {
-            return super.useOn(context);
-        }
+        BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
         Player player = context.getPlayer();
-        if (player == null) {
+        if (blockEntity == null || player == null) {
             return super.useOn(context);
         }
         if (hasRecipe(itemInHand)) {
+            if (blockEntity instanceof KitchenShelfBlockEntity shelf) {
+                RecipeRecord record = getRecipe(itemInHand);
+                return record != null && shelf.dispenseMatching(record.input())
+                        ? InteractionResult.sidedSuccess(level.isClientSide) : InteractionResult.PASS;
+            }
             return this.onPutRecipe(blockEntity, player, itemInHand);
-        } else {
-            return this.onRecordRecipe(context.getLevel(), player, blockEntity, recipeManager, itemInHand);
         }
+        return this.onRecordRecipe(level, player, blockEntity, level.getRecipeManager(), itemInHand);
     }
 
     private InteractionResult onPutRecipe(BlockEntity blockEntity, Player player, ItemStack itemInHand) {

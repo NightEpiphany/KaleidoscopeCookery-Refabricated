@@ -28,7 +28,7 @@ public class KitchenShelfBlockEntityRender implements BlockEntityRenderer<Kitche
             return;
         }
 
-        int displayCount = Math.min(16, (stored.getCount() + 15) / 16);
+        int displayCount = Math.min(16, stored.getCount());
         ItemStack display = stored.copyWithCount(1);
         float rotation = shelf.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180;
 

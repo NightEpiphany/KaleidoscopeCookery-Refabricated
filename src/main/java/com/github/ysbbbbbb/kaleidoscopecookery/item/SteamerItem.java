@@ -16,6 +16,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -40,8 +41,10 @@ public class SteamerItem extends WithTooltipsBlockItem {
 
     @Override
     protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
-        // 蒸笼只能从顶面放置，物品始终只代表一层。
-        return context.getClickedFace() == Direction.UP && super.placeBlock(context, state);
+        BlockState target = context.getLevel().getBlockState(context.getClickedPos());
+        // 可替换的非空气方块可以从任意一面点击，其余情况仍须从顶面放置。
+        return (context.getClickedFace() == Direction.UP || (!target.isAir() && target.is(BlockTags.REPLACEABLE)))
+                && super.placeBlock(context, state);
     }
 
     @Override

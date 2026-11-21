@@ -19,6 +19,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe> {
     public static final int DEFAULT_TIME = 300;
     public static final Ingredient DEFAULT_CARRIER = Ingredient.of(Items.BOWL);
@@ -46,17 +48,32 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
             ItemStack.CODEC.fieldOf("result").forGetter(StockpotRecipe::result),
             Codec.INT.optionalFieldOf("time", DEFAULT_TIME).forGetter(StockpotRecipe::time),
             Ingredient.CODEC.optionalFieldOf("carrier", DEFAULT_CARRIER).forGetter(StockpotRecipe::carrier),
-            StockpotVisuals.CODEC.forGetter(StockpotRecipe::visuals)
+            StockpotVisuals.CODEC.forGetter(StockpotRecipe::visuals),
+            Codec.BOOL.optionalFieldOf("syrup", false).forGetter(StockpotRecipe::syrup)
     ).apply(instance, StockpotRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, StockpotRecipe> STREAM_CODEC = StreamCodec.composite(
-            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), StockpotRecipe::getIngredients,
-            ResourceLocation.STREAM_CODEC, StockpotRecipe::soupBase,
-            ItemStack.STREAM_CODEC, StockpotRecipe::result,
-            ByteBufCodecs.INT, StockpotRecipe::time,
-            Ingredient.CONTENTS_STREAM_CODEC, StockpotRecipe::carrier,
-            StockpotVisuals.STREAM_CODEC, StockpotRecipe::visuals,
-            StockpotRecipe::new
+    private static final StreamCodec<RegistryFriendlyByteBuf, List<Ingredient>> INGREDIENTS_STREAM_CODEC =
+            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list());
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, StockpotRecipe> STREAM_CODEC = StreamCodec.of(
+            (buf, recipe) -> {
+                INGREDIENTS_STREAM_CODEC.encode(buf, recipe.getIngredients());
+                ResourceLocation.STREAM_CODEC.encode(buf, recipe.soupBase());
+                ItemStack.STREAM_CODEC.encode(buf, recipe.result());
+                buf.writeInt(recipe.time());
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.carrier());
+                StockpotVisuals.STREAM_CODEC.encode(buf, recipe.visuals());
+                buf.writeBoolean(recipe.syrup());
+            },
+            buf -> new StockpotRecipe(
+                    INGREDIENTS_STREAM_CODEC.decode(buf),
+                    ResourceLocation.STREAM_CODEC.decode(buf),
+                    ItemStack.STREAM_CODEC.decode(buf),
+                    buf.readInt(),
+                    Ingredient.CONTENTS_STREAM_CODEC.decode(buf),
+                    StockpotVisuals.STREAM_CODEC.decode(buf),
+                    buf.readBoolean()
+            )
     );
 
     @Override

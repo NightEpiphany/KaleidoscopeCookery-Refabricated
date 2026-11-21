@@ -122,6 +122,18 @@ public final class ModBlocks {
                     Block.box(0, 0, 0, 16, 10, 16)
             ).build();
 
+    // Candied skewers
+    public static final Block CANDIED_GLOW_BERRY_SKEWER_UPRIGHT = new CandiedSkewerBlock(12, () -> ModItems.CANDIED_GLOW_BERRY_SKEWER, 8, true);
+    public static final Block CANDIED_GLOW_BERRY_SKEWER_SIDE = new CandiedSkewerBlock(5, () -> ModItems.CANDIED_GLOW_BERRY_SKEWER, 8, false);
+    public static final Block CANDIED_SWEET_BERRY_SKEWER_UPRIGHT = new CandiedSkewerBlock(12, () -> ModItems.CANDIED_SWEET_BERRY_SKEWER, 0, true);
+    public static final Block CANDIED_SWEET_BERRY_SKEWER_SIDE = new CandiedSkewerBlock(5, () -> ModItems.CANDIED_SWEET_BERRY_SKEWER, 0, false);
+    public static final Block CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT = new CandiedSkewerBlock(5, () -> ModItems.CANDIED_CHORUS_FRUIT_SKEWER, 0, true);
+    public static final Block CANDIED_CHORUS_FRUIT_SKEWER_SIDE = new CandiedSkewerBlock(4, () -> ModItems.CANDIED_CHORUS_FRUIT_SKEWER, 0, false);
+    public static final Block CANDIED_APPLE_SKEWER_UPRIGHT = new CandiedSkewerBlock(5, () -> ModItems.CANDIED_APPLE_SKEWER, 0, true);
+    public static final Block CANDIED_APPLE_SKEWER_SIDE = new CandiedSkewerBlock(4, () -> ModItems.CANDIED_APPLE_SKEWER, 0, false);
+    public static final Block CANDIED_CATERPILLAR_SKEWER_UPRIGHT = new CandiedSkewerBlock(12, () -> ModItems.CANDIED_CATERPILLAR_SKEWER, 0, true);
+    public static final Block CANDIED_CATERPILLAR_SKEWER_SIDE = new CandiedSkewerBlock(5, () -> ModItems.CANDIED_CATERPILLAR_SKEWER, 0, false);
+
     // Block entities
     public static final BlockEntityType<BambooTrayBlockEntity> BAMBOO_TRAY_BE = BlockEntityType.Builder.of(BambooTrayBlockEntity::new, BAMBOO_TRAY).build(null);
     public static final BlockEntityType<TeaBannerBlockEntity> TEA_BANNER_BE = BlockEntityType.Builder.of(TeaBannerBlockEntity::new, TEA_BANNER).build(null);
@@ -232,6 +244,18 @@ public final class ModBlocks {
         // Feast
         Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "cold_cut_ham_slices"), COLD_CUT_HAM_SLICES);
         Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "bamboo_tube_rice"), BAMBOO_TUBE_RICE);
+
+        // Candied skewers
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_glow_berry_skewer_upright"), CANDIED_GLOW_BERRY_SKEWER_UPRIGHT);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_glow_berry_skewer_side"), CANDIED_GLOW_BERRY_SKEWER_SIDE);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_sweet_berry_skewer_upright"), CANDIED_SWEET_BERRY_SKEWER_UPRIGHT);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_sweet_berry_skewer_side"), CANDIED_SWEET_BERRY_SKEWER_SIDE);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_chorus_fruit_skewer_upright"), CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_chorus_fruit_skewer_side"), CANDIED_CHORUS_FRUIT_SKEWER_SIDE);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_apple_skewer_upright"), CANDIED_APPLE_SKEWER_UPRIGHT);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_apple_skewer_side"), CANDIED_APPLE_SKEWER_SIDE);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_caterpillar_skewer_upright"), CANDIED_CATERPILLAR_SKEWER_UPRIGHT);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "candied_caterpillar_skewer_side"), CANDIED_CATERPILLAR_SKEWER_SIDE);
 
         // Block entities
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "bamboo_tray"), BAMBOO_TRAY_BE);

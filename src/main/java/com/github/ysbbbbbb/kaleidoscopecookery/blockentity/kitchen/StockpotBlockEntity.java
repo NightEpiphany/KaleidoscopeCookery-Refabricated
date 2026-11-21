@@ -71,6 +71,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     private static final String STATUS = "Status";
     private static final String CURRENT_TICK = "CurrentTick";
     private static final String TAKEOUT_COUNT = "TakeoutCount";
+    private static final String SYRUP_USES = "SyrupUses";
     private static final String LID_ITEM = "LidItem";
 
     private final RecipeManager.CachedCheck<StockpotInput, StockpotRecipe> quickCheck = RecipeManager.createCheck(ModRecipes.STOCKPOT_RECIPE);
@@ -90,6 +91,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     private int status = PUT_SOUP_BASE;
     private int currentTick = -1;
     private int takeoutCount = 0;
+    private boolean useSyrup = false;
     /**
      * 盖子，因为盖子可以当做盾牌，所以会记录很多额外内容，需要专门保存
      */
@@ -306,6 +308,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         this.result = Items.SUSPICIOUS_STEW.getDefaultInstance();
         this.currentTick = StockpotRecipeSerializer.DEFAULT_TIME;
         this.takeoutCount = 1;
+        this.useSyrup = false;
     }
 
     private void applyRecipe(Level level, StockpotInput input, RecipeHolder<StockpotRecipe> recipe) {
@@ -315,7 +318,11 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         this.visuals = value.visuals();
         this.result = value.assemble(input, level.registryAccess());
         this.currentTick = value.time();
-        this.takeoutCount = Math.min(this.result.getCount(), MAX_TAKEOUT_COUNT);
+        this.useSyrup = value.syrup();
+        int servings = this.useSyrup
+                ? (int) this.inputs.stream().filter(stack -> !stack.isEmpty()).count()
+                : this.result.getCount();
+        this.takeoutCount = Math.min(servings, MAX_TAKEOUT_COUNT);
     }
 
     private void applyFlexRecipe(Level level, StockpotInput input, RecipeHolder<FlexStockpotRecipe> recipe) {
@@ -326,6 +333,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         this.result = value.assemble(input, level.registryAccess());
         this.currentTick = value.time();
         this.takeoutCount = Math.min(this.result.getCount(), MAX_TAKEOUT_COUNT);
+        this.useSyrup = false;
 
         // 计算品质
         if (level instanceof ServerLevel serverLevel) {
@@ -518,6 +526,10 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             return false;
         }
 
+        if (this.useSyrup) {
+            return this.dipSkewer(level, user, stack);
+        }
+
         Ingredient carrier;
         if (this.recipeId.equals(StockpotRecipeSerializer.EMPTY_ID)) {
             carrier = StockpotRecipeSerializer.DEFAULT_CARRIER;
@@ -545,8 +557,29 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
         ItemStack resultCopy = this.result.copyWithCount(1);
         ItemUtils.getItemToLivingEntity(user, resultCopy);
-        this.takeoutCount--;
-        if (this.takeoutCount <= 0) {
+        this.finishServing();
+        return true;
+    }
+
+    private boolean dipSkewer(Level level, LivingEntity user, ItemStack stack) {
+        if (!stack.isEmpty()) {
+            for (RecipeHolder<StockpotRecipe> holder : level.getRecipeManager().getAllRecipesFor(ModRecipes.STOCKPOT_RECIPE)) {
+                StockpotRecipe recipe = holder.value();
+                if (recipe.syrup() && recipe.soupBase().equals(this.soupBaseId) && recipe.carrier().test(stack)) {
+                    stack.consume(1, user);
+                    ItemUtils.getItemToLivingEntity(user, recipe.result().copyWithCount(1));
+                    level.playSound(null, this.worldPosition, SoundEvents.HONEY_BLOCK_HIT, SoundSource.BLOCKS, 0.8F, 1.0F);
+                    this.finishServing();
+                    return true;
+                }
+            }
+        }
+        this.sendActionBarMessage(user, "tip.kaleidoscope_cookery.stockpot.need_fruit_skewer");
+        return false;
+    }
+
+    private void finishServing() {
+        if (--this.takeoutCount <= 0) {
             this.status = PUT_SOUP_BASE;
             this.inputs.clear();
             this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
@@ -554,10 +587,12 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.soupBaseItem = ItemStack.EMPTY;
             this.result = ItemStack.EMPTY;
             this.currentTick = -1;
+            this.takeoutCount = 0;
+            this.useSyrup = false;
+            this.visuals = null;
             this.renderEntity = null;
         }
         this.refresh();
-        return true;
     }
 
     private void sendActionBarMessage(LivingEntity user, String key, Object... args) {
@@ -578,6 +613,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         tag.putInt(STATUS, this.status);
         tag.putInt(CURRENT_TICK, this.currentTick);
         tag.putInt(TAKEOUT_COUNT, this.takeoutCount);
+        tag.putInt(SYRUP_USES, this.getSyrupUses());
         tag.put(LID_ITEM, this.lidItem.saveOptional(registries));
     }
 
@@ -614,6 +650,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         this.status = tag.getInt(STATUS);
         this.currentTick = tag.getInt(CURRENT_TICK);
         this.takeoutCount = tag.getInt(TAKEOUT_COUNT);
+        this.useSyrup = tag.getInt(SYRUP_USES) > 0;
         if (tag.contains(LID_ITEM)) {
             this.lidItem = ItemStack.parseOptional(registries, tag.getCompound(LID_ITEM));
         }
@@ -651,6 +688,10 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     public int getTakeoutCount() {
         return takeoutCount;
+    }
+
+    public int getSyrupUses() {
+        return this.useSyrup ? this.takeoutCount : 0;
     }
 
     public ItemStack getResult() {

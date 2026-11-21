@@ -34,7 +34,17 @@ public final class ModBlockRenderLayerMap {
                 ModBlocks.RED_LANTERN,
                 ModBlocks.LONG_BENCH,
                 ModBlocks.EIGHT_IMMORTALS_TABLE,
-                ModBlocks.CLAY_POT_MILK_TEA
+                ModBlocks.CLAY_POT_MILK_TEA,
+                ModBlocks.CANDIED_GLOW_BERRY_SKEWER_UPRIGHT,
+                ModBlocks.CANDIED_GLOW_BERRY_SKEWER_SIDE,
+                ModBlocks.CANDIED_SWEET_BERRY_SKEWER_UPRIGHT,
+                ModBlocks.CANDIED_SWEET_BERRY_SKEWER_SIDE,
+                ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT,
+                ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_SIDE,
+                ModBlocks.CANDIED_APPLE_SKEWER_UPRIGHT,
+                ModBlocks.CANDIED_APPLE_SKEWER_SIDE,
+                ModBlocks.CANDIED_CATERPILLAR_SKEWER_UPRIGHT,
+                ModBlocks.CANDIED_CATERPILLAR_SKEWER_SIDE
         );
 
         FoodBiteRegistry.FOOD_DATA_MAP.keySet().forEach(id -> {

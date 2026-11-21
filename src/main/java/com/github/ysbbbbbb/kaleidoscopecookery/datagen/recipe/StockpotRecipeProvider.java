@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.recipe;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.StockpotRecipeBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
@@ -26,6 +27,12 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
 
     @Override
     public void buildRecipes(RecipeOutput consumer) {
+        addSugarSyrupRecipes(consumer, ModItems.GLOW_BERRY_SKEWER, ModItems.CANDIED_GLOW_BERRY_SKEWER, "glow_berry");
+        addSugarSyrupRecipes(consumer, ModItems.SWEET_BERRY_SKEWER, ModItems.CANDIED_SWEET_BERRY_SKEWER, "sweet_berry");
+        addSugarSyrupRecipes(consumer, ModItems.CHORUS_FRUIT_SKEWER, ModItems.CANDIED_CHORUS_FRUIT_SKEWER, "chorus_fruit");
+        addSugarSyrupRecipes(consumer, ModItems.APPLE_SKEWER, ModItems.CANDIED_APPLE_SKEWER, "apple");
+        addSugarSyrupRecipes(consumer, ModItems.CATERPILLAR_SKEWER, ModItems.CANDIED_CATERPILLAR_SKEWER, "caterpillar");
+
         StockpotRecipeBuilder.builder()
                 .addInput(TagCommon.SEEDS_RICE, TagCommon.SEEDS_RICE, TagCommon.SEEDS_RICE)
                 .setFinishedTexture(modLoc("stockpot/rice_finished"))
@@ -204,5 +211,18 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
                 .setSoupBase(ModSoupBases.LAVA)
                 .setResult(FoodBiteRegistry.getItem(BuiltInRegistries.ITEM.getKey(ModItems.SHENGJIAN_MANTOU)), 2)
                 .save(consumer, "shengjian_mantou_count_2");
+    }
+
+    private void addSugarSyrupRecipes(RecipeOutput output, Item skewer, Item result, String name) {
+        for (int count = 1; count <= StockpotBlockEntity.MAX_TAKEOUT_COUNT; count++) {
+            StockpotRecipeBuilder.builder()
+                    .addInput((Object[]) this.getItemsWithCount(Items.SUGAR, count))
+                    .setCarrier(skewer)
+                    .setResult(result, 1)
+                    .setFinishedTexture(modLoc("stockpot/sugar_syrup_finished"))
+                    .setFinishedBubbleColor(0xD9A441)
+                    .setSyrup()
+                    .save(output, "sugar_syrup_" + name + "_" + count);
+        }
     }
 }

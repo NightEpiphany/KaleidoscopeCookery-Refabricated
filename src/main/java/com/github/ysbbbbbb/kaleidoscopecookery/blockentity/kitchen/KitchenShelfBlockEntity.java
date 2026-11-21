@@ -1,12 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.KitchenShelfBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemStorage;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -21,11 +21,15 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler.CAPACITY;
 
@@ -48,17 +52,25 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
     }
 
     public boolean interact(LivingEntity living, boolean all) {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return false;
+        }
         ItemStack held = living.getMainHandItem();
         ItemStack stored = getStoredStack();
 
-        // 空手取出，始终遵守物品本身的最大堆叠数量。
+        // 空手潜行时取出全部库存，掉落时按物品的堆叠上限拆分。
         if (held.isEmpty()) {
             if (stored.isEmpty()) {
                 return false;
             }
-            int amount = all ? Math.min(stored.getCount(), stored.getMaxStackSize()) : 1;
-            ItemStack taken = inventory.extractItem(0, amount, false);
-            ItemUtils.getItemToLivingEntity(living, taken);
+            ItemStack taken;
+            if (all) {
+                taken = stored.copy();
+                inventory.setStackInSlot(0, ItemStack.EMPTY);
+            } else {
+                taken = inventory.extractItem(0, 1, false);
+            }
+            dropToFront(serverLevel, taken, false);
             return true;
         }
 
@@ -141,35 +153,61 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
         }
     }
 
-    public void dispense(BlockState state) {
-        if (!(level instanceof ServerLevel serverLevel) || getStoredStack().isEmpty()) {
+    public void dispense() {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
-        ItemStack stack = inventory.extractItem(0, 1, false);
+        dropToFront(serverLevel, inventory.extractItem(0, 1, false), true);
+    }
+
+    public boolean dispenseMatching(List<ItemStack> ingredients) {
+        if (level == null) {
+            return false;
+        }
+
+        Set<Item> needed = new LinkedHashSet<>();
+        for (ItemStack ingredient : ingredients) {
+            if (!ingredient.isEmpty()) {
+                needed.add(ingredient.getItem());
+            }
+        }
+
+        List<BlockPos> shelves = KitchenShelfBlock.getConnectedShelves(level, worldPosition);
+        boolean dispensed = false;
+        for (Item item : needed) {
+            for (BlockPos pos : shelves) {
+                if (level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf && shelf.getStoredStack().is(item)) {
+                    if (level.isClientSide) {
+                        return true;
+                    }
+                    shelf.dispense();
+                    dispensed = true;
+                    break;
+                }
+            }
+        }
+        return dispensed;
+    }
+
+    private void dropToFront(ServerLevel level, ItemStack stack, boolean dispenseEffects) {
         if (stack.isEmpty()) {
             return;
         }
 
-        Direction front = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        Direction front = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
         double x = worldPosition.getX() + 0.5 + front.getStepX() * 0.65;
         double y = worldPosition.getY() + 0.45;
         double z = worldPosition.getZ() + 0.5 + front.getStepZ() * 0.65;
 
-        ItemEntity entity = new ItemEntity(level, x, y, z, stack);
-        entity.setDeltaMovement(front.getStepX() * 0.2, 0.15, front.getStepZ() * 0.2);
-        level.addFreshEntity(entity);
-        level.playSound(null, worldPosition, ModSounds.BLOCK_KITCHEN_SHELF, SoundSource.BLOCKS, 1, 1);
-        serverLevel.sendParticles(ModParticles.COOKING, x, y, z, 6, 0.12, 0.08, 0.12, 0.01);
-    }
-
-    public void dropContents() {
-        if (level == null || level.isClientSide) {
-            return;
+        int maxStackSize = stack.getMaxStackSize();
+        while (!stack.isEmpty()) {
+            ItemEntity entity = new ItemEntity(level, x, y, z, stack.split(maxStackSize));
+            entity.setDeltaMovement(front.getStepX() * 0.2, 0.15, front.getStepZ() * 0.2);
+            level.addFreshEntity(entity);
         }
-        ItemStack stored = getStoredStack().copy();
-        inventory.setStackInSlot(0, ItemStack.EMPTY);
-        while (!stored.isEmpty()) {
-            Block.popResource(level, worldPosition, stored.split(stored.getMaxStackSize()));
+        if (dispenseEffects) {
+            level.playSound(null, worldPosition, ModSounds.BLOCK_KITCHEN_SHELF, SoundSource.BLOCKS, 1, 1);
+            level.sendParticles(ModParticles.COOKING, x, y, z, 6, 0.12, 0.08, 0.12, 0.01);
         }
     }
 
