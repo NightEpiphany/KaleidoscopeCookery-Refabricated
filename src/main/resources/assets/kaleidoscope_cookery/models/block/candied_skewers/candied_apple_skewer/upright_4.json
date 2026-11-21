@@ -5,7 +5,7 @@
     32
   ],
   "textures": {
-    "particle": "kaleidoscope_cookery:block/candied_skewers",
+    "particle": "minecraft:block/red_concrete",
     "texture": "kaleidoscope_cookery:block/candied_skewers"
   },
   "elements": [
