@@ -28,14 +28,22 @@ public record StockpotRecipe(NonNullList<Ingredient> ingredients,
                              Identifier cookingTexture,
                              Identifier finishedTexture,
                              int cookingBubbleColor,
-                             int finishedBubbleColor) implements BaseRecipe<StockpotInput> {
+                             int finishedBubbleColor,
+                             boolean syrup) implements BaseRecipe<StockpotInput> {
 
     public StockpotRecipe(List<Ingredient> ingredients, Identifier soupBase, ItemStackTemplate result,
                           int time, Ingredient carrier, Identifier cookingTexture, Identifier finishedTexture,
                           int cookingBubbleColor, int finishedBubbleColor) {
         this(createNonNullList(ingredients),
                 soupBase, result, time, carrier, cookingTexture, finishedTexture,
-                cookingBubbleColor, finishedBubbleColor);
+                cookingBubbleColor, finishedBubbleColor, false);
+    }
+
+    public StockpotRecipe(List<Ingredient> ingredients, Identifier soupBase, ItemStackTemplate result,
+                          int time, Ingredient carrier, Identifier cookingTexture, Identifier finishedTexture,
+                          int cookingBubbleColor, int finishedBubbleColor, boolean syrup) {
+        this(createNonNullList(ingredients), soupBase, result, time, carrier, cookingTexture, finishedTexture,
+                cookingBubbleColor, finishedBubbleColor, syrup);
     }
 
     private static NonNullList<Ingredient> createNonNullList(List<Ingredient> ingredients) {
@@ -48,7 +56,7 @@ public record StockpotRecipe(NonNullList<Ingredient> ingredients,
     public StockpotRecipe(NonNullList<Ingredient> ingredients, ItemStackTemplate result, int time, ItemStack container) {
         this(ingredients, DEFAULT_SOUP_BASE, result, time, Ingredient.of(container.getItem()),
                 DEFAULT_COOKING_TEXTURE, DEFAULT_FINISHED_TEXTURE,
-                DEFAULT_COOKING_BUBBLE_COLOR, DEFAULT_FINISHED_BUBBLE_COLOR);
+                DEFAULT_COOKING_BUBBLE_COLOR, DEFAULT_FINISHED_BUBBLE_COLOR, false);
     }
 
     @Override

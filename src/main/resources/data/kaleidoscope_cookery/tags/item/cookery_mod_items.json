@@ -211,6 +211,17 @@
     "kaleidoscope_cookery:apple_platter",
     "kaleidoscope_cookery:tomato_platter",
     "kaleidoscope_cookery:watermelon_platter",
-    "kaleidoscope_cookery:chorus_fruit_platter"
+    "kaleidoscope_cookery:chorus_fruit_platter",
+    "kaleidoscope_cookery:tea_seed",
+    "kaleidoscope_cookery:glow_berry_skewer",
+    "kaleidoscope_cookery:sweet_berry_skewer",
+    "kaleidoscope_cookery:chorus_fruit_skewer",
+    "kaleidoscope_cookery:apple_skewer",
+    "kaleidoscope_cookery:caterpillar_skewer",
+    "kaleidoscope_cookery:candied_glow_berry_skewer",
+    "kaleidoscope_cookery:candied_sweet_berry_skewer",
+    "kaleidoscope_cookery:candied_chorus_fruit_skewer",
+    "kaleidoscope_cookery:candied_apple_skewer",
+    "kaleidoscope_cookery:candied_caterpillar_skewer"
   ]
 }

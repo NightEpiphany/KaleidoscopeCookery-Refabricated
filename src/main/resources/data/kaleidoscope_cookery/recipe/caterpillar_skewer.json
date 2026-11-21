@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "kaleidoscope_cookery:caterpillar",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "C",
+    "S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_cookery:caterpillar_skewer"
+  }
+}

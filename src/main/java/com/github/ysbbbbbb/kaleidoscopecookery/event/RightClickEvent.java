@@ -53,6 +53,7 @@ public class RightClickEvent {
         // 厨架潜行存入物品
         if (!player.isSpectator() && player.isSecondaryUseActive() && hand == InteractionHand.MAIN_HAND
                 && !itemInHand.isEmpty() && !itemInHand.is(ModItems.KITCHEN_SHELF)
+                && !(itemInHand.getItem() instanceof RecipeItem && RecipeItem.hasRecipe(itemInHand))
                 && blockEntity instanceof KitchenShelfBlockEntity shelf) {
             if (!level.isClientSide() && shelf.interact(player, true)) {
                 level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 1.0F, 1.0F);

@@ -43,6 +43,18 @@ public interface ModConsumables {
             .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(NAUSEA, 200), 1F))
             .build();
 
+    Consumable FRUIT_SKEWER = Consumables.defaultFood().build();
+
+    Consumable CATERPILLAR_SKEWER = Consumables.defaultFood()
+            .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(NAUSEA, 15 * 20), 1F))
+            .build();
+
+    Consumable CANDIED_GLOW_BERRY_SKEWER = Consumables.defaultFood()
+            .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(NIGHT_VISION, 20 * 20), 1F))
+            .build();
+
+    Consumable CANDIED_SKEWER = Consumables.defaultFood().build();
+
     // 刺身
     Consumable SASHIMI = Consumables.defaultFood()
             .build();

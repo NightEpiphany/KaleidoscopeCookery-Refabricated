@@ -22,6 +22,7 @@ public class StockpotBlockEntityRenderState extends BlockEntityRenderState {
     public Identifier cookingTexture;
     public Identifier finishedTexture;
     public int takeOutCount;
+    public int syrupUses;
     public ItemStack output;
     public List<Integer> randomSeeds = Collections.emptyList();
     public boolean hasLid = false;

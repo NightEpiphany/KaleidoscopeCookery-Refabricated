@@ -248,6 +248,28 @@ public final class ModBlocks {
                 ).build(), BlockBehaviour.Properties.of().setId(PortHelper.createBlockId("bamboo_tube_rice"))
     );
 
+    // Candied skewers
+    public static final Block CANDIED_GLOW_BERRY_SKEWER_UPRIGHT = commonReg("candied_glow_berry_skewer_upright",
+            p -> new CandiedSkewerBlock(p, 12, () -> ModItems.CANDIED_GLOW_BERRY_SKEWER, 8, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_GLOW_BERRY_SKEWER_SIDE = commonReg("candied_glow_berry_skewer_side",
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_GLOW_BERRY_SKEWER, 8, false), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_SWEET_BERRY_SKEWER_UPRIGHT = commonReg("candied_sweet_berry_skewer_upright",
+            p -> new CandiedSkewerBlock(p, 12, () -> ModItems.CANDIED_SWEET_BERRY_SKEWER, 0, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_SWEET_BERRY_SKEWER_SIDE = commonReg("candied_sweet_berry_skewer_side",
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_SWEET_BERRY_SKEWER, 0, false), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT = commonReg("candied_chorus_fruit_skewer_upright",
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_CHORUS_FRUIT_SKEWER, 0, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_CHORUS_FRUIT_SKEWER_SIDE = commonReg("candied_chorus_fruit_skewer_side",
+            p -> new CandiedSkewerBlock(p, 4, () -> ModItems.CANDIED_CHORUS_FRUIT_SKEWER, 0, false), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_APPLE_SKEWER_UPRIGHT = commonReg("candied_apple_skewer_upright",
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_APPLE_SKEWER, 0, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_APPLE_SKEWER_SIDE = commonReg("candied_apple_skewer_side",
+            p -> new CandiedSkewerBlock(p, 4, () -> ModItems.CANDIED_APPLE_SKEWER, 0, false), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_CATERPILLAR_SKEWER_UPRIGHT = commonReg("candied_caterpillar_skewer_upright",
+            p -> new CandiedSkewerBlock(p, 12, () -> ModItems.CANDIED_CATERPILLAR_SKEWER, 0, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_CATERPILLAR_SKEWER_SIDE = commonReg("candied_caterpillar_skewer_side",
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_CATERPILLAR_SKEWER, 0, false), BlockBehaviour.Properties.of());
+
     // Block entities
     public static final BlockEntityType<PotBlockEntity> POT_BE = FabricBlockEntityTypeBuilder.create(PotBlockEntity::new, POT).build();
     public static final BlockEntityType<StockpotBlockEntity> STOCKPOT_BE = FabricBlockEntityTypeBuilder.create(StockpotBlockEntity::new, STOCKPOT).build();

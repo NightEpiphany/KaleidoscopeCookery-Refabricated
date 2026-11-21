@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": "minecraft:apple",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "F",
+    "F",
+    "S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_cookery:apple_skewer"
+  }
+}
