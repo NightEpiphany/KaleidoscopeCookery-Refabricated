@@ -3,7 +3,6 @@ package com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.StreamCodecUtil;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -50,10 +49,11 @@ public class StockpotRecipeSerializer {
             Identifier.CODEC.optionalFieldOf("cooking_texture", DEFAULT_COOKING_TEXTURE).forGetter(StockpotRecipe::cookingTexture),
             Identifier.CODEC.optionalFieldOf("finished_texture", DEFAULT_FINISHED_TEXTURE).forGetter(StockpotRecipe::finishedTexture),
             Codec.INT.optionalFieldOf("cooking_bubble_color", DEFAULT_COOKING_BUBBLE_COLOR).forGetter(StockpotRecipe::cookingBubbleColor),
-            Codec.INT.optionalFieldOf("finished_bubble_color", DEFAULT_FINISHED_BUBBLE_COLOR).forGetter(StockpotRecipe::finishedBubbleColor)
+            Codec.INT.optionalFieldOf("finished_bubble_color", DEFAULT_FINISHED_BUBBLE_COLOR).forGetter(StockpotRecipe::finishedBubbleColor),
+            Codec.BOOL.optionalFieldOf("syrup", false).forGetter(StockpotRecipe::syrup)
     ).apply(instance, StockpotRecipe::new));
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, StockpotRecipe> STREAM_CODEC = StreamCodecUtil.composite(
+    private static final StreamCodec<RegistryFriendlyByteBuf, StockpotRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), StockpotRecipe::getIngredients,
             Identifier.STREAM_CODEC, StockpotRecipe::soupBase,
             ItemStackTemplate.STREAM_CODEC, StockpotRecipe::result,
@@ -63,6 +63,7 @@ public class StockpotRecipeSerializer {
             Identifier.STREAM_CODEC, StockpotRecipe::finishedTexture,
             ByteBufCodecs.INT, StockpotRecipe::cookingBubbleColor,
             ByteBufCodecs.INT, StockpotRecipe::finishedBubbleColor,
+            ByteBufCodecs.BOOL, StockpotRecipe::syrup,
             StockpotRecipe::new);
 
     public static @NotNull MapCodec<StockpotRecipe> codec() {

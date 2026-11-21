@@ -81,6 +81,11 @@ public final class ModBlockItemIds {
     public static final BlockItemId TEA_SEED = id("tea_tree", "tea_seed");
     public static final BlockItemId BAMBOO_TUBE_RICE = id("bamboo_tube_rice", "bamboo_tube_rice");
     public static final BlockItemId STRAW_BED = id("straw_bed", "straw_bed");
+    public static final BlockItemId CANDIED_GLOW_BERRY_SKEWER = id("candied_glow_berry_skewer_upright", "candied_glow_berry_skewer");
+    public static final BlockItemId CANDIED_SWEET_BERRY_SKEWER = id("candied_sweet_berry_skewer_upright", "candied_sweet_berry_skewer");
+    public static final BlockItemId CANDIED_CHORUS_FRUIT_SKEWER = id("candied_chorus_fruit_skewer_upright", "candied_chorus_fruit_skewer");
+    public static final BlockItemId CANDIED_APPLE_SKEWER = id("candied_apple_skewer_upright", "candied_apple_skewer");
+    public static final BlockItemId CANDIED_CATERPILLAR_SKEWER = id("candied_caterpillar_skewer_upright", "candied_caterpillar_skewer");
 
     private static BlockItemId id(String blockPath, String itemPath) {
         return BlockItemId.create(

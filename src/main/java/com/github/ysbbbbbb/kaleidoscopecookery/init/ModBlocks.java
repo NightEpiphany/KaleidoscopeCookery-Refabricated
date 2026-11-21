@@ -19,6 +19,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlock
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TeaBannerBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.food.FoodBiteThreeByThreeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModBlockIds;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.ids.ModBlockItemIds;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
@@ -263,6 +264,27 @@ public final class ModBlocks {
             .ignitedByLava()
             .pushReaction(PushReaction.POPPED)
     );
+    // Candied skewers
+    public static final Block CANDIED_GLOW_BERRY_SKEWER_UPRIGHT = commonReg(ModBlockItemIds.CANDIED_GLOW_BERRY_SKEWER.block(),
+            p -> new CandiedSkewerBlock(p, 12, () -> ModItems.CANDIED_GLOW_BERRY_SKEWER, 8, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_GLOW_BERRY_SKEWER_SIDE = commonReg(ModBlockIds.CANDIED_GLOW_BERRY_SKEWER_SIDE,
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_GLOW_BERRY_SKEWER, 8, false), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_SWEET_BERRY_SKEWER_UPRIGHT = commonReg(ModBlockItemIds.CANDIED_SWEET_BERRY_SKEWER.block(),
+            p -> new CandiedSkewerBlock(p, 12, () -> ModItems.CANDIED_SWEET_BERRY_SKEWER, 0, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_SWEET_BERRY_SKEWER_SIDE = commonReg(ModBlockIds.CANDIED_SWEET_BERRY_SKEWER_SIDE,
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_SWEET_BERRY_SKEWER, 0, false), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT = commonReg(ModBlockItemIds.CANDIED_CHORUS_FRUIT_SKEWER.block(),
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_CHORUS_FRUIT_SKEWER, 0, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_CHORUS_FRUIT_SKEWER_SIDE = commonReg(ModBlockIds.CANDIED_CHORUS_FRUIT_SKEWER_SIDE,
+            p -> new CandiedSkewerBlock(p, 4, () -> ModItems.CANDIED_CHORUS_FRUIT_SKEWER, 0, false), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_APPLE_SKEWER_UPRIGHT = commonReg(ModBlockItemIds.CANDIED_APPLE_SKEWER.block(),
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_APPLE_SKEWER, 0, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_APPLE_SKEWER_SIDE = commonReg(ModBlockIds.CANDIED_APPLE_SKEWER_SIDE,
+            p -> new CandiedSkewerBlock(p, 4, () -> ModItems.CANDIED_APPLE_SKEWER, 0, false), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_CATERPILLAR_SKEWER_UPRIGHT = commonReg(ModBlockItemIds.CANDIED_CATERPILLAR_SKEWER.block(),
+            p -> new CandiedSkewerBlock(p, 12, () -> ModItems.CANDIED_CATERPILLAR_SKEWER, 0, true), BlockBehaviour.Properties.of());
+    public static final Block CANDIED_CATERPILLAR_SKEWER_SIDE = commonReg(ModBlockIds.CANDIED_CATERPILLAR_SKEWER_SIDE,
+            p -> new CandiedSkewerBlock(p, 5, () -> ModItems.CANDIED_CATERPILLAR_SKEWER, 0, false), BlockBehaviour.Properties.of());
 
     // Block entities
     public static final BlockEntityType<PotBlockEntity> POT_BE = FabricBlockEntityTypeBuilder.create(PotBlockEntity::new, POT).build();

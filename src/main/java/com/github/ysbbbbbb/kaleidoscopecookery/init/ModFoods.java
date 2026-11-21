@@ -66,6 +66,28 @@ public interface ModFoods {
             .nutrition(18).saturationModifier(0.2F).alwaysEdible()
             .build();
 
+    // Fruit skewers
+    FoodProperties BERRY_SKEWER = new FoodProperties.Builder()
+            .nutrition(4).saturationModifier(0.1F).alwaysEdible().build();
+
+    FoodProperties FRUIT_SKEWER = new FoodProperties.Builder()
+            .nutrition(8).saturationModifier(0.3F).alwaysEdible().build();
+
+    FoodProperties CATERPILLAR_SKEWER = new FoodProperties.Builder()
+            .nutrition(18).saturationModifier(7F / 36F).alwaysEdible().build();
+
+    FoodProperties CANDIED_GLOW_BERRY_SKEWER = new FoodProperties.Builder()
+            .nutrition(10).saturationModifier(0.08F).alwaysEdible().build();
+
+    FoodProperties CANDIED_SWEET_BERRY_SKEWER = new FoodProperties.Builder()
+            .nutrition(10).saturationModifier(0.08F).alwaysEdible().build();
+
+    FoodProperties CANDIED_FRUIT_SKEWER = new FoodProperties.Builder()
+            .nutrition(16).saturationModifier(0.3F).alwaysEdible().build();
+
+    FoodProperties CANDIED_CATERPILLAR_SKEWER = new FoodProperties.Builder()
+            .nutrition(36).saturationModifier(7F / 36F).alwaysEdible().build();
+
     // 刺身
     FoodProperties SASHIMI = (new FoodProperties.Builder())
             .nutrition(1).saturationModifier(0.5F)

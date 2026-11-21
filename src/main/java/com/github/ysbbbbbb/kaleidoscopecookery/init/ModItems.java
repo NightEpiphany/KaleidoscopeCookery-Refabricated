@@ -13,6 +13,7 @@ import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.BlocksAttacks;
@@ -54,7 +55,7 @@ public final class ModItems {
     public static final Item CHOPPING_BOARD = registerItemViaBlockWithDesc(ModBlockItemIds.CHOPPING_BOARD, ModBlocks.CHOPPING_BOARD, "chopping_board");
     public static final Item ENAMEL_BASIN = registerItemViaBlockWithDesc(ModBlockItemIds.ENAMEL_BASIN, ModBlocks.ENAMEL_BASIN, "enamel_basin");
     public static final Item KITCHENWARE_RACKS = registerItemViaBlockWithDesc(ModBlockItemIds.KITCHENWARE_RACKS, ModBlocks.KITCHENWARE_RACKS, "kitchenware_racks");
-    public static final Item KITCHEN_SHELF = registerItemViaBlock(ModBlockItemIds.KITCHEN_SHELF, ModBlocks.KITCHEN_SHELF);
+    public static final Item KITCHEN_SHELF = registerItemViaBlockWithDesc(ModBlockItemIds.KITCHEN_SHELF, ModBlocks.KITCHEN_SHELF, "kitchen_shelf");
     public static final Item CHILI_RISTRA = registerItemViaBlock(ModBlockItemIds.CHILI_RISTRA, ModBlocks.CHILI_RISTRA);
     public static final Item STRUNG_MUSHROOMS = registerItemViaBlock(ModBlockItemIds.STRUNG_MUSHROOMS, ModBlocks.STRUNG_MUSHROOMS);
     public static final Item STRAW_BLOCK = registerItemViaBlock(ModBlockItemIds.STRAW_BLOCK, ModBlocks.STRAW_BLOCK);
@@ -170,6 +171,33 @@ public final class ModItems {
     public static final Item LETTUCE = registerItem(ModItemIds.LETTUCE, p -> new Item(p.food(ModFoods.LETTUCE, ModConsumables.LETTUCE).compostable(ContextIntProviders.COMPOSTABLE_LOW_MEDIUM)));
     public static final Item RICE_PANICLE = registerItem(ModItemIds.RICE_PANICLE, p -> new Item(p.compostable(ContextIntProviders.COMPOSTABLE_LOW_MEDIUM)));
     public static final Item CATERPILLAR = registerItem(ModItemIds.CATERPILLAR, p -> new WithTooltipsItem(p.food(ModFoods.CATERPILLAR, ModConsumables.CATERPILLAR).compostable(ContextIntProviders.COMPOSTABLE_MEDIUM_HIGH), "caterpillar"));
+    public static final Item GLOW_BERRY_SKEWER = registerItem(ModItemIds.GLOW_BERRY_SKEWER,
+            p -> new FruitSkewerItem(p, ModFoods.BERRY_SKEWER, ModConsumables.FRUIT_SKEWER));
+    public static final Item SWEET_BERRY_SKEWER = registerItem(ModItemIds.SWEET_BERRY_SKEWER,
+            p -> new FruitSkewerItem(p, ModFoods.BERRY_SKEWER, ModConsumables.FRUIT_SKEWER));
+    public static final Item CHORUS_FRUIT_SKEWER = registerItem(ModItemIds.CHORUS_FRUIT_SKEWER,
+            p -> new FruitSkewerItem(p, ModFoods.FRUIT_SKEWER, ModConsumables.FRUIT_SKEWER));
+    public static final Item APPLE_SKEWER = registerItem(ModItemIds.APPLE_SKEWER,
+            p -> new FruitSkewerItem(p, ModFoods.FRUIT_SKEWER, ModConsumables.FRUIT_SKEWER));
+    public static final Item CATERPILLAR_SKEWER = registerItem(ModItemIds.CATERPILLAR_SKEWER,
+            p -> new FruitSkewerItem(p, ModFoods.CATERPILLAR_SKEWER, ModConsumables.CATERPILLAR_SKEWER));
+    public static final Item CANDIED_GLOW_BERRY_SKEWER = registerItem(ModBlockItemIds.CANDIED_GLOW_BERRY_SKEWER.item(),
+            p -> new CandiedSkewerItem("candied_glow_berry_skewer", ModBlocks.CANDIED_GLOW_BERRY_SKEWER_UPRIGHT,
+                    ModBlocks.CANDIED_GLOW_BERRY_SKEWER_SIDE, p, ModFoods.CANDIED_GLOW_BERRY_SKEWER,
+                    ModConsumables.CANDIED_GLOW_BERRY_SKEWER, MobEffects.GLOWING, 5 * 20));
+    public static final Item CANDIED_SWEET_BERRY_SKEWER = registerItem(ModBlockItemIds.CANDIED_SWEET_BERRY_SKEWER.item(),
+            p -> new CandiedSkewerItem("candied_sweet_berry_skewer", ModBlocks.CANDIED_SWEET_BERRY_SKEWER_UPRIGHT,
+                    ModBlocks.CANDIED_SWEET_BERRY_SKEWER_SIDE, p, ModFoods.CANDIED_SWEET_BERRY_SKEWER, ModConsumables.CANDIED_SKEWER));
+    public static final Item CANDIED_CHORUS_FRUIT_SKEWER = registerItem(ModBlockItemIds.CANDIED_CHORUS_FRUIT_SKEWER.item(),
+            p -> new CandiedSkewerItem("candied_chorus_fruit_skewer", ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT,
+                    ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_SIDE, p, ModFoods.CANDIED_FRUIT_SKEWER, ModConsumables.CANDIED_SKEWER));
+    public static final Item CANDIED_APPLE_SKEWER = registerItem(ModBlockItemIds.CANDIED_APPLE_SKEWER.item(),
+            p -> new CandiedSkewerItem("candied_apple_skewer", ModBlocks.CANDIED_APPLE_SKEWER_UPRIGHT,
+                    ModBlocks.CANDIED_APPLE_SKEWER_SIDE, p, ModFoods.CANDIED_FRUIT_SKEWER, ModConsumables.CANDIED_SKEWER));
+    public static final Item CANDIED_CATERPILLAR_SKEWER = registerItem(ModBlockItemIds.CANDIED_CATERPILLAR_SKEWER.item(),
+            p -> new CandiedSkewerItem("candied_caterpillar_skewer", ModBlocks.CANDIED_CATERPILLAR_SKEWER_UPRIGHT,
+                    ModBlocks.CANDIED_CATERPILLAR_SKEWER_SIDE, p, ModFoods.CANDIED_CATERPILLAR_SKEWER,
+                    ModConsumables.CANDIED_SKEWER, MobEffects.NAUSEA, 15 * 20));
     public static final Item FRIED_EGG = registerItem(ModItemIds.FRIED_EGG, p -> new Item(p.food(ModFoods.FRIED_EGG, ModConsumables.FRIED_EGG)));
     public static final Item TEA_EGG = registerItem(ModItemIds.TEA_EGG, p -> new FoodWithEffectsItem(p, ModFoods.TEA_EGG, ModConsumables.TEA_EGG));
     public static final Item DONKEY_BURGER = registerItem(ModItemIds.DONKEY_BURGER, p -> new FoodWithEffectsItem(p, ModFoods.DONKEY_BURGER, ModConsumables.DONKEY_BURGER));

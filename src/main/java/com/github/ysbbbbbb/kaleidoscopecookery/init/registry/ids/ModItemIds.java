@@ -37,6 +37,11 @@ public final class ModItemIds {
     public static final ResourceKey<Item> LETTUCE = key("lettuce");
     public static final ResourceKey<Item> RICE_PANICLE = key("rice_panicle");
     public static final ResourceKey<Item> CATERPILLAR = key("caterpillar");
+    public static final ResourceKey<Item> GLOW_BERRY_SKEWER = key("glow_berry_skewer");
+    public static final ResourceKey<Item> SWEET_BERRY_SKEWER = key("sweet_berry_skewer");
+    public static final ResourceKey<Item> CHORUS_FRUIT_SKEWER = key("chorus_fruit_skewer");
+    public static final ResourceKey<Item> APPLE_SKEWER = key("apple_skewer");
+    public static final ResourceKey<Item> CATERPILLAR_SKEWER = key("caterpillar_skewer");
     public static final ResourceKey<Item> FRIED_EGG = key("fried_egg");
     public static final ResourceKey<Item> TEA_EGG = key("tea_egg");
     public static final ResourceKey<Item> DONKEY_BURGER = key("donkey_burger");

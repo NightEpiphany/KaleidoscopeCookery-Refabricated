@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ITeapot;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
@@ -201,6 +202,11 @@ public class RecipeItem extends WithTooltipsBlockItem {
             if (hasRecipe(itemInHand)) {
                 if (isAutoBind(itemInHand)) {
                     return InteractionResult.PASS;
+                }
+                if (blockEntity instanceof KitchenShelfBlockEntity shelf) {
+                    RecipeRecord record = getRecipe(itemInHand);
+                    return record != null && shelf.dispenseMatching(record.input())
+                            ? InteractionResult.CONSUME : InteractionResult.PASS;
                 }
                 return this.onPutRecipe(blockEntity, player, itemInHand);
             } else {
