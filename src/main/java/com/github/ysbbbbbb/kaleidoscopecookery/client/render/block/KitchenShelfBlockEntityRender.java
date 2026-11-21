@@ -35,7 +35,7 @@ public class KitchenShelfBlockEntityRender implements BlockEntityRenderer<Kitche
                                    ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay) {
         BlockEntityRenderer.super.extractRenderState(shelf, renderState, partialTick, cameraPosition, crumblingOverlay);
         ItemStack stored = shelf.getStoredStack();
-        renderState.displayCount = Math.min(16, (stored.getCount() + 15) / 16);
+        renderState.displayCount = Math.min(16, stored.getCount());
         renderState.rotation = shelf.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180;
         this.itemModelResolver.updateForTopItem(renderState.item,
                 stored.isEmpty() ? ItemStack.EMPTY : stored.copyWithCount(1),

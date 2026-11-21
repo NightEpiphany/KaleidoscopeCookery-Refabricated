@@ -7,6 +7,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.CommonTags;
 
 
@@ -304,5 +305,28 @@ public class ShapedRecipeProvider extends ModRecipeProvider {
                 .define('C', Items.COMPOSTER)
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
+
+        addFruitSkewerRecipe(consumer, ModItems.GLOW_BERRY_SKEWER, Items.GLOW_BERRIES);
+        addFruitSkewerRecipe(consumer, ModItems.SWEET_BERRY_SKEWER, Items.SWEET_BERRIES);
+        addFruitSkewerRecipe(consumer, ModItems.CHORUS_FRUIT_SKEWER, Items.CHORUS_FRUIT);
+        addFruitSkewerRecipe(consumer, ModItems.APPLE_SKEWER, Items.APPLE);
+        this.shaped(RecipeCategory.FOOD, ModItems.CATERPILLAR_SKEWER)
+                .pattern("C")
+                .pattern("S")
+                .define('C', ModItems.CATERPILLAR)
+                .define('S', Items.STICK)
+                .unlockedBy("has_caterpillar", has(ModItems.CATERPILLAR))
+                .save(consumer);
+    }
+
+    private void addFruitSkewerRecipe(RecipeOutput output, ItemLike result, ItemLike fruit) {
+        this.shaped(RecipeCategory.FOOD, result)
+                .pattern("F")
+                .pattern("F")
+                .pattern("S")
+                .define('F', fruit)
+                .define('S', Items.STICK)
+                .unlockedBy("has_fruit", has(fruit))
+                .save(output);
     }
 }
