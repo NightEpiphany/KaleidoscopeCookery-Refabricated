@@ -11,6 +11,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Items;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.CommonTags;
 
+import java.util.Collections;
 
 import static com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems.STUFFED_DOUGH_FOOD;
 
@@ -21,6 +22,7 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
 
     @Override
     public void buildRecipes(RecipeOutput consumer) {
+        addSugarSyrupRecipes(consumer);
         addRiceRecipes(consumer);
         addDumplingRecipes(consumer);
         addShengjianMantouRecipes(consumer);
@@ -372,6 +374,33 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
                 .setCarrier(Items.FLOWER_POT)
                 .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.SHELF_MUSHROOM_POT_SOUP), 1)
                 .save(consumer, "shelf_mushroom_pot_soup");
+    }
+
+    private void addSugarSyrupRecipes(RecipeOutput consumer) {
+        ItemSkewerRecipe[] recipes = {
+                new ItemSkewerRecipe(ModItems.APPLE_SKEWER, ModItems.CANDIED_APPLE_SKEWER, "apple"),
+                new ItemSkewerRecipe(ModItems.CATERPILLAR_SKEWER, ModItems.CANDIED_CATERPILLAR_SKEWER, "caterpillar"),
+                new ItemSkewerRecipe(ModItems.CHORUS_FRUIT_SKEWER, ModItems.CANDIED_CHORUS_FRUIT_SKEWER, "chorus_fruit"),
+                new ItemSkewerRecipe(ModItems.GLOW_BERRY_SKEWER, ModItems.CANDIED_GLOW_BERRY_SKEWER, "glow_berry"),
+                new ItemSkewerRecipe(ModItems.SWEET_BERRY_SKEWER, ModItems.CANDIED_SWEET_BERRY_SKEWER, "sweet_berry")
+        };
+        for (ItemSkewerRecipe recipe : recipes) {
+            for (int count = 1; count <= 9; count++) {
+                StockpotRecipeBuilder.builder()
+                        .addInput((Object[]) Collections.nCopies(count, Items.SUGAR).toArray())
+                        .setCarrier(recipe.skewer())
+                        .setResult(recipe.candied(), 1)
+                        .setFinishedTexture(modLoc("stockpot/sugar_syrup_finished"))
+                        .setFinishedBubbleColor(0xD9A441)
+                        .setSyrup()
+                        .save(consumer, "sugar_syrup_" + recipe.name() + "_" + count);
+            }
+        }
+    }
+
+    private record ItemSkewerRecipe(net.minecraft.world.item.Item skewer,
+                                    net.minecraft.world.item.Item candied,
+                                    String name) {
     }
 
     private void addRiceRecipes(RecipeOutput consumer) {

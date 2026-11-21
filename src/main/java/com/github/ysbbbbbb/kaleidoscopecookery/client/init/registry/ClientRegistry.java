@@ -6,6 +6,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.conditions.model.ExtraLoad
 import com.github.ysbbbbbb.kaleidoscopecookery.client.conditions.registry.ExtraModelLoadingProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.FlatulenceEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.PotOverlayEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.KitchenShelfOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.SteamerOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TeapotOverlayEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.event.gui.overlay.TrashCanOverlay;
@@ -99,6 +100,7 @@ public final class ClientRegistry {
         TeapotOverlayEvent.register();
         TrashCanOverlay.register();
         SteamerOverlay.register();
+        KitchenShelfOverlay.register();
     }
 
     private static void registerBlockEntityRenderers() {

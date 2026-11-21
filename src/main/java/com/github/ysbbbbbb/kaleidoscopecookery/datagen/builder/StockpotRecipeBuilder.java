@@ -38,6 +38,7 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
     private Identifier finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
     private int cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
     private int finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
+    private boolean syrup;
 
     public static StockpotRecipeBuilder builder() {
         return new StockpotRecipeBuilder();
@@ -120,6 +121,11 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
+    public StockpotRecipeBuilder setSyrup() {
+        this.syrup = true;
+        return this;
+    }
+
     public StockpotRecipeBuilder setBubbleColors(int cookingBubbleColor, int finishedBubbleColor) {
         this.cookingBubbleColor = cookingBubbleColor;
         this.finishedBubbleColor = finishedBubbleColor;
@@ -172,7 +178,7 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
         StockpotRecipe recipe = new StockpotRecipe(
                 this.ingredients, this.soupBase, this.result,
                 this.time, this.carrier, this.cookingTexture, this.finishedTexture,
-                this.cookingBubbleColor, this.finishedBubbleColor
+                this.cookingBubbleColor, this.finishedBubbleColor, this.syrup
         );
         recipeOutput.accept(id, recipe, null);
     }

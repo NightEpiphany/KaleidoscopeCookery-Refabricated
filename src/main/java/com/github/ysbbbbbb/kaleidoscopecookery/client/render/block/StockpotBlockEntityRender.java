@@ -105,6 +105,7 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
         blockEntityRenderState.cookingTexture = blockEntity.getCookingTexture();
         blockEntityRenderState.finishedTexture = blockEntity.getFinishedTexture();
         blockEntityRenderState.takeOutCount = blockEntity.getTakeoutCount();
+        blockEntityRenderState.syrupUses = blockEntity.getSyrupUses();
         blockEntityRenderState.output = blockEntity.getResult();
     }
 
@@ -154,12 +155,17 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
             renderItems(blockEntityRenderState, poseStack, submitNodeCollector);
         } else if (status == StockpotBlockEntity.FINISHED) {
             int takeoutCount = blockEntityRenderState.takeOutCount;
-            int maxCount = Math.min(blockEntityRenderState.output.getCount(), StockpotBlockEntity.MAX_TAKEOUT_COUNT);
+            int maxCount = Math.clamp(blockEntityRenderState.output.getCount(), 1, StockpotBlockEntity.MAX_TAKEOUT_COUNT);
             if (takeoutCount <= 0 || maxCount <= 0) {
                 return;
             }
-            float fillRatio = Math.min(takeoutCount, maxCount) / (float) maxCount;
-            float soupHeight = MIN_SOUP_HEIGHT + (MAX_SOUP_HEIGHT - MIN_SOUP_HEIGHT) * fillRatio;
+            float soupHeight;
+            if (blockEntityRenderState.syrupUses > 0) {
+                soupHeight = 0.13F + 0.3F / StockpotBlockEntity.MAX_TAKEOUT_COUNT * blockEntityRenderState.syrupUses;
+            } else {
+                float fillRatio = Math.min(takeoutCount, maxCount) / (float) maxCount;
+                soupHeight = MIN_SOUP_HEIGHT + (MAX_SOUP_HEIGHT - MIN_SOUP_HEIGHT) * fillRatio;
+            }
             soupBase.renderWhenFinished(blockEntityRenderState, 0, poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, blockEntityRenderState.finishedTexture, soupHeight, cameraRenderState);
         }
     }
