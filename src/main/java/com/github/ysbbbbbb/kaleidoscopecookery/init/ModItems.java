@@ -176,7 +176,7 @@ public final class ModItems {
     public static final Item SWEET_BERRY_SKEWER = registerItem(ModItemIds.SWEET_BERRY_SKEWER,
             p -> new FruitSkewerItem(p, ModFoods.BERRY_SKEWER, ModConsumables.FRUIT_SKEWER));
     public static final Item CHORUS_FRUIT_SKEWER = registerItem(ModItemIds.CHORUS_FRUIT_SKEWER,
-            p -> new FruitSkewerItem(p, ModFoods.FRUIT_SKEWER, ModConsumables.FRUIT_SKEWER));
+            p -> new FruitSkewerItem(p, ModFoods.FRUIT_SKEWER, ModConsumables.CHORUS_FRUIT_SKEWER));
     public static final Item APPLE_SKEWER = registerItem(ModItemIds.APPLE_SKEWER,
             p -> new FruitSkewerItem(p, ModFoods.FRUIT_SKEWER, ModConsumables.FRUIT_SKEWER));
     public static final Item CATERPILLAR_SKEWER = registerItem(ModItemIds.CATERPILLAR_SKEWER,
@@ -190,7 +190,7 @@ public final class ModItems {
                     ModBlocks.CANDIED_SWEET_BERRY_SKEWER_SIDE, p, ModFoods.CANDIED_SWEET_BERRY_SKEWER, ModConsumables.CANDIED_SKEWER));
     public static final Item CANDIED_CHORUS_FRUIT_SKEWER = registerItem(ModBlockItemIds.CANDIED_CHORUS_FRUIT_SKEWER.item(),
             p -> new CandiedSkewerItem("candied_chorus_fruit_skewer", ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT,
-                    ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_SIDE, p, ModFoods.CANDIED_FRUIT_SKEWER, ModConsumables.CANDIED_SKEWER));
+                    ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_SIDE, p, ModFoods.CANDIED_FRUIT_SKEWER, ModConsumables.CANDIED_CHORUS_SKEWER));
     public static final Item CANDIED_APPLE_SKEWER = registerItem(ModBlockItemIds.CANDIED_APPLE_SKEWER.item(),
             p -> new CandiedSkewerItem("candied_apple_skewer", ModBlocks.CANDIED_APPLE_SKEWER_UPRIGHT,
                     ModBlocks.CANDIED_APPLE_SKEWER_SIDE, p, ModFoods.CANDIED_FRUIT_SKEWER, ModConsumables.CANDIED_SKEWER));

@@ -16,6 +16,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.model.banner.LeftBannerMod
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.banner.NormalBannerModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.banner.PatternModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.render.entity.EndSoulBeamRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.item.StrawHatArmorRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.ponder.init.PonderCompat;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.trinkets.init.TrinketsCompactClient;
@@ -92,6 +93,7 @@ public final class ClientRegistry {
         TrashCanOverlay.register();
         SteamerOverlay.register();
         KitchenShelfOverlay.register();
+        EndSoulBeamRenderer.register();
     }
 
     private static void registerBlockEntityRenderers() {

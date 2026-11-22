@@ -21,6 +21,7 @@ public final class ModEffects {
     public static final Holder<MobEffect> PROJECTILE_DODGE = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "projectile_dodge"), new BaseEffect(0x8E27F7));
     public static final Holder<MobEffect> INSTANT_SMELTING = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "instant_smelting"), new BaseEffect(0xF07C1C));
     public static final Holder<MobEffect> VITALITY = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "vitality"), new BaseEffect(0x6A9E4E));
+    public static final Holder<MobEffect> END_SOUL = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(KaleidoscopeCookery.MOD_ID, "end_soul"), new EndSoulEffect(0xB867DE));
 
     public static void registerEffects() {
         // 效果初始化只在类初始化时加载一次
