@@ -5,6 +5,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.item.consume_effects.TeleportRandomlyConsumeEffect;
 
 import java.util.List;
 
@@ -45,6 +46,8 @@ public interface ModConsumables {
 
     Consumable FRUIT_SKEWER = Consumables.defaultFood().build();
 
+    Consumable CHORUS_FRUIT_SKEWER = Consumables.defaultFood().onConsume(new TeleportRandomlyConsumeEffect()).build();
+
     Consumable CATERPILLAR_SKEWER = Consumables.defaultFood()
             .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(NAUSEA, 15 * 20), 1F))
             .build();
@@ -54,6 +57,8 @@ public interface ModConsumables {
             .build();
 
     Consumable CANDIED_SKEWER = Consumables.defaultFood().build();
+
+    Consumable CANDIED_CHORUS_SKEWER = Consumables.defaultFood().onConsume(new TeleportRandomlyConsumeEffect()).build();
 
     // 刺身
     Consumable SASHIMI = Consumables.defaultFood()
