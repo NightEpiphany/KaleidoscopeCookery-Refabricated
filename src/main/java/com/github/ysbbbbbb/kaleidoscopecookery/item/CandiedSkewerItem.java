@@ -8,6 +8,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +34,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
@@ -37,6 +45,7 @@ import java.util.UUID;
 import static net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING;
 
 public class CandiedSkewerItem extends WithTooltipsBlockItem implements IHasContainer {
+    private final boolean randomTeleport;
     private static final UUID KNOCKBACK_MODIFIER_UUID = UUID.fromString("d0190f53-13a1-4c8c-baa2-d3d0059911d4");
 
     private static final Multimap<Attribute, AttributeModifier> ATTRIBUTE_MODIFIERS = ImmutableMultimap.of(
@@ -54,15 +63,24 @@ public class CandiedSkewerItem extends WithTooltipsBlockItem implements IHasCont
     private final Block sideBlock;
 
     public CandiedSkewerItem(Block uprightBlock, Block sideBlock, FoodProperties foodProperties) {
-        this(uprightBlock, sideBlock, foodProperties, null, 0);
+        this(uprightBlock, sideBlock, foodProperties, null, 0, false);
+    }
+
+    public CandiedSkewerItem(Block uprightBlock, Block sideBlock, FoodProperties foodProperties, @Nullable MobEffect attackEffect, int attackEffectDuration) {
+        this(uprightBlock, sideBlock, foodProperties, attackEffect, attackEffectDuration, false);
+    }
+
+    public CandiedSkewerItem(Block uprightBlock, Block sideBlock, FoodProperties foodProperties, boolean randomTeleport) {
+        this(uprightBlock, sideBlock, foodProperties, null, 0, randomTeleport);
     }
 
     public CandiedSkewerItem(Block uprightBlock, Block sideBlock, FoodProperties foodProperties,
-                             @Nullable MobEffect attackEffect, int attackEffectDuration) {
+                             @Nullable MobEffect attackEffect, int attackEffectDuration, boolean randomTeleport) {
         super(uprightBlock, new Properties().food(foodProperties), "");
         this.attackEffect = attackEffect;
         this.attackEffectDuration = attackEffectDuration;
         this.sideBlock = sideBlock;
+        this.randomTeleport = randomTeleport;
     }
 
     @Override
@@ -113,6 +131,33 @@ public class CandiedSkewerItem extends WithTooltipsBlockItem implements IHasCont
     @Override
     public @NonNull ItemStack finishUsingItem(@NonNull ItemStack stack, @NonNull Level level, @NonNull LivingEntity entity) {
         ItemStack remaining = super.finishUsingItem(stack, level, entity);
+        if (!level.isClientSide && this.randomTeleport) {
+            double d = entity.getX();
+            double e = entity.getY();
+            double f = entity.getZ();
+
+            for(int i = 0; i < 16; ++i) {
+                double g = entity.getX() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)16.0F;
+                double h = Mth.clamp(entity.getY() + (double)(entity.getRandom().nextInt(16) - 8), level.getMinBuildHeight(), level.getMinBuildHeight() + ((ServerLevel)level).getLogicalHeight() - 1);
+                double j = entity.getZ() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)16.0F;
+                if (entity.isPassenger()) {
+                    entity.stopRiding();
+                }
+
+                Vec3 vec3 = entity.position();
+                if (entity.randomTeleport(g, h, j, true)) {
+                    level.gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(entity));
+                    SoundEvent soundEvent = entity instanceof Fox ? SoundEvents.FOX_TELEPORT : SoundEvents.CHORUS_FRUIT_TELEPORT;
+                    level.playSound(null, d, e, f, soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    entity.playSound(soundEvent, 1.0F, 1.0F);
+                    break;
+                }
+            }
+
+            if (entity instanceof Player) {
+                ((Player)entity).getCooldowns().addCooldown(this, 20);
+            }
+        }
         return this.returnContainerToEntity(remaining, level, entity);
     }
 

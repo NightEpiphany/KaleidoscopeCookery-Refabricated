@@ -144,14 +144,14 @@ public final class ModItems {
     // 果串
     public static final Item GLOW_BERRY_SKEWER = new FruitSkewerItem(ModFoods.BERRY_SKEWER);
     public static final Item SWEET_BERRY_SKEWER = new FruitSkewerItem(ModFoods.BERRY_SKEWER);
-    public static final Item CHORUS_FRUIT_SKEWER = new FruitSkewerItem(ModFoods.FRUIT_SKEWER);
+    public static final Item CHORUS_FRUIT_SKEWER = new FruitSkewerItem(ModFoods.FRUIT_SKEWER, true);
     public static final Item APPLE_SKEWER = new FruitSkewerItem(ModFoods.FRUIT_SKEWER);
     public static final Item CATERPILLAR_SKEWER = new FruitSkewerItem(ModFoods.CATERPILLAR_SKEWER);
 
     // 裹糖果串
     public static final Item CANDIED_GLOW_BERRY_SKEWER = new CandiedSkewerItem(ModBlocks.CANDIED_GLOW_BERRY_SKEWER_UPRIGHT, ModBlocks.CANDIED_GLOW_BERRY_SKEWER_SIDE, ModFoods.CANDIED_GLOW_BERRY_SKEWER, MobEffects.GLOWING, 5 * 20);
     public static final Item CANDIED_SWEET_BERRY_SKEWER = new CandiedSkewerItem(ModBlocks.CANDIED_SWEET_BERRY_SKEWER_UPRIGHT, ModBlocks.CANDIED_SWEET_BERRY_SKEWER_SIDE, ModFoods.CANDIED_SWEET_BERRY_SKEWER);
-    public static final Item CANDIED_CHORUS_FRUIT_SKEWER = new CandiedSkewerItem(ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT, ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_SIDE, ModFoods.CANDIED_FRUIT_SKEWER);
+    public static final Item CANDIED_CHORUS_FRUIT_SKEWER = new CandiedSkewerItem(ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT, ModBlocks.CANDIED_CHORUS_FRUIT_SKEWER_SIDE, ModFoods.CANDIED_FRUIT_SKEWER, true);
     public static final Item CANDIED_APPLE_SKEWER = new CandiedSkewerItem(ModBlocks.CANDIED_APPLE_SKEWER_UPRIGHT, ModBlocks.CANDIED_APPLE_SKEWER_SIDE, ModFoods.CANDIED_FRUIT_SKEWER);
     public static final Item CANDIED_CATERPILLAR_SKEWER = new CandiedSkewerItem(ModBlocks.CANDIED_CATERPILLAR_SKEWER_UPRIGHT, ModBlocks.CANDIED_CATERPILLAR_SKEWER_SIDE, ModFoods.CANDIED_CATERPILLAR_SKEWER, MobEffects.CONFUSION, 15 * 20);
 
