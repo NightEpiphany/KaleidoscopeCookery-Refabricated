@@ -8,6 +8,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,6 +20,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -27,6 +33,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,13 +53,24 @@ public class CandiedSkewerItem extends WithTooltipsBlockItem implements IHasCont
     private final @Nullable Holder<MobEffect> attackEffect;
     private final int attackEffectDuration;
 
+    private final boolean randomTeleport;
+
     public CandiedSkewerItem(String name, Block uprightBlock, Block sideBlock, FoodProperties food) {
-        this(name, uprightBlock, sideBlock, food, null, 0);
+        this(name, uprightBlock, sideBlock, food, null, 0, false);
+    }
+
+    public CandiedSkewerItem(String name, Block uprightBlock, Block sideBlock, FoodProperties food, @Nullable Holder<MobEffect> attackEffect, int attackEffectDuration) {
+        this(name, uprightBlock, sideBlock, food, attackEffect, attackEffectDuration, false);
+    }
+
+    public CandiedSkewerItem(String name, Block uprightBlock, Block sideBlock, FoodProperties food, boolean randomTeleport) {
+        this(name, uprightBlock, sideBlock, food, null, 0, randomTeleport);
     }
 
     public CandiedSkewerItem(String name, Block uprightBlock, Block sideBlock, FoodProperties food,
-                             @Nullable Holder<MobEffect> attackEffect, int attackEffectDuration) {
+                             @Nullable Holder<MobEffect> attackEffect, int attackEffectDuration, boolean randomTeleport) {
         super(uprightBlock, new Properties().food(food).attributes(ATTRIBUTES), name);
+        this.randomTeleport = randomTeleport;
         this.sideBlock = sideBlock;
         this.attackEffect = attackEffect;
         this.attackEffectDuration = attackEffectDuration;
@@ -97,6 +116,39 @@ public class CandiedSkewerItem extends WithTooltipsBlockItem implements IHasCont
     @Override
     public @NotNull ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         ItemStack remaining = super.finishUsingItem(stack, level, entity);
+        if (!level.isClientSide && this.randomTeleport) {
+            for(int i = 0; i < 16; ++i) {
+                double d = entity.getX() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)16.0F;
+                double e = Mth.clamp(entity.getY() + (double)(entity.getRandom().nextInt(16) - 8), level.getMinBuildHeight(), level.getMinBuildHeight() + ((ServerLevel)level).getLogicalHeight() - 1);
+                double f = entity.getZ() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)16.0F;
+                if (entity.isPassenger()) {
+                    entity.stopRiding();
+                }
+
+                Vec3 vec3 = entity.position();
+                if (entity.randomTeleport(d, e, f, true)) {
+                    level.gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(entity));
+                    SoundSource soundSource;
+                    SoundEvent soundEvent;
+                    if (entity instanceof Fox) {
+                        soundEvent = SoundEvents.FOX_TELEPORT;
+                        soundSource = SoundSource.NEUTRAL;
+                    } else {
+                        soundEvent = SoundEvents.CHORUS_FRUIT_TELEPORT;
+                        soundSource = SoundSource.PLAYERS;
+                    }
+
+                    level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), soundEvent, soundSource);
+                    entity.resetFallDistance();
+                    break;
+                }
+            }
+
+            if (entity instanceof Player player) {
+                player.resetCurrentImpulseContext();
+                player.getCooldowns().addCooldown(this, 20);
+            }
+        }
         return level.isClientSide || entity.hasInfiniteMaterials() ? remaining : this.returnContainerToEntity(remaining, level, entity);
     }
 

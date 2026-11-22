@@ -1,7 +1,7 @@
 {
   "block.kitchen_shelf": {
     "sounds": [
-      "kaleidoscope_cookery:block/kitchen_shelf"
+      "kaleidoscope_cookery:block/kitchen_shelf/kitchen_shelf"
     ],
     "subtitle": "subtitles.kaleidoscope_cookery.block.kitchen_shelf"
   },
