@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.client.render;
+package com.github.ysbbbbbb.kaleidoscopecookery.client.render.entity;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.renderstate.EndSoulBeamRenderState;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModAttachmentType;
