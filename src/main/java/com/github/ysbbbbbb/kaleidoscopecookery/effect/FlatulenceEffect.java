@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.effect;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModAttachmentType;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +19,7 @@ public class FlatulenceEffect extends BaseEffect {
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         // 最后 3 tick 移除记录
         if (duration < 5) {
-
+            KaleidoscopeCookery.LOGGER.debug("Remove flatulence effect.");
         }
         // 每 10 秒检查一次距离
         return duration % 10 == 5;
@@ -31,8 +32,9 @@ public class FlatulenceEffect extends BaseEffect {
                 serverPlayer.setAttached(ModAttachmentType.FLATULENCE_EFFECT_STARTING_POSITION, serverPlayer.position());
             } else {
                 Vec3 position = serverPlayer.getAttached(ModAttachmentType.FLATULENCE_EFFECT_STARTING_POSITION);
+                if (position != null)
                 // 检查坐标是否改变，触发触发器
-                ModTrigger.FLATULENCE_FLY_HEIGHT.trigger(serverPlayer, position);
+                    ModTrigger.FLATULENCE_FLY_HEIGHT.trigger(serverPlayer, position);
             }
         }
         return true;

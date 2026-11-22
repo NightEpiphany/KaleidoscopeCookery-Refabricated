@@ -21,6 +21,7 @@ public final class KaleidoscopeCookery implements ModInitializer {
     public void onInitialize() {
         if (FabricLoader.getInstance().isModLoaded(ConfigGetter.ID))
             GeneralConfig.init();
+        ModAttachmentType.registerAttachments();
         // 药水效果优先注册
         ModEffects.registerEffects();
         ModArmorMaterials.registerArmorMaterials();

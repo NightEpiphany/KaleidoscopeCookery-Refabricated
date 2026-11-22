@@ -1,18 +1,14 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.recipe;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.RiceBowlRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.PlateRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
@@ -180,7 +176,6 @@ public class ShapelessRecipeProvider extends ModRecipeProvider {
                 "fish_flavored_shredded_pork_rice_bowl"
         );
 
-        // 闈㈠洟
         for (int i = 0; i < 8; i++) {
             int count = i + 1;
             String name = "flour_from_" + count + "_wheat";
@@ -191,7 +186,6 @@ public class ShapelessRecipeProvider extends ModRecipeProvider {
                     .save(consumer, name);
         }
 
-        // 鐩樿
         addPlateRecipe(consumer, ModItems.SHENGJIAN_MANTOU, SHENGJIAN_MANTOU_PLATE);
         addPlateRecipe(consumer, ModItems.BAOZI, BAOZI_PLATE);
         addPlateRecipe(consumer, ModItems.QINGTUAN, QINGTUAN_PLATE);
