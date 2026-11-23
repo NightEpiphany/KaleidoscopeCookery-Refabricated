@@ -1,9 +1,5 @@
 {
   "values": [
-    "minecraft:feather",
-    {
-      "id": "#c:feathers",
-      "required": false
-    }
+    "minecraft:feather"
   ]
 }
