@@ -166,7 +166,7 @@ public class StoveBlock extends HorizontalDirectionalBlock {
         }
         // 熄灭
         if (state.getValue(LIT) && itemInHand.is(TagMod.EXTINGUISH_STOVE)) {
-            if (itemInHand.is(ModItems.KITCHEN_SHOVEL) && hasOil(itemInHand)) {
+            if (itemInHand.is(TagMod.KITCHEN_SHOVEL) && hasOil(itemInHand)) {
                 setHasOil(itemInHand, false);
             }
             level.setBlockAndUpdate(pos, state.setValue(LIT, false));
