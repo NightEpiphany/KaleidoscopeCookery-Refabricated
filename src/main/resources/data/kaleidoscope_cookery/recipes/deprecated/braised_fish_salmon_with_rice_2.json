@@ -1,0 +1,22 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
+  "ingredients": [
+    {
+      "tag": "c:raw_fishes/salmon"
+    },
+    {
+      "tag": "c:cooked_rice"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "item": "kaleidoscope_cookery:braised_fish_rice_bowl"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}
