@@ -1,0 +1,6 @@
+{
+  "values": [
+    "kaleidoscope_cookery:flour",
+    {"id": "create:wheat_flour", "required": false}
+  ]
+}

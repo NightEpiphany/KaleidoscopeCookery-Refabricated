@@ -226,7 +226,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             ItemUtils.consume(stack, user, 1);
             ModTrigger.EVENT.trigger(user, ModEventTriggerType.PUT_OIL_IN_POT);
             return true;
-        } else if (stack.is(ModItems.KITCHEN_SHOVEL) && KitchenShovelItem.hasOil(stack)) {
+        } else if (stack.is(TagMod.KITCHEN_SHOVEL) && KitchenShovelItem.hasOil(stack)) {
             // 带油锅铲特判
             placeOil(level, user, level.random);
             KitchenShovelItem.setHasOil(stack, false);

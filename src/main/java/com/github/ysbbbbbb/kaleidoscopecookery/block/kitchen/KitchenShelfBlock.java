@@ -55,6 +55,7 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
                 .mapColor(MapColor.WOOD)
                 .strength(2.0F)
                 .sound(SoundType.WOOD)
+                .isRedstoneConductor((blockState, blockGetter, blockPos) -> false)
                 .noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)

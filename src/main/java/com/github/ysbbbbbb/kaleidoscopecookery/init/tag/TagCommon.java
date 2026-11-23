@@ -55,6 +55,7 @@ public interface TagCommon {
 
     TagKey<Item> MUSHROOMS = itemTag("mushroom");
 
+    TagKey<Item> FLOUR = itemTag("flour/wheat");
     TagKey<Item> DOUGH = itemTag("dough");
 
     TagKey<Block> COLORLESS_GLASS = blockTag("glass/colorless");
