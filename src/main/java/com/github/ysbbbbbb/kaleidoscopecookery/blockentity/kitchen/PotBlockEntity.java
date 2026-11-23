@@ -233,7 +233,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             stack.consume(1, user);
             ModTrigger.EVENT.trigger(user, ModEventTriggerType.PUT_OIL_IN_POT);
             return true;
-        } else if (stack.is(ModItems.KITCHEN_SHOVEL) && KitchenShovelItem.hasOil(stack)) {
+        } else if (stack.is(TagMod.KITCHEN_SHOVEL) && KitchenShovelItem.hasOil(stack)) {
             // 带油锅铲特判
             placeOil(level, user, level.getRandom());
             KitchenShovelItem.setHasOil(stack, false);
@@ -359,7 +359,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
 
     @SuppressWarnings("deprecation")
     private boolean takeOutWithoutCarrier(Level level, LivingEntity user, ItemStack stack, ItemStack finallyResult) {
-        if (stack.is(ModItems.KITCHEN_SHOVEL)) {
+        if (stack.is(TagMod.KITCHEN_SHOVEL)) {
             // 如果是玩家，则需要判断是否潜行才能取出
             if (user instanceof Player player && !player.isSecondaryUseActive()) {
                 return false;
@@ -396,7 +396,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             }
         }
         // 没有锅铲时才会触发提示和伤害
-        if (!mainHandItem.is(ModItems.KITCHEN_SHOVEL)) {
+        if (!mainHandItem.is(TagMod.KITCHEN_SHOVEL)) {
             if (this.hasHeatSource(level)) {
                 user.hurt(level.damageSources().inFire(), 1);
                 ModTrigger.EVENT.trigger(user, ModEventTriggerType.HURT_WHEN_TAKEOUT_FROM_POT);
