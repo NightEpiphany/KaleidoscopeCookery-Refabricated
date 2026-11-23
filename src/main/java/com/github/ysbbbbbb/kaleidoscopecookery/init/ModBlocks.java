@@ -98,6 +98,7 @@ public final class ModBlocks {
             .mapColor(MapColor.WOOD)
             .strength(2.0F)
             .sound(BlockSoundSets.WOOD)
+            .isRedstoneConductor((_, _, _) -> false)
             .noOcclusion());
 
     public static final Block CHILI_RISTRA = commonReg(ModBlockItemIds.CHILI_RISTRA.block(), ChiliRistraBlock::new, BlockBehaviour.Properties.of()
