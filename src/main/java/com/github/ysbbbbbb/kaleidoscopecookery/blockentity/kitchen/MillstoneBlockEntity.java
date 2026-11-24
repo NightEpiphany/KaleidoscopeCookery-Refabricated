@@ -66,6 +66,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     public static final int MAX_INPUT_COUNT = 8;
     private static final int OUTPUT_SLOT_COUNT = 4;
     private static final double MAX_BIND_DISTANCE_SQR = 5 * 5;
+    private static final double MILLSTONE_COLLISION_HALF_WIDTH = 1.0;
+    private static final double MILLSTONE_COLLISION_HEIGHT = 15.0 / 16.0;
     private static final double COLLISION_CLEARANCE = 1.0E-6;
     private static final String ENTITY_ID_KEY = "EntityId";
     private static final String ENTITY_KEY = "StoredEntity";
@@ -161,7 +163,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             this.refresh();
             return;
         }
-        if (tryPlaceEntity(serverLevel, bindEntity, this.getOrbitPosition(center, rot))) {
+        if (tryPlaceEntity(serverLevel, bindEntity, this.getOrbitPosition(bindEntity, center, rot))) {
             bindEntity.setYRot(-rot - 90);
             bindEntity.setXRot(0);
             bindEntity.setOldPosAndRot();
@@ -447,7 +449,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                     && (pos.y < floorY || !serverLevel.noBlockCollision(entity, entity.getBoundingBox()))) {
                 Vec3 releasePos = new Vec3(pos.x, Math.max(pos.y, floorY), pos.z);
                 if (tryPlaceEntity(serverLevel, entity, releasePos)
-                        || tryPlaceEntity(serverLevel, entity, this.getOrbitPosition(center, this.getRotation(serverLevel, 0)))) {
+                        || tryPlaceEntity(serverLevel, entity, this.getOrbitPosition(entity, center, this.getRotation(serverLevel, 0)))) {
                     Vec3 movement = entity.getDeltaMovement();
                     entity.setDeltaMovement(movement.x, Math.max(movement.y, 0), movement.z);
                     entity.resetFallDistance();
@@ -466,8 +468,19 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         this.unbindEntity();
     }
 
-    private Vec3 getOrbitPosition(Vec3 center, float rot) {
-        return new Vec3(0, 0, 2).add(this.offset).yRot(rot * Mth.DEG_TO_RAD).add(center);
+    private Vec3 getOrbitPosition(LivingEntity entity, Vec3 center, float rot) {
+        Vec3 orbit = this.offset.add(0, 0, 2).yRot(rot * Mth.DEG_TO_RAD);
+        double radius = orbit.horizontalDistance();
+        // 按实体半宽扩张磨盘的方形碰撞范围，取外接圆半径避开四个角。
+        double halfWidth = MILLSTONE_COLLISION_HALF_WIDTH + entity.getBbWidth() / 2.0 + COLLISION_CLEARANCE;
+        double safeRadius = Math.sqrt(2) * halfWidth;
+        if (radius > 0 && radius < safeRadius
+                && orbit.y < MILLSTONE_COLLISION_HEIGHT && orbit.y + entity.getBbHeight() > 0
+                && safeRadius * safeRadius + orbit.y * orbit.y < MAX_BIND_DISTANCE_SQR) {
+            double scale = safeRadius / radius;
+            orbit = new Vec3(orbit.x * scale, orbit.y, orbit.z * scale);
+        }
+        return center.add(orbit);
     }
 
     private static boolean tryPlaceEntity(ServerLevel level, LivingEntity entity, Vec3 pos) {

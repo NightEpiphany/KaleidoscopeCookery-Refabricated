@@ -58,7 +58,9 @@ public interface ModConsumables {
 
     Consumable CANDIED_SKEWER = Consumables.defaultFood().build();
 
-    Consumable CANDIED_CHORUS_SKEWER = Consumables.defaultFood().onConsume(new TeleportRandomlyConsumeEffect()).build();
+    Consumable CANDIED_CHORUS_SKEWER = Consumables.defaultFood().onConsume(new TeleportRandomlyConsumeEffect())
+            .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(END_SOUL, 20 * 60 * 30), 0.01F))
+            .build();
 
     // 刺身
     Consumable SASHIMI = Consumables.defaultFood()
