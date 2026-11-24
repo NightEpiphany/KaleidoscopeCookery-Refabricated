@@ -13,8 +13,8 @@ public final class MillstoneEntityEvent {
     private static boolean onLivingAttack(LivingEntity entity, DamageSource source, float amount) {
         MillstoneBlockEntity millstone = MillstoneBlockEntity.findBoundMillstone(entity);
         if (millstone != null) {
-            millstone.setCacheRot(millstone.getRotation(entity.level(), 0));
             millstone.unbindEntity();
+            millstone.setCacheRot(millstone.getRotation(entity.level(), 0));
             millstone.refresh();
         }
         return true;
