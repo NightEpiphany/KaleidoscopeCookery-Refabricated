@@ -52,6 +52,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -64,6 +65,10 @@ import java.util.UUID;
 public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone {
     public static final int MAX_INPUT_COUNT = 8;
     private static final int OUTPUT_SLOT_COUNT = 4;
+    private static final double MAX_BIND_DISTANCE_SQR = 5 * 5;
+    private static final double MILLSTONE_COLLISION_HALF_WIDTH = 1.0;
+    private static final double MILLSTONE_COLLISION_HEIGHT = 15.0 / 16.0;
+    private static final double COLLISION_CLEARANCE = 1.0E-6;
     private static final String ENTITY_ID_KEY = "EntityId";
     private static final String ENTITY_KEY = "StoredEntity";
     private static final String CACHE_ROT_KEY = "CacheRot";
@@ -132,43 +137,37 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         // 旋转一圈的时间 (ticks)
         float rot = this.getRotation(level, 0);
         Vec3 center = Vec3.atBottomCenterOf(this.getBlockPos());
-        double maxDistanceSqr = 5 * 5;
         LivingEntity bindEntity = getBindEntity(level);
         // 如果实体存在，检查是否需要更新位置
         if (bindEntity == null) {
             // 必须距离磨盘足够近才可以（5 格）
             if (serverLevel.getEntity(entityId) instanceof LivingEntity mob
-                    && mob.isAlive()
-                    && mob.distanceToSqr(center) < maxDistanceSqr
-                    && this.canBindEntity(mob)) {
+                && mob.isAlive()
+                && mob.distanceToSqr(center) < MAX_BIND_DISTANCE_SQR
+                && this.canBindEntity(mob)) {
                 this.bindEntity(mob);
+                bindEntity = mob;
+                rot = this.getRotation(level, 0);
             } else {
-                this.entityId = Util.NIL_UUID;
+                this.unbindEntity();
                 this.cacheRot = 0f;
-                this.liftAngle = 0f;
                 this.refresh();
                 return;
             }
-        } else if (!bindEntity.isAlive()
-                || bindEntity.distanceToSqr(center) >= maxDistanceSqr
+        }
+        if (!bindEntity.isAlive()
+                || bindEntity.distanceToSqr(center) >= MAX_BIND_DISTANCE_SQR
                 || bindEntity.isInWall()) {
-            this.entityId = Util.NIL_UUID;
-            this.bindRef = null;
+            this.unbindEntity();
             this.cacheRot = rot;
-            this.liftAngle = 0f;
             this.refresh();
             return;
         }
-        // 如果实体存在，检查是否需要更新位置
-        Vec3 pos = new Vec3(0, 0, 2)
-                .add(this.offset)
-                .yRot(rot * Mth.DEG_TO_RAD)
-                .add(center);
-        if (bindEntity == null) return;
-        bindEntity.setPosRaw(pos.x, pos.y, pos.z);
-        bindEntity.setYRot(-rot - 90);
-        bindEntity.setXRot(0);
-        bindEntity.setOldPosAndRot();
+        if (tryPlaceEntity(serverLevel, bindEntity, this.getOrbitPosition(bindEntity, center, rot))) {
+            bindEntity.setYRot(-rot - 90);
+            bindEntity.setXRot(0);
+            bindEntity.setOldPosAndRot();
+        }
         // 如果实体带有库存，那么可以尝试往磨盘里放物品
         if (bindEntity.tickCount % 10 == 0 && this.isOutputEmpty() && this.input.isEmpty() && this.progress <= 0) {
             // Fabric暂时只能支持驴和骡使用物品栏
@@ -441,9 +440,70 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     }
 
     public void unbindEntity() {
+        if (this.level instanceof ServerLevel serverLevel && this.hasEntity()
+                && serverLevel.getEntity(this.entityId) instanceof LivingEntity entity && entity.isAlive()) {
+            Vec3 center = Vec3.atBottomCenterOf(this.worldPosition);
+            Vec3 pos = entity.position();
+            double floorY = center.y + Math.min(0, this.offset.y);
+            if (entity.distanceToSqr(center) < MAX_BIND_DISTANCE_SQR
+                    && (pos.y < floorY || !serverLevel.noBlockCollision(entity, entity.getBoundingBox()))) {
+                Vec3 releasePos = new Vec3(pos.x, Math.max(pos.y, floorY), pos.z);
+                if (tryPlaceEntity(serverLevel, entity, releasePos)
+                        || tryPlaceEntity(serverLevel, entity, this.getOrbitPosition(entity, center, this.getRotation(serverLevel, 0)))) {
+                    Vec3 movement = entity.getDeltaMovement();
+                    entity.setDeltaMovement(movement.x, Math.max(movement.y, 0), movement.z);
+                    entity.resetFallDistance();
+                    entity.setOldPosAndRot();
+                }
+            }
+        }
         this.entityId = Util.NIL_UUID;
         this.bindRef = null;
         this.liftAngle = 0f;
+    }
+
+    @Override
+    public void preRemoveSideEffects(@NonNull BlockPos pos, @NonNull BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        this.unbindEntity();
+    }
+
+    private Vec3 getOrbitPosition(LivingEntity entity, Vec3 center, float rot) {
+        Vec3 orbit = this.offset.add(0, 0, 2).yRot(rot * Mth.DEG_TO_RAD);
+        double radius = orbit.horizontalDistance();
+        // 按实体半宽扩张磨盘的方形碰撞范围，取外接圆半径避开四个角。
+        double halfWidth = MILLSTONE_COLLISION_HALF_WIDTH + entity.getBbWidth() / 2.0 + COLLISION_CLEARANCE;
+        double safeRadius = Math.sqrt(2) * halfWidth;
+        if (radius > 0 && radius < safeRadius
+                && orbit.y < MILLSTONE_COLLISION_HEIGHT && orbit.y + entity.getBbHeight() > 0
+                && safeRadius * safeRadius + orbit.y * orbit.y < MAX_BIND_DISTANCE_SQR) {
+            double scale = safeRadius / radius;
+            orbit = new Vec3(orbit.x * scale, orbit.y, orbit.z * scale);
+        }
+        return center.add(orbit);
+    }
+
+    private static boolean tryPlaceEntity(ServerLevel level, LivingEntity entity, Vec3 pos) {
+        var dimensions = entity.getDimensions(entity.getPose());
+        AABB box = dimensions.makeBoundingBox(pos);
+        if (!level.noBlockCollision(entity, box)) {
+            // 允许绕开石磨边角或抬高到地面上方，避免把碰撞箱压进地板。
+            Vec3 center = box.getCenter();
+            AABB search = new AABB(center.add(-1, 0, -1), center.add(1, 1 + COLLISION_CLEARANCE, 1));
+            Optional<Vec3> freeCenter = level.findFreePosition(entity, Shapes.create(search), center,
+                    box.getXsize() + 2 * COLLISION_CLEARANCE,
+                    box.getYsize() + 2 * COLLISION_CLEARANCE,
+                    box.getZsize() + 2 * COLLISION_CLEARANCE);
+            if (freeCenter.isEmpty()) {
+                return false;
+            }
+            pos = pos.add(freeCenter.get().subtract(center));
+            if (!level.noBlockCollision(entity, dimensions.makeBoundingBox(pos))) {
+                return false;
+            }
+        }
+        entity.setPos(pos);
+        return true;
     }
 
     public void sendActionBarMessage(LivingEntity user, String key, Object... args) {

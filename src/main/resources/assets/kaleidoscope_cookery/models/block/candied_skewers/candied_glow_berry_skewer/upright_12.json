@@ -6,7 +6,7 @@
     32
   ],
   "textures": {
-    "particle": "minecraft:block/yellow_concrete",
+    "particle": "kaleidoscope_cookery:block/candied_glow_berry_skewers_particle",
     "texture": "kaleidoscope_cookery:block/candied_skewers"
   },
   "elements": [
