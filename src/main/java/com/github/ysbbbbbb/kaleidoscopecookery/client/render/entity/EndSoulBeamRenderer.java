@@ -8,8 +8,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelSubmitContext;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EndCrystalRenderer;
@@ -71,7 +71,7 @@ public final class EndSoulBeamRenderer {
         levelState.setData(BEAMS, beams == null ? List.of() : List.copyOf(beams));
     }
 
-    private static void submit(LevelRenderContext context) {
+    private static void submit(LevelSubmitContext context) {
         List<EndSoulBeamRenderState> beams = context.levelState().getDataOrDefault(BEAMS, List.of());
         if (beams.isEmpty()) {
             return;
