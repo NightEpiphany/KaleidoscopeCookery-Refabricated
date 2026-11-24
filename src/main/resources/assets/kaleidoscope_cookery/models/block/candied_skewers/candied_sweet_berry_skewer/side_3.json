@@ -1,11 +1,12 @@
 {
+  "render_type": "minecraft:cutout",
   "format_version": "1.9.0",
   "texture_size": [
     32,
     32
   ],
   "textures": {
-    "particle": "minecraft:block/red_concrete",
+    "particle": "kaleidoscope_cookery:block/candied_sweet_berry_skewers_particle",
     "texture": "kaleidoscope_cookery:block/candied_skewers"
   },
   "elements": [
