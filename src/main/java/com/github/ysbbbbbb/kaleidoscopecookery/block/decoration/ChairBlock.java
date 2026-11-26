@@ -11,6 +11,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -50,7 +52,9 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
     public static final BooleanProperty HAS_CARPET = BooleanProperty.create("has_carpet");
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final VoxelShape BASE = Block.box(2, 0, 2, 14, 9, 14);
+    private static final int SEAT_HEIGHT = 9;
+    private static final double CAT_REACH = 1.25;
+    private static final VoxelShape BASE = Block.box(2, 0, 2, 14, SEAT_HEIGHT, 14);
     private static final VoxelShape NORTH = Shapes.or(BASE, Block.box(2, 0, 12, 14, 19, 14));
     private static final VoxelShape SOUTH = Shapes.or(BASE, Block.box(2, 0, 2, 14, 19, 4));
     private static final VoxelShape WEST = Shapes.or(BASE, Block.box(12, 0, 2, 14, 19, 14));
@@ -103,8 +107,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
 
     @NotNull
     private ItemInteractionResult tryToSitOn(BlockState state, Level level, BlockPos pos, Player player) {
-        List<SitEntity> entities = level.getEntitiesOfClass(SitEntity.class, new AABB(pos));
-        if (entities.isEmpty()) {
+        if (!isSeatOccupied(level, pos)) {
             SitEntity entitySit = new SitEntity(level, pos, 0.5125);
             entitySit.setYRot(state.getValue(FACING).toYRot());
             level.addFreshEntity(entitySit);
@@ -112,6 +115,43 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
             return ItemInteractionResult.SUCCESS;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    public static boolean isSeatOccupied(Level level, BlockPos pos) {
+        return !level.getEntitiesOfClass(SitEntity.class, new AABB(pos)).isEmpty();
+    }
+
+    public static boolean tryToLieOn(BlockState state, BlockPos pos, Cat cat) {
+        Level level = cat.level();
+        if (level.isClientSide || cat.isPassenger() || cat.isLeashed() || cat.isOrderedToSit()) {
+            return false;
+        }
+
+        Direction facing = state.getValue(FACING);
+        Vec3 restPosition = Vec3.atBottomCenterOf(pos).add(facing.getStepX() / 16.0, SEAT_HEIGHT / 16.0, facing.getStepZ() / 16.0);
+        if (cat.distanceToSqr(restPosition) > CAT_REACH * CAT_REACH || isSeatOccupied(level, pos)
+                || !level.noCollision(cat, cat.getBoundingBox().move(restPosition.subtract(cat.position())))) {
+            return false;
+        }
+
+        SitEntity seat = new SitEntity(SitEntity.TYPE, level);
+        seat.setSitType(SitEntity.CAT_CHAIR);
+        seat.setPos(restPosition);
+        seat.setYRot(facing.toYRot());
+        if (!level.addFreshEntity(seat)) {
+            return false;
+        }
+        if (!cat.startRiding(seat)) {
+            seat.discard();
+            return false;
+        }
+
+        cat.getNavigation().stop();
+        cat.setYRot(seat.getYRot());
+        cat.setYHeadRot(seat.getYRot());
+        cat.setYBodyRot(seat.getYRot());
+        seat.positionRider(cat);
+        return true;
     }
 
     @NotNull
@@ -155,8 +195,11 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
     }
 
     @Override
-    public void destroy(LevelAccessor levelAccessor, BlockPos pos, BlockState state) {
-        levelAccessor.getEntitiesOfClass(SitEntity.class, new AABB(pos)).forEach(Entity::discard);
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!level.isClientSide && !state.is(newState.getBlock())) {
+            level.getEntitiesOfClass(SitEntity.class, new AABB(pos)).forEach(Entity::discard);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
