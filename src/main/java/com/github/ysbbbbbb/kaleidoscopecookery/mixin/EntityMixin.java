@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Entity.class)
 public abstract class EntityMixin {
     @Inject(method = "move", at = @At("HEAD"), cancellable = true)
-    private void kaleidoscopeCookery$keepCatOnChair(MoverType type, Vec3 movement, CallbackInfo ci) {
+    private void kaleidoscopeCookery$keepCatOnChair(MoverType moverType, Vec3 delta, CallbackInfo ci) {
         if (SitEntity.isCatLyingOnChair((Entity) (Object) this)) {
             ci.cancel();
         }
