@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.mixin;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.LivingChangeTargetEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -9,12 +10,20 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Mob.class)
 public abstract class MobMixin extends LivingEntity {
 
     protected MobMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @Inject(method = "isEffectiveAi", at = @At("HEAD"), cancellable = true)
+    private void kaleidoscopeCookery$pauseCatAiOnChair(CallbackInfoReturnable<Boolean> cir) {
+        if (SitEntity.isCatLyingOnChair(this)) {
+            cir.setReturnValue(false);
+        }
     }
 
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)

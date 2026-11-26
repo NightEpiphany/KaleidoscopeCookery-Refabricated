@@ -2,10 +2,12 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.decoration;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.entity.ISittable;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.ChairBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
@@ -29,7 +31,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -47,7 +51,8 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
     public static final BooleanProperty HAS_CARPET = BooleanProperty.create("has_carpet");
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final VoxelShape BASE = Block.box(2, 0, 2, 14, 9, 14);
+    private static final int SEAT_HEIGHT = 9;
+    private static final VoxelShape BASE = Block.box(2, 0, 2, 14, SEAT_HEIGHT, 14);
     private static final VoxelShape NORTH = Shapes.or(BASE, Block.box(2, 0, 12, 14, 19, 14));
     private static final VoxelShape SOUTH = Shapes.or(BASE, Block.box(2, 0, 2, 14, 19, 4));
     private static final VoxelShape WEST = Shapes.or(BASE, Block.box(12, 0, 2, 14, 19, 14));
@@ -172,6 +177,24 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
             case WEST -> WEST;
             default -> NORTH;
         };
+    }
+
+    // 获取猫咪侧躺的位置信息
+    public static Vec3 catLiePosition(BlockPos pos, BlockState state) {
+        Direction facing = state.getValue(FACING);
+        return Vec3.atBottomCenterOf(pos).add(facing.getStepX() / 16.0, SEAT_HEIGHT / 16.0, facing.getStepZ() / 16.0);
+    }
+
+    @Override
+    protected void affectNeighborsAfterRemoval(@NonNull BlockState state, @NonNull ServerLevel level, @NonNull BlockPos pos, boolean isMoving) {
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
+        if (!level.getBlockState(pos).is(this)) {
+            for (SitEntity seat : level.getEntitiesOfClass(SitEntity.class, new AABB(pos),
+                    entity -> entity.getSitType() == SitEntity.CAT_CHAIR)) {
+                seat.ejectPassengers();
+                seat.discard();
+            }
+        }
     }
 
     @Override

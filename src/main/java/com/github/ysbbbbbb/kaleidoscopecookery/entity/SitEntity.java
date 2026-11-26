@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.entity;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.ChairBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEntities;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
@@ -20,11 +21,13 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -34,6 +37,7 @@ import java.util.function.Predicate;
 public class SitEntity extends Entity {
     public static final int DEFAULT = 0;
     public static final int TRASH_CAN = 1;
+    public static final int CAT_CHAIR = 2;
     private static final Direction[] DISMOUNT_DIRECTIONS = {
             Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH
     };
@@ -42,11 +46,11 @@ public class SitEntity extends Entity {
 
     public SitEntity(EntityType<? extends SitEntity> type, Level level) {
         super(type, level);
+        this.noPhysics = true;
     }
 
     protected SitEntity(Level level) {
         this(ModEntities.SIT, level);
-        this.noPhysics = true;
     }
 
     public SitEntity(Level level, BlockPos pos, double y) {
@@ -59,6 +63,31 @@ public class SitEntity extends Entity {
         this.setSitType(sitType);
     }
 
+    public static boolean trySeatCat(ServerLevel level, Cat cat, Vec3 position) {
+        if (cat.isLeashed()) {
+            return false;
+        }
+        SitEntity seat = new SitEntity(level);
+        seat.setSitType(CAT_CHAIR);
+        seat.setPos(position);
+        if (!level.addFreshEntity(seat)) {
+            return false;
+        }
+        if (cat.startRiding(seat)) {
+            return true;
+        }
+        seat.discard();
+        return false;
+    }
+
+    public static boolean isSeatAt(ServerLevel level, BlockPos pos) {
+        return !level.getEntitiesOfClass(SitEntity.class, new AABB(pos)).isEmpty();
+    }
+
+    public static boolean isCatLyingOnChair(Entity entity) {
+        return entity instanceof Cat && entity.getVehicle() instanceof SitEntity seat && seat.getSitType() == CAT_CHAIR;
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -67,7 +96,10 @@ public class SitEntity extends Entity {
             this.checkPassengers();
             if (this.tickCount % 20 == 0) {
                 BlockState blockState = this.level().getBlockState(this.blockPosition());
-                if (!blockState.is(TagMod.SITTABLE)) {
+                if (this.getSitType() == CAT_CHAIR && !(blockState.getBlock() instanceof ChairBlock)) {
+                    this.ejectPassengers();
+                    this.discard();
+                } else if (this.getSitType() != CAT_CHAIR && !blockState.is(TagMod.SITTABLE)) {
                     this.discard();
                 }
             }
@@ -75,9 +107,32 @@ public class SitEntity extends Entity {
     }
 
     @Override
+    protected void addPassenger(@NonNull Entity passenger) {
+        super.addPassenger(passenger);
+        if (!this.level().isClientSide() && this.getSitType() == CAT_CHAIR && passenger instanceof Cat cat) {
+            cat.getNavigation().stop();
+            cat.setInSittingPose(false);
+            cat.setLying(true);
+            this.positionRider(cat);
+        }
+    }
+
+    @Override
+    protected void positionRider(@NonNull Entity passenger, @NonNull MoveFunction move) {
+        if (this.getSitType() == CAT_CHAIR && passenger instanceof Cat) {
+            passenger.setDeltaMovement(Vec3.ZERO);
+            move.accept(passenger, this.getX(), this.getY(), this.getZ());
+        } else {
+            super.positionRider(passenger, move);
+        }
+    }
+
+    @Override
     protected void removePassenger(@NonNull Entity passenger) {
         if (this.getSitType() == TRASH_CAN && passenger instanceof Player player) {
             player.playSound(ModSounds.TRASH_CAN);
+        } else if (!this.level().isClientSide() && this.getSitType() == CAT_CHAIR && passenger instanceof Cat cat) {
+            cat.setLying(false);
         }
         super.removePassenger(passenger);
     }
@@ -115,7 +170,9 @@ public class SitEntity extends Entity {
     @Override
     public void remove(@NonNull RemovalReason reason) {
         super.remove(reason);
-        SitUtil.removeSitEntity(level(), blockPosition());
+        if (this.getSitType() != CAT_CHAIR) {
+            SitUtil.removeSitEntity(level(), blockPosition());
+        }
     }
 
     @Override
