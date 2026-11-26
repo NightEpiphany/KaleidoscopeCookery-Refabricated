@@ -12,6 +12,10 @@ import net.minecraft.world.level.block.Block;
 @SuppressWarnings("unused")
 public interface TagMod {
     /**
+     * 厨架存物的黑名单，这里面的物品不允许放在架子上
+     */
+    TagKey<Item> KITCHEN_SHELF_STORE_BLACKLIST = itemTag("kitchen_shelf_store_blacklist");
+    /**
      * 蒸笼允许的输入食材
      */
     TagKey<Item> STEAMER_INGREDIENTS = itemTag("steamer_ingredients");

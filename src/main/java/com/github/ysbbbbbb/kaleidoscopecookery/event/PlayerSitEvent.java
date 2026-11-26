@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.event;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.entity.ISittable;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.ChairBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModEntities;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.SitUtil;
@@ -8,6 +9,7 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -27,7 +29,7 @@ public class PlayerSitEvent {
     }
 
     private static InteractionResult onUseBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.isClientSide() || !level.mayInteract(player, hitResult.getBlockPos()) || player.isShiftKeyDown() || SitUtil.isPlayerSitting(player) || hitResult.getDirection() != Direction.UP)
+        if (!(level instanceof ServerLevel serverLevel) || !level.mayInteract(player, hitResult.getBlockPos()) || player.isShiftKeyDown() || SitUtil.isPlayerSitting(player) || hitResult.getDirection() != Direction.UP)
             return InteractionResult.PASS;
 
         BlockPos hitPos = hitResult.getBlockPos();
@@ -35,6 +37,9 @@ public class PlayerSitEvent {
         Block b = s.getBlock();
 
         if (b instanceof ISittable sittable && isPlayerInRange(player, hitPos) && !SitUtil.isOccupied(level, hitPos) && player.getItemInHand(hand).isEmpty()) {
+            if (b instanceof ChairBlock && SitEntity.isSeatAt(serverLevel, hitPos)) {
+                return InteractionResult.PASS;
+            }
             SitEntity sit = ModEntities.SIT.create(level, EntitySpawnReason.SPAWN_ITEM_USE);
             if (sit == null) return InteractionResult.PASS;
             sit.setSitType(SitEntity.DEFAULT);
