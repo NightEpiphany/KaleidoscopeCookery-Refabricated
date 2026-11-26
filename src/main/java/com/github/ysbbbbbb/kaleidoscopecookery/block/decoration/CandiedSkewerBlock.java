@@ -35,14 +35,12 @@ public class CandiedSkewerBlock extends StackableFoodBlock {
     private static final VoxelShape WIDE_UPRIGHT = Block.box(-4, 0, -4, 20, 20, 20);
     private static final VoxelShape SIDE = Block.box(0, 0, 0, 16, 24, 16);
 
-    private final int lightLevel;
     private final boolean upright;
 
     public CandiedSkewerBlock(BlockBehaviour.Properties properties, int maxCount, Supplier<Item> item,
                               int lightLevel, boolean upright) {
         super(properties.forceSolidOn().instabreak().mapColor(MapColor.WOOD).sound(BlockSoundSets.WOOD)
                 .pushReaction(PushReaction.POPPED).lightLevel(_ -> lightLevel).noCollision(), maxCount, item);
-        this.lightLevel = lightLevel;
         this.upright = upright;
     }
 
