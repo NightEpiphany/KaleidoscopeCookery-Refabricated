@@ -170,7 +170,7 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
     }
 
     @Override
-    protected void tick(@NonNull BlockState state, ServerLevel level, @NonNull BlockPos pos, @NonNull RandomSource random) {
+    protected void tick(@NonNull BlockState state, @NonNull ServerLevel level, @NonNull BlockPos pos, @NonNull RandomSource random) {
         List<BlockPos> shelves = getConnectedShelves(level, pos);
         BlockPos leader = shelves.stream()
                 .filter(level::hasNeighborSignal)
