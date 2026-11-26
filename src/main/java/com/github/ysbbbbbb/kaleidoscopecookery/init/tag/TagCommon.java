@@ -14,6 +14,10 @@ import net.minecraft.world.level.material.Fluid;
  */
 @SuppressWarnings("unused")
 public interface TagCommon {
+    /**
+     * 鸡的食物，兼容新版原版标签。
+     */
+    TagKey<Item> CHICKEN_FOOD = TagKey.create(Registries.ITEM, new ResourceLocation("minecraft", "chicken_food"));
     TagKey<Item> CROPS = itemTag("crops");
     TagKey<Item> CROPS_CHILI_PEPPER = itemTag("crops/chilipepper");
     TagKey<Item> CROPS_TOMATO = itemTag("crops/tomato");

@@ -2,8 +2,9 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +16,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
@@ -32,18 +34,53 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty SNEAK_PLACED = BooleanProperty.create("sneak_placed");
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
+    private static final VoxelShape BOTTOM = Block.box(0, 0, 0, 16, 1, 16);
+    private static final VoxelShape LEFT_SIDE = Block.box(0, 1, 0, 1, 16, 16);
+    private static final VoxelShape RIGHT_SIDE = Block.box(15, 1, 0, 16, 16, 16);
+
+    // 按北向模型的坐标定义形状，并预计算四个水平朝向。
+    private static final Map<Part, Map<Direction, VoxelShape>> SHAPES = Map.of(
+            Part.SINGLE, VoxelShapeUtils.horizontalShapes(Shapes.or(
+                    BOTTOM,
+                    Block.box(1, 8, 0, 15, 9, 16),
+                    Block.box(1, 1, 15, 15, 16, 16),
+                    LEFT_SIDE, RIGHT_SIDE
+            )),
+            Part.LEFT, VoxelShapeUtils.horizontalShapes(Shapes.or(
+                    BOTTOM,
+                    Block.box(1, 8, 0, 16, 9, 16),
+                    Block.box(1, 1, 15, 16, 16, 16),
+                    LEFT_SIDE
+            )),
+            Part.MIDDLE, VoxelShapeUtils.horizontalShapes(Shapes.or(
+                    BOTTOM,
+                    Block.box(0, 8, 0, 16, 9, 16),
+                    Block.box(0, 1, 15, 16, 16, 16)
+            )),
+            Part.RIGHT, VoxelShapeUtils.horizontalShapes(Shapes.or(
+                    BOTTOM,
+                    Block.box(0, 8, 0, 15, 9, 16),
+                    Block.box(0, 1, 15, 15, 16, 16),
+                    RIGHT_SIDE
+            ))
+    );
 
     /**
      * 学习原版投掷器，4 tick 延迟发射
@@ -62,6 +99,11 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
                 .setValue(SNEAK_PLACED, false)
                 .setValue(WATERLOGGED, false)
                 .setValue(PART, Part.SINGLE));
+    }
+
+    @Override
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPES.get(state.getValue(PART)).get(state.getValue(BlockStateProperties.HORIZONTAL_FACING));
     }
 
     @Override
@@ -110,8 +152,9 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
         return state.setValue(PART, part);
     }
 
-    private boolean isConnectable(BlockState state, Direction direction) {
-        return state.getBlock() == this && !state.getValue(SNEAK_PLACED) && state.getValue(BlockStateProperties.HORIZONTAL_FACING).equals(direction);
+    private boolean isConnectable(BlockState state, Direction facing) {
+        return state.is(this) && !state.getValue(SNEAK_PLACED)
+                && state.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite() != facing;
     }
 
     public static List<BlockPos> getConnectedShelves(Level level, BlockPos pos) {
@@ -128,7 +171,7 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
             start = start.relative(opposite);
         }
 
-        List<BlockPos> group = new ArrayList<>();
+        List<BlockPos> group = new ArrayList<>(16);
         for (BlockPos current = start; shelf.isConnectable(level.getBlockState(current), facing); current = current.relative(axis)) {
             group.add(current);
         }
@@ -185,7 +228,7 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
             return InteractionResult.PASS;
         }
         ItemStack itemInHand = player.getItemInHand(hand);
-        if (itemInHand.is(ModItems.KITCHEN_SHELF)
+        if (itemInHand.is(TagMod.KITCHEN_SHELF_STORE_BLACKLIST)
                 || (itemInHand.getItem() instanceof RecipeItem && RecipeItem.hasRecipe(itemInHand))) {
             return InteractionResult.PASS;
         }

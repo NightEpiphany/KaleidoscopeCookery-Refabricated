@@ -3,7 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.event;
 import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
@@ -58,7 +58,7 @@ public class RightClickEvent {
         }
         // 厨架潜行存入物品
         if (!player.isSpectator() && player.isSecondaryUseActive() && hand == InteractionHand.MAIN_HAND
-                && !itemInHand.isEmpty() && !itemInHand.is(ModItems.KITCHEN_SHELF)
+                && !itemInHand.isEmpty() && !itemInHand.is(TagMod.KITCHEN_SHELF_STORE_BLACKLIST)
                 && !(item instanceof RecipeItem && RecipeItem.hasRecipe(itemInHand))
                 && level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf) {
             if (!level.isClientSide) {
@@ -71,6 +71,10 @@ public class RightClickEvent {
     }
 
     private static InteractionResult onUseEntity(Player player, Level level, InteractionHand hand, Entity target, EntityHitResult hitResult) {
+        if (player.getItemInHand(hand).is(Items.LEAD) && SitEntity.isCatChairPassenger(target)) {
+            return InteractionResult.FAIL;
+        }
+
         ItemStack mainHandItem = player.getMainHandItem();
         if (target instanceof Chicken chicken && chicken.isBaby() && mainHandItem.is(TagMod.CATERPILLARS)) {
             // 让鸡瞬间成年

@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.entity;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.ChairBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.misc.TrashCanBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +30,7 @@ public class SitEntity extends Entity {
 
     public static final int DEFAULT = 0;
     public static final int TRASH_CAN = 1;
+    public static final int CAT_CHAIR = 2;
     /**
      * 座位类型，用来处理不同方块生成的实体，从而做出特殊的内容
      */
@@ -86,14 +89,37 @@ public class SitEntity extends Entity {
             this.checkBelowWorld();
             this.checkPassengers();
 
-            // 每秒检查一次所处位置是否有方块，没有就删除实体
-            if (this.tickCount % 20 == 0) {
+            if (this.getSitType() == CAT_CHAIR) {
+                if (!(this.level().getBlockState(this.blockPosition()).getBlock() instanceof ChairBlock)) {
+                    this.discard();
+                }
+            } else if (this.tickCount % 20 == 0) {
+                // 每秒检查一次所处位置是否有方块，没有就删除实体
                 BlockState blockState = this.level().getBlockState(this.blockPosition());
                 if (!blockState.is(TagMod.SITTABLE)) {
                     this.discard();
                 }
             }
         }
+    }
+
+    @Override
+    protected void positionRider(@NotNull Entity passenger, @NotNull MoveFunction move) {
+        if (this.getSitType() == CAT_CHAIR && passenger instanceof Cat cat) {
+            move.accept(cat, this.getX(), this.getY(), this.getZ());
+            cat.setDeltaMovement(Vec3.ZERO);
+            if (!this.level().isClientSide) {
+                // 原版猫的躺姿不写入存档，座位在区块重新加载后恢复姿态。
+                cat.setInSittingPose(false);
+                cat.setLying(true);
+            }
+        } else {
+            super.positionRider(passenger, move);
+        }
+    }
+
+    public static boolean isCatChairPassenger(Entity entity) {
+        return entity instanceof Cat && entity.getVehicle() instanceof SitEntity seat && seat.getSitType() == CAT_CHAIR;
     }
 
     private void checkPassengers() {
@@ -117,6 +143,9 @@ public class SitEntity extends Entity {
 
     @Override
     protected void removePassenger(@NotNull Entity passenger) {
+        if (this.getSitType() == CAT_CHAIR && passenger instanceof Cat cat && !this.level().isClientSide) {
+            cat.setLying(false);
+        }
         // 玩家脱离骑乘垃圾桶实体，此时停止动画，并播放声音
         if (this.getSitType() == SitEntity.TRASH_CAN && passenger instanceof Player player) {
             // 获取垃圾桶
