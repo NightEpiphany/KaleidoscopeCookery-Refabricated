@@ -50,7 +50,7 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    /** Mirrors the short delay used by vanilla dispensers before a redstone pulse is handled. */
+    /** 模拟原版物品发送延迟刻 */
     private static final int DISPENSE_DELAY = 4;
 
     public KitchenShelfBlock(Properties properties) {
@@ -170,7 +170,7 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
     }
 
     @Override
-    protected void tick(@NonNull BlockState state, ServerLevel level, @NonNull BlockPos pos, @NonNull RandomSource random) {
+    protected void tick(@NonNull BlockState state, @NonNull ServerLevel level, @NonNull BlockPos pos, @NonNull RandomSource random) {
         List<BlockPos> shelves = getConnectedShelves(level, pos);
         BlockPos leader = shelves.stream()
                 .filter(level::hasNeighborSignal)
