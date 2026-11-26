@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld_skewer",
+  "textures": {
+    "layer0": "kaleidoscope_cookery:item/candied_apple_skewer_eating_1"
+  }
+}
