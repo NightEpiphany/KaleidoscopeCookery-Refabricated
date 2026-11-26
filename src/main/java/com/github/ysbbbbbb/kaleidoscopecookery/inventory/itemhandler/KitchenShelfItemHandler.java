@@ -30,7 +30,7 @@ public class KitchenShelfItemHandler extends ItemStackHandler {
     }
 
     /**
-     * Stores one item as the codec sample and keeps the larger logical count separately.
+     * 元数据codec存储
      */
     public void save(@NonNull ValueOutput output) {
         ItemStack stack = stacks.getFirst();
@@ -48,7 +48,6 @@ public class KitchenShelfItemHandler extends ItemStackHandler {
     }
 
     public void setTransferStack(ItemStack stack) {
-        // Transfer simulations mutate a snapshot and must not refresh the block entity.
         this.stacks.set(0, stack);
     }
 
