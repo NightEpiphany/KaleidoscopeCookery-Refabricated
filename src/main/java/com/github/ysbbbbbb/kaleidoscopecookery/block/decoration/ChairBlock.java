@@ -172,9 +172,9 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
         };
     }
 
+    // 获取猫咪侧躺的位置信息
     public static Vec3 catLiePosition(BlockPos pos, BlockState state) {
         Direction facing = state.getValue(FACING);
-        // Move the cat slightly forward to clear the backrest.
         return Vec3.atBottomCenterOf(pos).add(facing.getStepX() / 16.0, SEAT_HEIGHT / 16.0, facing.getStepZ() / 16.0);
     }
 
