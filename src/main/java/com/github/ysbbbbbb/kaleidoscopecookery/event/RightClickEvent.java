@@ -6,7 +6,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfB
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
@@ -52,7 +51,7 @@ public class RightClickEvent {
         ItemStack itemInHand = player.getItemInHand(hand);
         // 厨架潜行存入物品
         if (!player.isSpectator() && player.isSecondaryUseActive() && hand == InteractionHand.MAIN_HAND
-                && !itemInHand.isEmpty() && !itemInHand.is(ModItems.KITCHEN_SHELF)
+                && !itemInHand.isEmpty() && !itemInHand.is(TagMod.KITCHEN_SHELF_STORE_BLACKLIST)
                 && !(itemInHand.getItem() instanceof RecipeItem && RecipeItem.hasRecipe(itemInHand))
                 && blockEntity instanceof KitchenShelfBlockEntity shelf) {
             if (!level.isClientSide() && shelf.interact(player, true)) {

@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ITeapot;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.KitchenShelfBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
@@ -187,26 +188,33 @@ public class RecipeItem extends WithTooltipsBlockItem {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (context.getLevel() instanceof ServerLevel serverLevel) {
-            ItemStack itemInHand = context.getItemInHand();
-            BlockPos clickedPos = context.getClickedPos();
+        Level level = context.getLevel();
+        ItemStack itemInHand = context.getItemInHand();
+        BlockPos clickedPos = context.getClickedPos();
+        Player player = context.getPlayer();
+        RecipeRecord record = getRecipe(itemInHand);
+        if (player != null && record != null && level.getBlockState(clickedPos).getBlock() instanceof KitchenShelfBlock) {
+            // 客户端先拦截方块放置预测，取料与掉落物由服务端处理。
+            if (level.isClientSide()) {
+                return InteractionResult.SUCCESS;
+            }
+            if (level.getBlockEntity(clickedPos) instanceof KitchenShelfBlockEntity shelf) {
+                shelf.dispenseMatching(record.input(), player.isSecondaryUseActive());
+            }
+            return InteractionResult.CONSUME;
+        }
+        if (level instanceof ServerLevel serverLevel) {
             BlockEntity blockEntity = serverLevel.getLevel().getBlockEntity(clickedPos);
             RecipeManager recipeManager = serverLevel.getLevel().recipeAccess();
             if (blockEntity == null) {
                 return super.useOn(context);
             }
-            Player player = context.getPlayer();
             if (player == null) {
                 return super.useOn(context);
             }
             if (hasRecipe(itemInHand)) {
                 if (isAutoBind(itemInHand)) {
                     return InteractionResult.PASS;
-                }
-                if (blockEntity instanceof KitchenShelfBlockEntity shelf) {
-                    RecipeRecord record = getRecipe(itemInHand);
-                    return record != null && shelf.dispenseMatching(record.input())
-                            ? InteractionResult.CONSUME : InteractionResult.PASS;
                 }
                 return this.onPutRecipe(blockEntity, player, itemInHand);
             } else {

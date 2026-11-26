@@ -7,6 +7,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemStorage;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -28,9 +29,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NonNull;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler.CAPACITY;
 
@@ -156,40 +155,65 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
     }
 
     public void dispense() {
+        if (level instanceof ServerLevel serverLevel) {
+            dispense(serverLevel, 1);
+        }
+    }
+
+    public void dispenseMatching(List<ItemStack> ingredients, boolean useRecipeCounts) {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
-        dropToFront(serverLevel, inventory.extractItem(0, 1, false), true);
-    }
 
-    public boolean dispenseMatching(List<ItemStack> ingredients) {
-        if (level == null) {
-            return false;
-        }
-
-        Set<Item> needed = new LinkedHashSet<>();
+        var remaining = new Reference2IntOpenHashMap<Item>(ingredients.size());
         for (ItemStack ingredient : ingredients) {
             if (!ingredient.isEmpty()) {
-                needed.add(ingredient.getItem());
+                Item item = ingredient.getItem();
+                if (useRecipeCounts) {
+                    remaining.addTo(item, ingredient.getCount());
+                } else {
+                    remaining.put(item, 1);
+                }
             }
         }
+        if (remaining.isEmpty()) {
+            return;
+        }
 
-        List<BlockPos> shelves = KitchenShelfBlock.getConnectedShelves(level, worldPosition);
-        boolean dispensed = false;
-        for (Item item : needed) {
-            for (BlockPos pos : shelves) {
-                if (level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf
-                        && shelf.getStoredStack().is(item)) {
-                    if (level.isClientSide()) {
-                        return true;
-                    }
-                    shelf.dispense();
-                    dispensed = true;
+        for (BlockPos pos : KitchenShelfBlock.getConnectedShelves(serverLevel, worldPosition)) {
+            if (!(serverLevel.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf)) {
+                continue;
+            }
+            ItemStack stored = shelf.getStoredStack();
+            if (stored.isEmpty()) {
+                continue;
+            }
+            Item item = stored.getItem();
+            int requested = remaining.getInt(item);
+            if (requested == 0) {
+                continue;
+            }
+            int missing = requested - shelf.dispense(serverLevel, requested);
+            if (missing > 0) {
+                remaining.put(item, missing);
+            } else {
+                remaining.removeInt(item);
+                if (remaining.isEmpty()) {
                     break;
                 }
             }
         }
-        return dispensed;
+    }
+
+    private int dispense(ServerLevel level, int requested) {
+        ItemStack remaining = getStoredStack().copy();
+        ItemStack taken = remaining.split(requested);
+        int count = taken.getCount();
+        if (count > 0) {
+            inventory.setStackInSlot(0, remaining.isEmpty() ? ItemStack.EMPTY : remaining);
+            dropToFront(level, taken, true);
+        }
+        return count;
     }
 
     private void dropToFront(ServerLevel level, ItemStack stack, boolean dispenseEffects) {
