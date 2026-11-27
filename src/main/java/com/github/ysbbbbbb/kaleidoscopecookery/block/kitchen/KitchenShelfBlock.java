@@ -225,7 +225,7 @@ public class KitchenShelfBlock extends BaseEntityBlock implements SimpleWaterlog
         }
         for (BlockPos shelfPos : shelves) {
             if (level.getBlockEntity(shelfPos) instanceof KitchenShelfBlockEntity shelf) {
-                shelf.dispense();
+                shelf.dispense(null);
             }
         }
     }

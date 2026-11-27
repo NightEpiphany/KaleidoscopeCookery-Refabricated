@@ -7,6 +7,8 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemStorage;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -26,10 +28,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jspecify.annotations.Nullable;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler.CAPACITY;
 
@@ -65,12 +66,12 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
             }
             ItemStack taken;
             if (all) {
-                taken = stored.copy();
-                inventory.setStackInSlot(0, ItemStack.EMPTY);
+                taken = stored.copyWithCount(64);
+                inventory.extractItem(0, 64, false);
             } else {
                 taken = inventory.extractItem(0, 1, false);
             }
-            dropToFront(serverLevel, taken, false);
+            dropToFront(serverLevel, taken, false, null);
             return true;
         }
 
@@ -153,51 +154,86 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
         }
     }
 
-    public void dispense() {
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
-        dropToFront(serverLevel, inventory.extractItem(0, 1, false), true);
+    public void dispense(@Nullable BlockPos clickPos) {
+        dispense(clickPos, 1);
     }
 
-    public boolean dispenseMatching(List<ItemStack> ingredients) {
+    private int dispense(@Nullable BlockPos clickPos, int amount) {
+        if (!(level instanceof ServerLevel serverLevel) || clickPos != null && !(level.getBlockEntity(clickPos) instanceof KitchenShelfBlockEntity)) {
+            return 0;
+        }
+
+        ItemStack stored = getStoredStack();
+        int extracted = Math.min(amount, stored.getCount());
+        if (extracted == 0) {
+            return 0;
+        }
+        inventory.setStackInSlot(0, stored.copyWithCount(stored.getCount() - extracted));
+        dropToFront(serverLevel, stored.copyWithCount(extracted), true, clickPos);
+        return extracted;
+    }
+
+    public boolean dispenseMatching(List<ItemStack> ingredients, boolean useRecipeCounts) {
         if (level == null) {
             return false;
         }
 
-        Set<Item> needed = new LinkedHashSet<>();
+        Reference2IntMap<Item> remaining = new Reference2IntOpenHashMap<>(ingredients.size());
         for (ItemStack ingredient : ingredients) {
-            if (!ingredient.isEmpty()) {
-                needed.add(ingredient.getItem());
+            if (ingredient.isEmpty()) {
+                continue;
+            }
+            if (useRecipeCounts) {
+                remaining.mergeInt(ingredient.getItem(), ingredient.getCount(), Integer::sum);
+            } else {
+                remaining.put(ingredient.getItem(), 1);
             }
         }
+        if (remaining.isEmpty()) {
+            return false;
+        }
 
-        List<BlockPos> shelves = KitchenShelfBlock.getConnectedShelves(level, worldPosition);
         boolean dispensed = false;
-        for (Item item : needed) {
-            for (BlockPos pos : shelves) {
-                if (level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf && shelf.getStoredStack().is(item)) {
-                    if (level.isClientSide) {
-                        return true;
-                    }
-                    shelf.dispense();
-                    dispensed = true;
+        for (BlockPos pos : KitchenShelfBlock.getConnectedShelves(level, worldPosition)) {
+            if (!(level.getBlockEntity(pos) instanceof KitchenShelfBlockEntity shelf)) {
+                continue;
+            }
+            Item item = shelf.getStoredStack().getItem();
+            int needed = remaining.getInt(item);
+            if (needed == 0) {
+                continue;
+            }
+            if (level.isClientSide) {
+                return true;
+            }
+
+            int extracted = shelf.dispense(worldPosition, needed);
+            if (extracted == 0) {
+                continue;
+            }
+            dispensed = true;
+            if (extracted == needed) {
+                remaining.removeInt(item);
+                if (remaining.isEmpty()) {
                     break;
                 }
+            } else {
+                remaining.put(item, needed - extracted);
             }
         }
         return dispensed;
     }
 
-    private void dropToFront(ServerLevel level, ItemStack stack, boolean dispenseEffects) {
+    private void dropToFront(ServerLevel level, ItemStack stack, boolean dispenseEffects, @Nullable BlockPos clickPos) {
         if (stack.isEmpty()) {
             return;
         }
 
         Direction front = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-        double x = worldPosition.getX() + 0.5 + front.getStepX() * 0.65;
-        double y = worldPosition.getY() + 0.45;
-        double z = worldPosition.getZ() + 0.5 + front.getStepZ() * 0.65;
+        BlockPos dispensePos = clickPos == null ? worldPosition : clickPos;
+        double x = dispensePos.getX() + 0.5 + front.getStepX() * 0.65;
+        double y = dispensePos.getY() + 0.45;
+        double z = dispensePos.getZ() + 0.5 + front.getStepZ() * 0.65;
 
         int maxStackSize = stack.getMaxStackSize();
         while (!stack.isEmpty()) {

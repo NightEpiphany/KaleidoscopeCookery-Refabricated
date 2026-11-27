@@ -90,7 +90,7 @@ public class ItemStackHandler implements IItemHandler {
             return ItemStack.EMPTY;
         } else {
             this.validateSlotIndex(slot);
-            ItemStack existing = (ItemStack)this.stacks.get(slot);
+            ItemStack existing = this.stacks.get(slot);
             if (existing.isEmpty()) {
                 return ItemStack.EMPTY;
             } else {

@@ -141,7 +141,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
         if (hasRecipe(itemInHand)) {
             if (blockEntity instanceof KitchenShelfBlockEntity shelf) {
                 RecipeRecord record = getRecipe(itemInHand);
-                return record != null && shelf.dispenseMatching(record.input())
+                return record != null && shelf.dispenseMatching(record.input(), player.isSecondaryUseActive())
                         ? InteractionResult.sidedSuccess(level.isClientSide) : InteractionResult.PASS;
             }
             return this.onPutRecipe(blockEntity, player, itemInHand);
