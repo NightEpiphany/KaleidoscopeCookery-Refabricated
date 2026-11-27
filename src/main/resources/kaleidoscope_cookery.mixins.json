@@ -20,6 +20,7 @@
     "MobMixin",
     "PlayerMixin",
     "PowderSnowBlockMixin",
+    "ShulkerBoxBlockEntityMixin",
     "VillagerMixin"
   ],
   "client": [

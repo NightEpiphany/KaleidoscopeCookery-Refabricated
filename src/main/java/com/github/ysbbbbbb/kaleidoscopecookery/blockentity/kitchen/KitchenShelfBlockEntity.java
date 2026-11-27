@@ -8,6 +8,8 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemStorage;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.forge.ItemHandlerHelper;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -28,15 +30,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jspecify.annotations.NonNull;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler.CAPACITY;
 
 @SuppressWarnings("UnstableApiUsage")
 public class KitchenShelfBlockEntity extends BaseBlockEntity {
     private static final int RESTOCK_INTERVAL = 83;
+    private static final int BULK_TAKE_LIMIT = 64;
     private final KitchenShelfItemHandler inventory = new KitchenShelfItemHandler(this);
     private final KitchenShelfItemStorage itemStorage = new KitchenShelfItemStorage(inventory, this::refresh);
     private boolean wasPowered;
@@ -53,7 +54,7 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
         return itemStorage;
     }
 
-    public boolean interact(LivingEntity living, boolean all) {
+    public boolean interact(LivingEntity living, boolean bulk) {
         if (!(level instanceof ServerLevel serverLevel)) {
             return false;
         }
@@ -65,13 +66,7 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
             if (stored.isEmpty()) {
                 return false;
             }
-            ItemStack taken;
-            if (all) {
-                taken = stored.copy();
-                inventory.setStackInSlot(0, ItemStack.EMPTY);
-            } else {
-                taken = inventory.extractItem(0, 1, false);
-            }
+            ItemStack taken = takeStored(bulk ? BULK_TAKE_LIMIT : 1);
             dropToFront(serverLevel, getBlockState(), taken, false);
             return true;
         }
@@ -80,7 +75,7 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
         if (!stored.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stored, held)) {
             return false;
         }
-        int amount = all ? Math.min(held.getCount(), CAPACITY - stored.getCount()) : 1;
+        int amount = bulk ? Math.min(held.getCount(), CAPACITY - stored.getCount()) : 1;
         if (amount <= 0) {
             return false;
         }
@@ -157,38 +152,69 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
     }
 
     public void dispense(BlockState state) {
-        if (!(level instanceof ServerLevel serverLevel) || getStoredStack().isEmpty()) {
-            return;
+        if (level instanceof ServerLevel serverLevel) {
+            dropToFront(serverLevel, state, takeStored(1), true);
         }
-        ItemStack stack = inventory.extractItem(0, 1, false);
-        dropToFront(serverLevel, state, stack, true);
     }
 
-    public boolean dispenseMatching(List<ItemStack> ingredients) {
+    private ItemStack takeStored(int amount) {
+        ItemStack stored = getStoredStack();
+        int taken = Math.min(amount, stored.getCount());
+        if (taken == 0) {
+            return ItemStack.EMPTY;
+        }
+        inventory.setStackInSlot(0, stored.copyWithCount(stored.getCount() - taken));
+        return stored.copyWithCount(taken);
+    }
+
+    public boolean dispenseMatching(List<ItemStack> ingredients, boolean useRecipeCounts) {
         if (level == null) {
             return false;
         }
 
-        Set<Item> needed = new LinkedHashSet<>();
+        Reference2IntMap<Item> remaining = new Reference2IntOpenHashMap<>(ingredients.size());
         for (ItemStack ingredient : ingredients) {
-            if (!ingredient.isEmpty()) {
-                needed.add(ingredient.getItem());
+            if (ingredient.isEmpty()) {
+                continue;
+            }
+            if (useRecipeCounts) {
+                remaining.mergeInt(ingredient.getItem(), ingredient.getCount(), Integer::sum);
+            } else {
+                remaining.put(ingredient.getItem(), 1);
             }
         }
+        if (remaining.isEmpty()) {
+            return false;
+        }
 
-        List<BlockPos> group = KitchenShelfBlock.getConnectedShelves(level, worldPosition);
         boolean dispensed = false;
-        for (Item item : needed) {
-            for (BlockPos shelfPos : group) {
-                if (level.getBlockEntity(shelfPos) instanceof KitchenShelfBlockEntity shelf
-                        && shelf.getStoredStack().is(item)) {
-                    if (level.isClientSide) {
-                        return true;
-                    }
-                    shelf.dispense(shelf.getBlockState());
-                    dispensed = true;
+        for (BlockPos shelfPos : KitchenShelfBlock.getConnectedShelves(level, worldPosition)) {
+            if (!(level.getBlockEntity(shelfPos) instanceof KitchenShelfBlockEntity shelf)) {
+                continue;
+            }
+            Item item = shelf.getStoredStack().getItem();
+            int needed = remaining.getInt(item);
+            if (needed == 0) {
+                continue;
+            }
+            if (!(level instanceof ServerLevel serverLevel)) {
+                return level.isClientSide;
+            }
+
+            ItemStack taken = shelf.takeStored(needed);
+            int takenCount = taken.getCount();
+            if (takenCount == 0) {
+                continue;
+            }
+            dropToFront(serverLevel, getBlockState(), taken, true);
+            dispensed = true;
+            if (takenCount == needed) {
+                remaining.removeInt(item);
+                if (remaining.isEmpty()) {
                     break;
                 }
+            } else {
+                remaining.put(item, needed - takenCount);
             }
         }
         return dispensed;

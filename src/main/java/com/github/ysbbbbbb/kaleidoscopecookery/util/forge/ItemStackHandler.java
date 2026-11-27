@@ -1,15 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.util.forge;
 
 import net.minecraft.nbt.Tag;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 //From Neoforge
 public class ItemStackHandler implements IItemHandler

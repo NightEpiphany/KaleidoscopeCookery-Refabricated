@@ -171,7 +171,7 @@ public class RecipeItem extends WithTooltipsBlockItem {
         BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
         if (blockEntity instanceof KitchenShelfBlockEntity shelf && hasRecipe(itemInHand)) {
             RecipeRecord record = getRecipe(itemInHand);
-            if (record != null && shelf.dispenseMatching(record.input())) {
+            if (record != null && shelf.dispenseMatching(record.input(), context.isSecondaryUseActive())) {
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
             return InteractionResult.PASS;
