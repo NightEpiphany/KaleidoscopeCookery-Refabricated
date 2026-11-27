@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -67,12 +68,12 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
             }
             ItemStack taken;
             if (all) {
-                taken = stored.copy();
-                inventory.setStackInSlot(0, ItemStack.EMPTY);
+                taken = stored.copyWithCount(64);
+                inventory.extractItem(0, 64, false);
             } else {
                 taken = inventory.extractItem(0, 1, false);
             }
-            dropToFront(serverLevel, taken, false);
+            dropToFront(serverLevel, taken, false, null);
             return true;
         }
 
@@ -156,7 +157,7 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
 
     public void dispense() {
         if (level instanceof ServerLevel serverLevel) {
-            dispense(serverLevel, 1);
+            dispense(serverLevel, 1, null);
         }
     }
 
@@ -193,7 +194,7 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
             if (requested == 0) {
                 continue;
             }
-            int missing = requested - shelf.dispense(serverLevel, requested);
+            int missing = requested - shelf.dispense(serverLevel, requested, worldPosition);
             if (missing > 0) {
                 remaining.put(item, missing);
             } else {
@@ -205,26 +206,27 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
         }
     }
 
-    private int dispense(ServerLevel level, int requested) {
+    private int dispense(ServerLevel level, int requested, @Nullable BlockPos clickPos) {
         ItemStack remaining = getStoredStack().copy();
         ItemStack taken = remaining.split(requested);
         int count = taken.getCount();
         if (count > 0) {
             inventory.setStackInSlot(0, remaining.isEmpty() ? ItemStack.EMPTY : remaining);
-            dropToFront(level, taken, true);
+            dropToFront(level, taken, true, clickPos);
         }
         return count;
     }
 
-    private void dropToFront(ServerLevel level, ItemStack stack, boolean dispenseEffects) {
+    private void dropToFront(ServerLevel level, ItemStack stack, boolean dispenseEffects, @Nullable BlockPos clickPos) {
         if (stack.isEmpty()) {
             return;
         }
 
         Direction front = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-        double x = worldPosition.getX() + 0.5 + front.getStepX() * 0.65;
-        double y = worldPosition.getY() + 0.45;
-        double z = worldPosition.getZ() + 0.5 + front.getStepZ() * 0.65;
+        BlockPos dispensePos = clickPos == null ? worldPosition : clickPos;
+        double x = dispensePos.getX() + 0.5 + front.getStepX() * 0.65;
+        double y = dispensePos.getY() + 0.45;
+        double z = dispensePos.getZ() + 0.5 + front.getStepZ() * 0.65;
 
         while (!stack.isEmpty()) {
             ItemEntity entity = new ItemEntity(level, x, y, z, stack.split(stack.getMaxStackSize()));
