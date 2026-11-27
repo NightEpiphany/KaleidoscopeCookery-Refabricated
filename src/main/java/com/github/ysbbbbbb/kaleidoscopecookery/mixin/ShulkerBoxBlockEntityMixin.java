@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin {
     @ModifyReturnValue(method = "canPlaceItemThroughFace", at = @At("RETURN"))
-    private boolean kaleidoscope$blockFruitBasketInsertion(boolean original, @Local(argsOnly = true, name = "itemStack") ItemStack itemStack) {
+    private boolean kaleidoscopeCookery$blockFruitBasketInsertion(boolean original, @Local(argsOnly = true, name = "itemStack") ItemStack itemStack) {
         return original && !(Block.byItem(itemStack.getItem()) instanceof FruitBasketBlock);
     }
 }
