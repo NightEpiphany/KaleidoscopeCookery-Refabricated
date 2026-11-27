@@ -23,6 +23,7 @@
     "MobBucketItemMixin",
     "MobMixin",
     "PowderSnowBlockMixin",
+    "ShulkerBoxBlockEntityMixin",
     "ShulkerBulletMixin",
     "ThrowableProjectileMixin",
     "VillagerMixin",
