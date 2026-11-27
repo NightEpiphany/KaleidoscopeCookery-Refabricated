@@ -35,6 +35,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -52,15 +53,16 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     public static final BooleanProperty HAS_CARPET = BooleanProperty.create("has_carpet");
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final VoxelShape SELECTION_SHAPE = Block.box(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape SELECTION_SHAPE = Shapes.or(
+            Block.box(1, 0, 1, 15, 14, 15),
+            Block.box(0, 14, 0, 16, 16, 16)
+    );
     private static final VoxelShape COLLISION_SHAPE = Block.box(0, 14, 0, 16, 16, 16);
 
     public static final int SINGLE = 0;
     public static final int LEFT = 1;
     public static final int MIDDLE = 2;
     public static final int RIGHT = 3;
-
-    private static final VoxelShape FACE = Block.box(0, 13, 0, 16, 16, 16);
 
     public TableBlock(SoundType soundType) {
         super(Properties.of()
@@ -92,14 +94,14 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
                 return InteractionResult.SUCCESS;
             }
             else if (level.getBlockEntity(pos) instanceof TableBlockEntity table) {
-                return useWithOther(level, pos, player, hand, table, itemInHand);
+                return useWithOther(level, pos, player, table, itemInHand);
             }
         }
         return super.use(state, level, pos, player, hand, hit);
     }
 
     @NotNull
-    private InteractionResult useWithOther(Level level, BlockPos pos, Player player, InteractionHand hand, TableBlockEntity table, ItemStack itemInHand) {
+    private InteractionResult useWithOther(Level level, BlockPos pos, Player player, TableBlockEntity table, ItemStack itemInHand) {
         NonNullList<ItemStack> tableItems = table.getItems();
         Pair<Integer, ItemStack> lastStack = ItemUtils.getLastStack(tableItems);
         Integer tableIndex = lastStack.getLeft();

@@ -12,6 +12,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,7 +35,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unused"})
 public class CandiedSkewerBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape UPRIGHT_SHAPE_LITTLE = Block.box(0, 0, 0, 16, 20, 16);
     private static final VoxelShape UPRIGHT_SHAPE_HUGE = Block.box(-4, 0, -4, 20, 20, 20);
@@ -71,6 +72,19 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock implements Si
                 .setValue(countProperty, 1));
     }
 
+    @Override
+    public boolean canSurvive(@NonNull BlockState state, @NonNull LevelReader level, BlockPos pos) {
+        Direction supportDirection = getSupportDirection(state);
+        BlockPos supportPos = pos.relative(supportDirection);
+        Direction supportFace = supportDirection.getOpposite();
+        return this.upright ? canSupportCenter(level, supportPos, supportFace)
+                : level.getBlockState(supportPos).isFaceSturdy(level, supportPos, supportFace);
+    }
+
+    private Direction getSupportDirection(BlockState state) {
+        return this.upright ? Direction.DOWN : state.getValue(FACING).getOpposite();
+    }
+
     public IntegerProperty getCountProperty() {
         return countProperty;
     }
@@ -86,6 +100,9 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock implements Si
     @SuppressWarnings("deprecation")
     @Override
     public @NonNull BlockState updateShape(@NonNull BlockState blockState, @NonNull Direction direction, @NonNull BlockState blockState2, @NonNull LevelAccessor levelAccessor, @NonNull BlockPos blockPos, @NonNull BlockPos blockPos2) {
+        if (direction == getSupportDirection(blockState) && !blockState.canSurvive(levelAccessor, blockPos)) {
+            return Blocks.AIR.defaultBlockState();
+        }
         if (blockState.getValue(WATERLOGGED)) {
             levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
