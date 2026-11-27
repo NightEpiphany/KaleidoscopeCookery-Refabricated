@@ -16,7 +16,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -70,8 +72,24 @@ public class CandiedSkewerBlock extends StackableFoodBlock {
     }
 
     @Override
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        Direction supportDirection = getSupportDirection(state);
+        BlockPos supportPos = pos.relative(supportDirection);
+        Direction supportFace = supportDirection.getOpposite();
+        return this.upright ? canSupportCenter(level, supportPos, supportFace)
+                : level.getBlockState(supportPos).isFaceSturdy(level, supportPos, supportFace);
+    }
+
+    private Direction getSupportDirection(BlockState state) {
+        return this.upright ? Direction.DOWN : state.getValue(FACING).getOpposite();
+    }
+
+    @Override
     public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
                                            LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        if (direction == getSupportDirection(state) && !state.canSurvive(level, pos)) {
+            return Blocks.AIR.defaultBlockState();
+        }
         if (state.getValue(WATERLOGGED)) {
             level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
