@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,6 +64,19 @@ public class CandiedSkewerBlock extends StackableFoodBlock {
     }
 
     @Override
+    protected boolean canSurvive(@NonNull BlockState state, @NonNull LevelReader level, BlockPos pos) {
+        Direction supportDirection = getSupportDirection(state);
+        BlockPos supportPos = pos.relative(supportDirection);
+        Direction supportFace = supportDirection.getOpposite();
+        return this.upright ? canSupportCenter(level, supportPos, supportFace)
+                : level.getBlockState(supportPos).isFaceSturdy(level, supportPos, supportFace);
+    }
+
+    private Direction getSupportDirection(BlockState state) {
+        return this.upright ? Direction.DOWN : state.getValue(FACING).getOpposite();
+    }
+
+    @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         if (state != null && !this.upright && context.getClickedFace().getAxis().isHorizontal()) {
@@ -76,6 +90,9 @@ public class CandiedSkewerBlock extends StackableFoodBlock {
                                                @NonNull ScheduledTickAccess scheduledTicks, @NonNull BlockPos pos,
                                                @NonNull Direction direction, @NonNull BlockPos neighborPos,
                                                @NonNull BlockState neighborState, @NonNull RandomSource random) {
+        if (direction == getSupportDirection(state) && !state.canSurvive(level, pos)) {
+            return Blocks.AIR.defaultBlockState();
+        }
         if (state.getValue(WATERLOGGED)) {
             scheduledTicks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
