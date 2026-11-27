@@ -33,6 +33,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +56,10 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     public static final int MIDDLE = 2;
     public static final int RIGHT = 3;
 
-    private static final VoxelShape SELECTION_SHAPE = Block.box(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape SELECTION_SHAPE = Shapes.or(
+            Block.box(1, 0, 1, 15, 14, 15),
+            Block.box(0, 14, 0, 16, 16, 16)
+    );
     private static final VoxelShape COLLISION_SHAPE = Block.box(0, 14, 0, 16, 16, 16);
 
     public TableBlock(BlockBehaviour.Properties p) {
